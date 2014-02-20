@@ -58,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ResultType.cs" />
     <Compile Include="Services\ITestBuilder.cs" />
-    <Compile Include="Services\ITestPuller.cs" />
+    <Compile Include="Services\ITestSourcePuller.cs" />
     <Compile Include="Services\ITestReporter.cs" />
     <Compile Include="Services\ITestRunner.cs" />
   </ItemGroup>
