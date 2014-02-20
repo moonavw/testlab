@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C647087-605B-4818-B357-949976F23F75}</ProjectGuid>
+    <ProjectGuid>{A08CA30E-2B38-4731-8EBC-CD0AB3333E32}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestLab.Infrastructure</RootNamespace>
-    <AssemblyName>TestLab.Infrastructure</AssemblyName>
+    <RootNamespace>TestLab.Infrastructure.Cucumber</RootNamespace>
+    <AssemblyName>TestLab.Infrastructure.Cucumber</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -33,8 +32,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq">
+      <HintPath>..\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="NPatterns">
       <HintPath>..\packages\NPatterns.1.0.4826\lib\net45\NPatterns.dll</HintPath>
+    </Reference>
+    <Reference Include="RunProcessAsTask">
+      <HintPath>..\packages\RunProcessAsTask.1.0.0\lib\RunProcessAsTask.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,10 +56,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="CucumberModule.cs" />
+    <Compile Include="CucumberTestBuilder.cs" />
+    <Compile Include="CucumberTestReporter.cs" />
+    <Compile Include="CucumberTestRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
+      <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
+      <Name>TestLab.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\TestLab.Infrastructure.csproj">
+      <Project>{0c647087-605b-4818-b357-949976f23f75}</Project>
+      <Name>TestLab.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

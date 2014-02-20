@@ -1,4 +1,4 @@
-﻿using TestLab.Domain.Models;
+﻿using TestLab.Infrastructure;
 
 namespace TestLab.Domain.Services
 {

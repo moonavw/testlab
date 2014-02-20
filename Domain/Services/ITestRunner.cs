@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TestLab.Domain.Models;
+using TestLab.Infrastructure;
 
 namespace TestLab.Domain.Services
 {
