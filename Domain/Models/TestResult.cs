@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestLab.Domain.Models
 {
@@ -22,7 +18,7 @@ namespace TestLab.Domain.Models
 
         public DateTime Created { get; set; }
 
-        public virtual TestRun TestRun { get; set; }
+        public virtual TestReport TestReport { get; set; }
 
         public virtual TestCase TestCase { get; set; }
     }

@@ -14,7 +14,7 @@ namespace TestLab.Infrastructure.Persistence.Mapping
             Property(z => z.TestCaseId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             Property(z => z.TestRunId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-            HasRequired(z => z.TestRun)
+            HasRequired(z => z.TestReport)
                 .WithMany(f => f.TestResults)
                 .HasForeignKey(z => z.TestRunId);
 

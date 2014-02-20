@@ -23,8 +23,9 @@ namespace TestLab.Infrastructure.Persistence
             modelBuilder.Configurations.Add(new Mapping.TestBuildMapping());
             modelBuilder.Configurations.Add(new Mapping.TestPlanMapping());
             modelBuilder.Configurations.Add(new Mapping.TestCaseMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestResultMapping());
             modelBuilder.Configurations.Add(new Mapping.TestRunMapping());
+            modelBuilder.Configurations.Add(new Mapping.TestReportMapping());
+            modelBuilder.Configurations.Add(new Mapping.TestResultMapping());
         }
     }
 }
