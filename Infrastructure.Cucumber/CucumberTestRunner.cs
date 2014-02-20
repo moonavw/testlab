@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Ionic.Zip;
 using TestLab.Domain;
 using TestLab.Infrastructure;
-using TestLab.Domain.Services;
 using RunProcessAsTask;
 
 namespace TestLab.Infrastructure.Cucumber

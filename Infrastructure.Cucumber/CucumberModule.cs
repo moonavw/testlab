@@ -1,5 +1,5 @@
 ﻿using Ninject.Modules;
-using TestLab.Domain.Services;
+using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Cucumber
 {

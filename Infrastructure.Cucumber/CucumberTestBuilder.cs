@@ -6,7 +6,6 @@ using Ionic.Zip;
 using MoreLinq;
 using TestLab.Domain;
 using TestLab.Infrastructure;
-using TestLab.Domain.Services;
 
 namespace TestLab.Infrastructure.Cucumber
 {

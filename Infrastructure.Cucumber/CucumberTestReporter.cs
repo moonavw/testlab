@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TestLab.Domain;
 using TestLab.Infrastructure;
-using TestLab.Domain.Services;
 
 namespace TestLab.Infrastructure.Cucumber
 {

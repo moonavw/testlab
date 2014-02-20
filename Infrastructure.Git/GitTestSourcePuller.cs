@@ -3,7 +3,6 @@ using System.IO;
 using RunProcessAsTask;
 using TestLab.Domain;
 using TestLab.Infrastructure;
-using TestLab.Domain.Services;
 
 namespace TestLab.Infrastructure.Git
 {
