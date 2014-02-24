@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using TestLab.Infrastructure;
 
@@ -8,8 +9,7 @@ namespace TestLab.Domain
     {
         public TestCase()
         {
-            TestPlans = new HashSet<TestPlan>();
-            TestResults = new HashSet<TestResult>();
+            Plans = new HashSet<TestPlan>();
         }
 
         public int Id { get; set; }
@@ -18,13 +18,13 @@ namespace TestLab.Domain
 
         public string FullName { get; set; }
 
-        public int TestSourceId { get; set; }
+        public DateTime? Published { get; set; }
 
-        public virtual ICollection<TestPlan> TestPlans { get; set; }
+        public int TestProjectId { get; set; }
 
-        public virtual ICollection<TestResult> TestResults { get; set; }
+        public virtual TestProject Project { get; set; }
 
-        public virtual TestSource TestSource { get; set; }
+        public virtual ICollection<TestPlan> Plans { get; set; }
 
         public string FileName
         {

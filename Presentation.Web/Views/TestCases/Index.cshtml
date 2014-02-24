@@ -1,0 +1,31 @@
+﻿@model IEnumerable<TestLab.Domain.TestCase>
+
+@{
+    ViewBag.Title = "TestCases";
+}
+
+<h2>TestCases</h2>
+
+<p>
+    @Html.ActionLink("Back to TestProject", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, new { @class = "btn btn-default" })
+</p>
+
+@Html.Grid(Model).Columns(c =>
+{
+    c.Add(o => o.Name);
+
+    c.Add(o => o.FullName);
+
+    c.Add(o => o.Plans)
+     .RenderValueAs(d => string.Join(",", d.Plans.Select(z => z.Name)));
+
+    c.Add(o => o.Plans.Count);
+
+    c.Add(o => o.Published)
+     .SetWidth(110);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
+
+@section scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+}

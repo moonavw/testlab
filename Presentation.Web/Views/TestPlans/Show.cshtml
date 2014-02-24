@@ -1,0 +1,27 @@
+﻿@model TestLab.Domain.TestPlan
+
+@{
+    ViewBag.Title = "TestPlan";
+}
+
+<div>
+    <h2>TestPlan</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+@Html.Partial("_ShowAudit", Model)
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("TestSessions", "Index", "TestSessions", new { testplanId = Model.Id }, new { @class = "btn btn-default" })
+</p>
+
+@Html.Partial("../TestCases/Index", Model.Cases)

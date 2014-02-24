@@ -3,11 +3,11 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Cucumber
 {
-    public class CucumberModule:NinjectModule
+    public class CucumberModule : NinjectModule
     {
         public override void Load()
         {
-            Bind<ITestBuilder>().To<CucumberTestBuilder>();
+            Bind<ITestPublisher>().To<CucumberTestPublisher>();
             Bind<ITestRunner>().To<CucumberTestRunner>();
             Bind<ITestReporter>().To<CucumberTestReporter>();
         }

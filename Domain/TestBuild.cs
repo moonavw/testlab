@@ -4,22 +4,19 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestBuild : Entity
+    public class TestBuild : ValueObject
     {
-        public int Id { get; set; }
+        public string Name { get; set; }
 
-        public int TestSourceId { get; set; }
+        public TestBuildType Type { get; set; }
 
-        public DateTime Created { get; set; }
+        public string LocalPath { get; set; }
 
-        public virtual TestSource TestSource { get; set; }
+        public DateTime? Built { get; set; }
 
-        public string Name
-        {
-            get { return TestSource == null ? null : string.Format("build_{0}_{1:yyyyMMdd_hhmm}", TestSource.Name, Created); }
-        }
+        public DateTime? Published { get; set; }
 
-        public string LocalPath
+        public string PublishPath
         {
             get
             {

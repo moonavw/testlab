@@ -1,9 +1,7 @@
-﻿using NPatterns.ObjectRelational;
-
-namespace TestLab.Infrastructure
+﻿namespace TestLab.Infrastructure
 {
     public interface IUnitOfWork : NPatterns.ObjectRelational.IUnitOfWork
     {
-        IRepository<T> Repository<T>() where T : Entity;
+        IRepository<TEntity> Repository<TEntity>() where TEntity : Entity;
     }
 }

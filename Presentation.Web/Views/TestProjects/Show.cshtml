@@ -1,0 +1,52 @@
+﻿@model TestLab.Domain.TestProject
+
+@{
+    ViewBag.Title = "TestProject";
+}
+
+<div>
+    <h2>TestProject</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocalPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocalPath)
+        </dd>
+    </dl>
+</div>
+
+@Html.Partial("_ShowSource", Model.Source)
+@Html.Partial("_ShowBuild", Model.Build)
+@Html.Partial("_ShowAudit", Model)
+
+@using (Html.BeginForm("Build", "TestProjects", new { id = Model.Id }))
+{
+    <input type="submit" value="Build" class="btn btn-success" />
+}
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+
+    @Html.ActionLink("TestPlans", "Index", "TestPlans", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("TestCases", "Index", "TestCases", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
+</p>

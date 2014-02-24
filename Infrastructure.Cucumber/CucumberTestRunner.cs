@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Ionic.Zip;
-using TestLab.Domain;
-using TestLab.Infrastructure;
 using RunProcessAsTask;
+using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Cucumber
 {
@@ -18,40 +18,34 @@ namespace TestLab.Infrastructure.Cucumber
             _uow = uow;
         }
 
-        public TestRun Run(TestPlan plan, TestBuild build)
+        public bool CanRun(TestSession session)
         {
-            return RunAsync(plan, build).Result;
+            return session.Plan.Project.Type == TestProjectType.Cucumber;
         }
 
-
-        public async Task<TestRun> RunAsync(TestPlan plan, TestBuild build)
+        public async Task Run(TestSession session)
         {
-            //create run
-            var run = new TestRun
-            {
-                Created = DateTime.Now,
-                TestBuild = build
-            };
-            plan.TestRuns.Add(run);
-            _uow.Commit();
+            session.Started = DateTime.Now;
+
+            await _uow.CommitAsync();
 
             //copy build to target
             //TODO: unzip files async
-            using (var zip = ZipFile.Read(build.LocalPath))
+            using (var zip = ZipFile.Read(session.Plan.Project.Build.PublishPath))
             {
                 zip.ExtractAll(Constants.RUN_ROOT);
             }
 
             //generate run.cmd by testplan
-            string cmdFile = Path.ChangeExtension(run.Name, ".cmd");
+            string cmdFile = Path.ChangeExtension(session.Name, ".cmd");
             using (var sw = File.CreateText(Path.Combine(Constants.RUN_ROOT, cmdFile)))
             {
-                sw.WriteLine(@"cd {0}", build.Name);
-                foreach (var t in plan.TestCases)
+                sw.WriteLine(@"cd {0}", session.Plan.Project.Build.Name);
+                foreach (var t in session.Runs)
                 {
-                    sw.WriteLine("pushd {0}", t.DirectoryName);
-                    sw.WriteLine(@"cucumber --tag @Name_{0} -f html --out {1}\{2}\{0}.html", t.Name,
-                        Constants.RESULT_ROOT, run.Name);
+                    sw.WriteLine("pushd {0}", t.Case.DirectoryName);
+                    sw.WriteLine(@"cucumber --tag @Name_{0} -f html --out {1}\{2}\{0}.html", t.Case.Name,
+                        Constants.RESULT_ROOT, session.Name);
                     sw.WriteLine("popd");
                 }
             }
@@ -64,16 +58,22 @@ namespace TestLab.Infrastructure.Cucumber
             }
             var pi = new ProcessStartInfo(Constants.RDP_TOOL,
                 string.Format(@"{0} {1} {2} {3} {4} {5}",
-                    Constants.RDP_SERVER,
-                    Constants.RDP_DOMAIN,
-                    Constants.RDP_USER,
-                    Constants.RDP_PWD,
+                    session.Config.RdpServer,
+                    session.Config.RdpDomain,
+                    session.Config.RdpUserName,
+                    session.Config.RdpPassword,
                     Constants.RDP_START,
                     cmdFile));
 
+            session.Runs.ToList().ForEach(z => z.Started = DateTime.Now);
+
             await ProcessEx.RunAsync(pi);
 
-            return run;
+            session.Runs.ToList().ForEach(z => z.Completed = DateTime.Now);
+
+            session.Completed = DateTime.Now;
+
+            await _uow.CommitAsync();
         }
     }
 }

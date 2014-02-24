@@ -1,0 +1,32 @@
+﻿@model TestLab.Domain.TestSource
+
+<div>
+    <h4>Source</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PathOrUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PathOrUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pulled)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pulled)
+            &nbsp;
+        </dd>
+    </dl>
+</div>

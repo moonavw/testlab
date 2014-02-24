@@ -51,6 +51,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="GridMvc">
+      <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -64,6 +67,9 @@
     </Reference>
     <Reference Include="Ninject.Web.Mvc">
       <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="RestfulRouting">
+      <HintPath>..\packages\RestfulRouting.1.5.0\lib\RestfulRouting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,7 +90,7 @@
     </Reference>
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -128,6 +134,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -135,17 +142,26 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestSessionsController.cs" />
+    <Compile Include="Controllers\TestCasesController.cs" />
+    <Compile Include="Controllers\TestPlansController.cs" />
+    <Compile Include="Controllers\TestRunsController.cs" />
+    <Compile Include="Controllers\TestProjectsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\Validation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Gridmvc.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -158,8 +174,15 @@
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.7.1.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -179,11 +202,40 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.0.min.map" />
+    <Content Include="Views\Shared\_GridPager.cshtml" />
+    <Content Include="Views\Shared\_Grid.cshtml" />
+    <Content Include="Views\TestProjects\New.cshtml" />
+    <Content Include="Views\TestProjects\Show.cshtml" />
+    <Content Include="Views\TestProjects\Edit.cshtml" />
+    <Content Include="Views\TestProjects\Index.cshtml" />
+    <Content Include="Views\TestProjects\_form.cshtml" />
+    <Content Include="Views\Shared\_ShowAudit.cshtml" />
+    <Content Include="Views\TestSessions\Index.cshtml" />
+    <Content Include="Views\TestPlans\Index.cshtml" />
+    <Content Include="Views\TestCases\Index.cshtml" />
+    <Content Include="Views\TestRuns\Index.cshtml" />
+    <Content Include="Views\TestProjects\_ShowBuild.cshtml" />
+    <Content Include="Views\TestProjects\_ShowSource.cshtml" />
+    <Content Include="Views\TestPlans\New.cshtml" />
+    <Content Include="Views\TestPlans\_form.cshtml" />
+    <Content Include="Views\TestPlans\Edit.cshtml" />
+    <Content Include="Views\TestPlans\Show.cshtml" />
+    <Content Include="Views\TestSessions\New.cshtml" />
+    <Content Include="Views\TestSessions\Show.cshtml" />
+    <Content Include="Views\TestSessions\_form.cshtml" />
+    <Content Include="Views\TestCases\_form.cshtml" />
+    <Content Include="Views\TestCases\Edit.cshtml" />
+    <Content Include="Views\TestCases\New.cshtml" />
+    <Content Include="Views\TestSessions\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
+      <Project>{9BDF56E3-6B17-438B-AFEE-11120410B9C8}</Project>
+      <Name>NPatterns</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Application\TestLab.Application.csproj">
       <Project>{29bc7c00-8b9b-42a0-94bc-6c0809f7f8d7}</Project>
       <Name>TestLab.Application</Name>

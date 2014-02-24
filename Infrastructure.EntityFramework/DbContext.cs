@@ -1,7 +1,6 @@
 ﻿using System.Data.Entity;
-using NPatterns.ObjectRelational.EF;
-using NPatterns.ObjectRelational;
-using TestLab.Infrastructure;
+using TestLab.Domain;
+using TestLab.Infrastructure.EntityFramework.Mapping;
 
 namespace TestLab.Infrastructure.EntityFramework
 {
@@ -19,13 +18,15 @@ namespace TestLab.Infrastructure.EntityFramework
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new Mapping.TestSourceMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestBuildMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestPlanMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestCaseMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestRunMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestReportMapping());
-            modelBuilder.Configurations.Add(new Mapping.TestResultMapping());
+            modelBuilder.ComplexType<TestBuild>();
+            modelBuilder.ComplexType<TestSource>();
+            modelBuilder.ComplexType<TestResult>();
+            modelBuilder.ComplexType<TestConfig>();
+            modelBuilder.Configurations.Add(new TestProjectMapping());
+            modelBuilder.Configurations.Add(new TestSessionMapping());
+            modelBuilder.Configurations.Add(new TestPlanMapping());
+            modelBuilder.Configurations.Add(new TestCaseMapping());
+            modelBuilder.Configurations.Add(new TestRunMapping());
         }
     }
 }

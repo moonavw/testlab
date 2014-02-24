@@ -1,0 +1,61 @@
+﻿@model TestLab.Domain.TestProject
+
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="form-horizontal">
+    <fieldset>
+        <legend>TestProject</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
+            @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Type, " has-error"))">
+            @Html.LabelFor(m => m.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Type, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Source</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Source.PathOrUrl, " has-error"))">
+            @Html.LabelFor(m => m.Source.PathOrUrl, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Source.PathOrUrl, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Source.PathOrUrl, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Source.Type, " has-error"))">
+            @Html.LabelFor(m => m.Source.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(m => m.Source.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Source.Type, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Build</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Build.Type, " has-error"))">
+            @Html.LabelFor(m => m.Build.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(m => m.Build.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Build.Type, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="reset" value="Reset" class="btn btn-default"/>
+        </div>
+    </div>
+</div>

@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TestLab.Domain;
-using TestLab.Infrastructure;
 
 namespace TestLab.Infrastructure.Cucumber
 {
@@ -13,7 +13,8 @@ namespace TestLab.Infrastructure.Cucumber
             "<td class=\"failed\" colspan=\"\\d+\"><pre>(.+)</pre></td>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        private static readonly Regex RxSummary = new Regex("<p id=\"totals\">(.+)<br>(.+)</p>",
+        private static readonly Regex RxSummary = new Regex(
+            "<p id=\"totals\">(.+)<br>(.+)</p>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly IUnitOfWork _uow;
@@ -23,37 +24,40 @@ namespace TestLab.Infrastructure.Cucumber
             _uow = uow;
         }
 
-        public TestReport Report(TestRun run)
+        public bool CanReport(TestSession session)
+        {
+            return session.Plan.Project.Type == TestProjectType.Cucumber;
+        }
+
+        public async Task Report(TestSession session)
         {
             //looking for result files, publish them to db
-            var dir = new DirectoryInfo(Path.Combine(Constants.RESULT_ROOT, run.Name));
+            var dir = new DirectoryInfo(Path.Combine(Constants.RESULT_ROOT, session.Name));
             var files = dir.GetFiles("*.html", SearchOption.AllDirectories);
 
             //TODO: read file async
             var q = (from f in files
+                     let caseName = Path.GetFileNameWithoutExtension(f.Name)
                      let text = f.OpenText().ReadToEnd()
                      let summaryMatch = RxSummary.Match(text)
                      let failMatch = RxFailed.Match(text)
-                     select new TestResult
+                     from r in session.Runs
+                     where r.Case.Name.Equals(caseName, StringComparison.OrdinalIgnoreCase)
+                     select new
                      {
-                         Created = f.CreationTime,
-                         LogFile = f.FullName,
-                         Summary = summaryMatch.Groups[1].Value + "\n" + summaryMatch.Groups[2].Value,
-                         ErrorMessage = failMatch.Success ? "\n" + failMatch.Groups[1].Value : "",
-                         Type = failMatch.Success ? ResultType.Fail : ResultType.Pass
+                         run = r,
+                         result = new TestResult
+                         {
+                             Reported = f.CreationTime,
+                             File = f.FullName,
+                             Summary = summaryMatch.Groups[1].Value + "\n" + summaryMatch.Groups[2].Value + (failMatch.Success ? "\n" + failMatch.Groups[1].Value : ""),
+                             Type = failMatch.Success ? TestResultType.Fail : TestResultType.Pass
+                         }
                      }).ToList();
 
-            var report = new TestReport
-            {
-                Created = DateTime.Now
-            };
-            q.ForEach(z => report.TestResults.Add(z));
+            q.ForEach(z => z.run.Result = z.result);
 
-            run.TestReport = report;
-
-            _uow.Commit();
-
-            return report;
+            await _uow.CommitAsync();
         }
     }
 }

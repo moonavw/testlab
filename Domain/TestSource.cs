@@ -1,32 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSource : Entity
+    public class TestSource : ValueObject
     {
-        public TestSource()
-        {
-            TestBuilds = new HashSet<TestBuild>();
-            TestCases = new HashSet<TestCase>();
-        }
+        [Required]
+        public string PathOrUrl { get; set; }
 
-        public int Id { get; set; }
+        public TestSourceType Type { get; set; }
 
-        public string Name { get; set; }
-
-        public string SourcePath { get; set; }
-
-        public SourceType Type { get; set; }
-
-        public virtual ICollection<TestBuild> TestBuilds { get; set; }
-
-        public virtual ICollection<TestCase> TestCases { get; set; }
-
-        public string LocalPath
-        {
-            get { return string.IsNullOrEmpty(Name) ? null : Path.Combine(Constants.SRC_ROOT, Name); }
-        }
+        public DateTime? Pulled { get; set; }
     }
 }

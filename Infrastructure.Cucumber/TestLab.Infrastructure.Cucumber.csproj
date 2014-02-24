@@ -41,9 +41,6 @@
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns">
-      <HintPath>..\packages\NPatterns.1.0.4826\lib\net45\NPatterns.dll</HintPath>
-    </Reference>
     <Reference Include="RunProcessAsTask">
       <HintPath>..\packages\RunProcessAsTask.1.0.0\lib\RunProcessAsTask.dll</HintPath>
     </Reference>
@@ -57,12 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CucumberModule.cs" />
-    <Compile Include="CucumberTestBuilder.cs" />
+    <Compile Include="CucumberTestPublisher.cs" />
     <Compile Include="CucumberTestReporter.cs" />
     <Compile Include="CucumberTestRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
+      <Project>{9bdf56e3-6b17-438b-afee-11120410b9c8}</Project>
+      <Name>NPatterns</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
       <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
       <Name>TestLab.Domain</Name>

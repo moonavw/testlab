@@ -5,23 +5,23 @@ namespace TestLab.Domain
 {
     public class TestRun : Entity
     {
-        public int Id { get; set; }
-
-        public int TestBuildId { get; set; }
-
-        public int TestPlanId { get; set; }
-
-        public DateTime Created { get; set; }
-
-        public virtual TestPlan TestPlan { get; set; }
-
-        public virtual TestBuild TestBuild { get; set; }
-
-        public virtual TestReport TestReport { get; set; }
-
-        public string Name
+        public TestRun()
         {
-            get { return TestPlan == null ? null : string.Format("run_{0}_{1:yyyyMMdd_hhmm}", TestPlan.Name, Created); }
+            Result = new TestResult();
         }
+
+        public int TestCaseId { get; set; }
+
+        public int TestSessionId { get; set; }
+
+        public DateTime? Started { get; set; }
+
+        public DateTime? Completed { get; set; }
+
+        public TestResult Result { get; set; }
+
+        public virtual TestCase Case { get; set; }
+
+        public virtual TestSession Session { get; set; }
     }
 }

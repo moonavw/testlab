@@ -24,6 +24,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Application", "Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Infrastructure.EntityFramework", "Infrastructure.EntityFramework\TestLab.Infrastructure.EntityFramework.csproj", "{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_npatterns", "_npatterns", "{226E5C06-0B55-412D-9442-7D6425B93D05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPatterns", "..\NPatterns\src\NPatterns\NPatterns.csproj", "{9BDF56E3-6B17-438B-AFEE-11120410B9C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NPatterns.ObjectRelational.EntityFramework", "..\NPatterns\src\NPatterns.ObjectRelational.EntityFramework\NPatterns.ObjectRelational.EntityFramework.csproj", "{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Infrastructure.Ruby", "Infrastructure.Ruby\TestLab.Infrastructure.Ruby.csproj", "{10A34163-C256-4CD2-8464-120D6EC55E38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,8 +112,42 @@ Global
 		{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74}.Release|x86.ActiveCfg = Release|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{10A34163-C256-4CD2-8464-120D6EC55E38}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9BDF56E3-6B17-438B-AFEE-11120410B9C8} = {226E5C06-0B55-412D-9442-7D6425B93D05}
+		{935E7A2C-AF4A-433A-A8D4-8410F88C3D74} = {226E5C06-0B55-412D-9442-7D6425B93D05}
 	EndGlobalSection
 EndGlobal

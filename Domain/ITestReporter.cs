@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using TestLab.Infrastructure;
+﻿using System.Threading.Tasks;
 
 namespace TestLab.Domain
 {
     public interface ITestReporter
     {
-        TestReport Report(TestRun run);
+        bool CanReport(TestSession session);
+
+        Task Report(TestSession session);
     }
 }

@@ -1,25 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
 using TestLab.Domain;
-using TestLab.Infrastructure;
 
 namespace TestLab.Infrastructure.EntityFramework.Mapping
 {
-    class TestRunMapping : EntityTypeConfiguration<TestRun>
+    internal class TestRunMapping : EntityTypeConfiguration<TestRun>
     {
         public TestRunMapping()
         {
-            ToTable("TestRuns");
+            HasKey(z => new { z.TestCaseId, z.TestSessionId });
+            Property(z => z.TestCaseId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            Property(z => z.TestSessionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-            HasKey(z => z.Id);
-
-            HasRequired(z => z.TestBuild)
+            HasRequired(z => z.Case)
                 .WithMany()
-                .HasForeignKey(z => z.TestBuildId);
+                .HasForeignKey(z => z.TestCaseId)
+                .WillCascadeOnDelete(false);
 
-            HasRequired(z => z.TestPlan)
-                .WithMany(f => f.TestRuns)
-                .HasForeignKey(z => z.TestPlanId);
+            HasRequired(z => z.Session)
+                .WithMany(f => f.Runs)
+                .HasForeignKey(z => z.TestSessionId);
         }
     }
 }

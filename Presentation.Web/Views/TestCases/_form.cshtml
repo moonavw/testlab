@@ -1,0 +1,41 @@
+﻿@model TestLab.Domain.TestCase
+
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="form-horizontal">
+    <fieldset>
+        <legend>TestCase</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
+            @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
+            </div>
+        </div>
+        
+        <div class="form-group@(Html.ValidationErrorFor(m => m.FullName, " has-error"))">
+            @Html.LabelFor(m => m.FullName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.FullName, null, new { @class = "help-block" })
+            </div>
+        </div>
+        
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Published, " has-error"))">
+            @Html.LabelFor(m => m.Published, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Published, new[] { new SelectListItem { Text = "No", Value = "", Selected = !Model.Published.HasValue }, new SelectListItem { Text = "Yes", Value = DateTime.Now.ToString(), Selected = Model.Published.HasValue } }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Published, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="reset" value="Reset" class="btn btn-default"/>
+        </div>
+    </div>
+</div>

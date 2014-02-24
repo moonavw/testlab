@@ -3,11 +3,11 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Git
 {
-    public class GitModule:NinjectModule
+    public class GitModule : NinjectModule
     {
         public override void Load()
         {
-            Bind<ITestSourcePuller>().To<GitTestSourcePuller>();
+            Bind<ITestPuller>().To<GitTestPuller>();
         }
     }
 }

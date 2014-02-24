@@ -1,0 +1,59 @@
+﻿@model TestLab.Domain.TestBuild
+
+<div>
+    <h4>Build</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.LocalPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocalPath)
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Built)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Built)
+            &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.PublishPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublishPath)
+            &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Published)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Published)
+            &nbsp;
+        </dd>
+    </dl>
+</div>

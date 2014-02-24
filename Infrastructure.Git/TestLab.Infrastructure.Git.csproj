@@ -48,13 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GitModule.cs" />
-    <Compile Include="GitTestSourcePuller.cs" />
+    <Compile Include="GitTestPuller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
+      <Project>{9BDF56E3-6B17-438B-AFEE-11120410B9C8}</Project>
+      <Name>NPatterns</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
       <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
       <Name>TestLab.Domain</Name>

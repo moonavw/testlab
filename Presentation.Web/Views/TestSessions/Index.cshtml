@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TestLab.Domain.TestSession>
+
+@{
+    ViewBag.Title = "TestSessions";
+}
+
+<h2>TestSessions</h2>
+
+<p>
+    @Html.ActionLink("Create New", "New", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to TestPlan", "Show", "TestPlans", new { id = ViewContext.RouteData.Values["testplanId"] }, new { @class = "btn btn-default" })
+</p>
+
+@Html.Grid(Model).Columns(c =>
+{
+    c.Add()
+     .Encoded(false)
+     .Sanitized(false)
+     .SetWidth(30)
+     .RenderValueAs(d =>
+                        @<b>
+                             @Html.ActionLink("Open", "Show", new { id = d.Id }, new { @class = "btn btn-default btn-sm" })
+                         </b>);
+
+    c.Add(o => o.Name);
+
+    c.Add(o => o.Type);
+    
+    c.Add(o => o.Summary);
+
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add(o => o.Runs.Count);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
+
+@section scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+}

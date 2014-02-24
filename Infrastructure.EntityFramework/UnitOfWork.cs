@@ -1,22 +1,15 @@
-﻿using NPatterns.ObjectRelational;
-using NPatterns.ObjectRelational.EF;
-
-namespace TestLab.Infrastructure.EntityFramework
+﻿namespace TestLab.Infrastructure.EntityFramework
 {
-    public class UnitOfWork : NPatterns.ObjectRelational.EF.UnitOfWork, TestLab.Infrastructure.IUnitOfWork
+    public class UnitOfWork : NPatterns.ObjectRelational.EntityFramework.UnitOfWork, IUnitOfWork
     {
         public UnitOfWork()
             : base(new TestLabDbContext())
         {
         }
 
-        #region IUnitOfWork Members
-
-        IRepository<T> Infrastructure.IUnitOfWork.Repository<T>()
+        public IRepository<TEntity> Repository<TEntity>() where TEntity : Entity
         {
-            return new Repository<T>(Context);
+            return new Repository<TEntity>(Context);
         }
-
-        #endregion
     }
 }

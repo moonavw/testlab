@@ -1,13 +1,19 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+
+[assembly: WebActivator.PostApplicationStartMethod(typeof(TestLab.Presentation.Web.FilterConfig), "Start")]
 
 namespace TestLab.Presentation.Web
 {
     public class FilterConfig
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        private static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+        }
+
+        public static void Start()
+        {
+            RegisterGlobalFilters(GlobalFilters.Filters);
         }
     }
 }

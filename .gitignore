@@ -1,8 +1,10 @@
 bin
 obj
 packages
+*.exe
 !.nuget/*.exe
 *.suo
 *.user
 ._*
 Thumbs.db
+App_Data

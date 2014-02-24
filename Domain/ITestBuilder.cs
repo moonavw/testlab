@@ -1,9 +1,11 @@
-﻿using TestLab.Infrastructure;
+﻿using System.Threading.Tasks;
 
 namespace TestLab.Domain
 {
     public interface ITestBuilder
     {
-        TestBuild Build(TestSource src);
+        bool CanBuild(TestProject project);
+
+        Task Build(TestProject project);
     }
 }

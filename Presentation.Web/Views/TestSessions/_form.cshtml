@@ -1,0 +1,67 @@
+﻿@model TestLab.Domain.TestSession
+
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="form-horizontal">
+    <fieldset>
+        <legend>TestSession</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
+            @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>TestCases</legend>
+        <div class="form-group">
+            @Html.Label("TestCases", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ListBox("TestCases", new MultiSelectList(Model.Plan.Cases, "Id", "Name", Model.Runs.Select(z => z.Case.Id)), new { @class = "form-control" })
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>
+        <legend>Config</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpServer, " has-error"))">
+            @Html.LabelFor(m => m.Config.RdpServer, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Config.RdpServer, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.RdpServer, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpDomain, " has-error"))">
+            @Html.LabelFor(m => m.Config.RdpDomain, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Config.RdpDomain, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.RdpDomain, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpUserName, " has-error"))">
+            @Html.LabelFor(m => m.Config.RdpUserName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Config.RdpUserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.RdpUserName, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpPassword, " has-error"))">
+            @Html.LabelFor(m => m.Config.RdpPassword, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Config.RdpPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.RdpPassword, null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="reset" value="Reset" class="btn btn-default"/>
+        </div>
+    </div>
+</div>
