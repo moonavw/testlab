@@ -9,13 +9,13 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Summary)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Summary)
         </dd>
-        
+                
         <dt>
             @Html.DisplayNameFor(model => model.Started)
         </dt>
@@ -33,25 +33,10 @@
             @Html.DisplayFor(model => model.Completed)
             &nbsp;
         </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Summary)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Summary)
-        </dd>
     </dl>
 </div>
-
+@Html.Partial("../TestProjects/_ShowBin", Model.Bin)
+@Html.Partial("_ShowConfig", Model.Config)
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
@@ -60,4 +45,4 @@
 {
     <input type="submit" value="Start Run" class="btn btn-success" />
 }
-@Html.Partial("../TestRuns/Index", Model.Runs)
+@Html.Partial("../TestResults/Index", Model.Results)

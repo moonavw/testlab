@@ -1,10 +1,10 @@
-﻿@model IEnumerable<TestLab.Domain.TestRun>
+﻿@model IEnumerable<TestLab.Domain.TestResult>
 
 @{
-    ViewBag.Title = "TestRuns";
+    ViewBag.Title = "TestResults";
 }
 
-<h2>TestRuns</h2>
+<h2>TestResults</h2>
 
 <p>
     @Html.ActionLink("Back to TestSession", "Show", "TestSessions", new { id = ViewContext.RouteData.Values["testsessionId"] }, new { @class = "btn btn-default" })
@@ -20,9 +20,9 @@
     c.Add(o => o.Completed)
      .SetWidth(110);
 
-    c.Add(o => o.Result.Type);
+    c.Add(o => o.PassOrFail);
 
-    c.Add(o => o.Result.Summary);
+    c.Add(o => o.Summary);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

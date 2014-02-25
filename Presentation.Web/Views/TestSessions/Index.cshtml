@@ -21,10 +21,6 @@
                         @<b>
                              @Html.ActionLink("Open", "Show", new { id = d.Id }, new { @class = "btn btn-default btn-sm" })
                          </b>);
-
-    c.Add(o => o.Name);
-
-    c.Add(o => o.Type);
     
     c.Add(o => o.Summary);
 
@@ -34,7 +30,7 @@
     c.Add(o => o.Completed)
      .SetWidth(110);
 
-    c.Add(o => o.Runs.Count);
+    c.Add(o => o.Results.Count);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

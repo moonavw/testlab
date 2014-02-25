@@ -1,0 +1,33 @@
+﻿@model TestLab.Domain.TestBin
+
+<div>
+    <h4>Bin</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Built)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Built)
+            &nbsp;
+        </dd>
+    </dl>
+</div>

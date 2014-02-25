@@ -9,30 +9,26 @@ namespace TestLab.Infrastructure.Git
 {
     public class GitTestPuller : ITestPuller
     {
-        private readonly IUnitOfWork _uow;
+        #region Implementation of ITestPuller
 
-        public GitTestPuller(IUnitOfWork uow)
+        public TestRepoType Type
         {
-            _uow = uow;
+            get { return TestRepoType.Git; }
         }
 
-        public bool CanPull(TestProject project)
+        public Task Pull(TestSrc src, TestRepo repo)
         {
-            return project.Source.Type == TestSourceType.Git;
-        }
+            string pathOrUrl = repo.PathOrUrl;
+            string workDir = src.Location;
 
-        public async Task Pull(TestProject project)
-        {
             //git clone or git pull
-            var pi = !Directory.Exists(project.LocalPath)
-                ? new ProcessStartInfo("git", string.Format("clone {0} {1}", project.Source.PathOrUrl, project.LocalPath))
-                : new ProcessStartInfo("git", "pull") { WorkingDirectory = project.LocalPath };
+            var pi = !Directory.Exists(workDir)
+                ? new ProcessStartInfo("git", string.Format("clone {0} {1}", pathOrUrl, workDir))
+                : new ProcessStartInfo("git", "pull") { WorkingDirectory = workDir };
 
-            await ProcessEx.RunAsync(pi);
-
-            project.Source.Pulled = DateTime.Now;
-
-            await _uow.CommitAsync();
+            return ProcessEx.RunAsync(pi);
         }
+
+        #endregion
     }
 }

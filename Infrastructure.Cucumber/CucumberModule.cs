@@ -9,7 +9,6 @@ namespace TestLab.Infrastructure.Cucumber
         {
             Bind<ITestPublisher>().To<CucumberTestPublisher>();
             Bind<ITestRunner>().To<CucumberTestRunner>();
-            Bind<ITestReporter>().To<CucumberTestReporter>();
         }
     }
 }

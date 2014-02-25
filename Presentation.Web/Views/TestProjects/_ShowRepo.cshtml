@@ -1,0 +1,23 @@
+﻿@model TestLab.Domain.TestRepo
+
+<div>
+    <h4>Repository</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PathOrUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PathOrUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+    </dl>
+</div>

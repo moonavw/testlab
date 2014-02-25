@@ -6,27 +6,21 @@ namespace TestLab.Infrastructure.Ruby
 {
     public class RubyTestBuilder : ITestBuilder
     {
-        private readonly IUnitOfWork _uow;
+        #region Implementation of ITestBuilder
 
-        public RubyTestBuilder(IUnitOfWork uow)
+        public TestSrcType Type
         {
-            _uow = uow;
+            get { return TestSrcType.Ruby; }
         }
 
-        public bool CanBuild(TestProject project)
+        public async Task Build(TestSrc src, TestBin bin)
         {
-            return project.Build.Type == TestBuildType.Ruby;
+            await Task.Run(() =>
+            {
+                bin.Location = src.Location;
+            });
         }
 
-        public async Task Build(TestProject project)
-        {
-            //TODO: rake or just copy
-
-            project.Build.LocalPath = project.LocalPath;
-            project.Build.Built = DateTime.Now;
-            project.Build.Name = string.Format("build_{0}_{1:yyyyMMdd_hhmm}", project.Name, project.Build.Built);
-
-            await _uow.CommitAsync();
-        }
+        #endregion
     }
 }

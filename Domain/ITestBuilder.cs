@@ -4,8 +4,17 @@ namespace TestLab.Domain
 {
     public interface ITestBuilder
     {
-        bool CanBuild(TestProject project);
+        TestSrcType Type { get; }
 
-        Task Build(TestProject project);
+        Task Build(TestSrc src, TestBin bin);
     }
+
+    //    public async Task Build(TestProject project)
+    //    {
+    //        string buildScript = project.BuildScript;
+    //        string workDir = project.WorkDir;
+    //        var pi = new ProcessStartInfo(buildScript) { WorkingDirectory = workDir };
+
+    //        await ProcessEx.RunAsync(pi);
+    //    }
 }

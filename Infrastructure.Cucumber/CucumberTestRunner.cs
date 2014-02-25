@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Ionic.Zip;
 using RunProcessAsTask;
 using TestLab.Domain;
 
@@ -11,69 +10,55 @@ namespace TestLab.Infrastructure.Cucumber
 {
     public class CucumberTestRunner : ITestRunner
     {
-        private readonly IUnitOfWork _uow;
+        private static readonly Regex RxFailed = new Regex(
+            "<td class=\"failed\" colspan=\"\\d+\"><pre>(.+)</pre></td>",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        public CucumberTestRunner(IUnitOfWork uow)
+        private static readonly Regex RxSummary = new Regex(
+            "<p id=\"totals\">(.+)<br>(.+)</p>",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        #region Implementation of ITestRunner
+
+        public TestBinType Type
         {
-            _uow = uow;
+            get { return TestBinType.Cucumber; }
         }
 
-        public bool CanRun(TestSession session)
+        public async Task<TestResult> Run(TestCase test, TestBin bin, TestConfig config)
         {
-            return session.Plan.Project.Type == TestProjectType.Cucumber;
-        }
+            string workDir = Path.GetDirectoryName(Path.Combine(bin.Location, test.FullName));
+            string outputFile = Path.ChangeExtension(Path.Combine(bin.Location, "testresults", test.Name), ".html");
+            string startProgram = string.Format(@"cucumber --tag @Name_{0} -f html --out {1}", test.Name, outputFile);
 
-        public async Task Run(TestSession session)
-        {
-            session.Started = DateTime.Now;
+            var result = new TestResult { Started = DateTime.Now };
 
-            await _uow.CommitAsync();
 
-            //copy build to target
-            //TODO: unzip files async
-            using (var zip = ZipFile.Read(session.Plan.Project.Build.PublishPath))
-            {
-                zip.ExtractAll(Constants.RUN_ROOT);
-            }
-
-            //generate run.cmd by testplan
-            string cmdFile = Path.ChangeExtension(session.Name, ".cmd");
-            using (var sw = File.CreateText(Path.Combine(Constants.RUN_ROOT, cmdFile)))
-            {
-                sw.WriteLine(@"cd {0}", session.Plan.Project.Build.Name);
-                foreach (var t in session.Runs)
-                {
-                    sw.WriteLine("pushd {0}", t.Case.DirectoryName);
-                    sw.WriteLine(@"cucumber --tag @Name_{0} -f html --out {1}\{2}\{0}.html", t.Case.Name,
-                        Constants.RESULT_ROOT, session.Name);
-                    sw.WriteLine("popd");
-                }
-            }
-
-            //rdp
-            string startFile = Path.Combine(Constants.RUN_ROOT, Path.GetFileName(Constants.RDP_START));
-            if (!File.Exists(startFile))
-            {
-                File.WriteAllText(startFile, "cd/d %~dp0 \r\n %*");
-            }
-            var pi = new ProcessStartInfo(Constants.RDP_TOOL,
-                string.Format(@"{0} {1} {2} {3} {4} {5}",
-                    session.Config.RdpServer,
-                    session.Config.RdpDomain,
-                    session.Config.RdpUserName,
-                    session.Config.RdpPassword,
-                    Constants.RDP_START,
-                    cmdFile));
-
-            session.Runs.ToList().ForEach(z => z.Started = DateTime.Now);
+            var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
+                                          string.Format(@"{0} {1} {2} {3} {4} {5}",
+                                                        config.RdpServer,
+                                                        config.RdpDomain,
+                                                        config.RdpUserName,
+                                                        config.RdpPassword,
+                                                        workDir,
+                                                        startProgram));
 
             await ProcessEx.RunAsync(pi);
 
-            session.Runs.ToList().ForEach(z => z.Completed = DateTime.Now);
+            //parse result from output file
+            var file = new FileInfo(outputFile);
+            string text = await file.OpenText().ReadToEndAsync();
 
-            session.Completed = DateTime.Now;
+            var summaryMatch = RxSummary.Match(text);
+            var failMatch = RxFailed.Match(text);
+            result.File = file.FullName;
+            result.Summary = summaryMatch.Groups[1].Value + "\n" + summaryMatch.Groups[2].Value + (failMatch.Success ? "\n" + failMatch.Groups[1].Value : "");
+            result.PassOrFail = !failMatch.Success;
+            result.Completed = DateTime.Now;
 
-            await _uow.CommitAsync();
+            return result;
         }
+
+        #endregion
     }
 }

@@ -43,25 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITestPublisher.cs" />
-    <Compile Include="ITestReporter.cs" />
-    <Compile Include="TestBuildType.cs" />
-    <Compile Include="TestConfig.cs" />
-    <Compile Include="TestProject.cs" />
-    <Compile Include="TestSession.cs" />
-    <Compile Include="TestSourceType.cs" />
-    <Compile Include="TestBuild.cs" />
-    <Compile Include="TestCase.cs" />
-    <Compile Include="TestProjectType.cs" />
-    <Compile Include="TestPlan.cs" />
-    <Compile Include="TestResult.cs" />
-    <Compile Include="TestRun.cs" />
-    <Compile Include="TestSource.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestResultType.cs" />
     <Compile Include="ITestBuilder.cs" />
+    <Compile Include="ITestDeployer.cs" />
     <Compile Include="ITestPuller.cs" />
     <Compile Include="ITestRunner.cs" />
+    <Compile Include="ITestService.cs" />
+    <Compile Include="TestBin.cs" />
+    <Compile Include="TestSrcType.cs" />
+    <Compile Include="TestConfig.cs" />
+    <Compile Include="TestProject.cs" />
+    <Compile Include="TestRepo.cs" />
+    <Compile Include="TestSession.cs" />
+    <Compile Include="TestCase.cs" />
+    <Compile Include="TestSrc.cs" />
+    <Compile Include="TestRepoType.cs" />
+    <Compile Include="TestBinType.cs" />
+    <Compile Include="TestPlan.cs" />
+    <Compile Include="TestResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ITestPublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
@@ -73,7 +73,6 @@
       <Name>TestLab.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

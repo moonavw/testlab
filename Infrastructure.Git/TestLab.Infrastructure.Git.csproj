@@ -60,7 +60,7 @@
       <Name>NPatterns</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
-      <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
+      <Project>{1B46D9A0-AFF4-4EBA-8BAD-811E0453D45D}</Project>
       <Name>TestLab.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\TestLab.Infrastructure.csproj">

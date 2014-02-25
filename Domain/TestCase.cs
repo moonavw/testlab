@@ -25,15 +25,5 @@ namespace TestLab.Domain
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
-
-        public string FileName
-        {
-            get { return Path.GetFileName(FullName); }
-        }
-
-        public string DirectoryName
-        {
-            get { return Path.GetDirectoryName(FullName); }
-        }
     }
 }

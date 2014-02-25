@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using TestLab.Infrastructure;
@@ -11,13 +12,11 @@ namespace TestLab.Domain
         public TestSession()
         {
             Config = new TestConfig();
-            Runs = new HashSet<TestRun>();
+            Bin = new TestBin();
+            Results = new HashSet<TestResult>();
         }
 
         public int Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
 
         public DateTime? Started { get; set; }
 
@@ -25,37 +24,27 @@ namespace TestLab.Domain
 
         public TestConfig Config { get; set; }
 
+        public TestBin Bin { get; set; }
+
         public int TestPlanId { get; set; }
 
         public virtual TestPlan Plan { get; set; }
 
-        public virtual ICollection<TestRun> Runs { get; set; }
+        public virtual ICollection<TestResult> Results { get; set; }
 
         public int PassCount
         {
-            get { return Runs.Count(z => z.Result.Type == TestResultType.Pass); }
+            get { return Results.Count(z => z.PassOrFail == true); }
         }
 
         public int FailCount
         {
-            get { return Runs.Count(z => z.Result.Type == TestResultType.Fail); }
+            get { return Results.Count(z => z.PassOrFail == false); }
         }
 
         public int NoResultCount
         {
-            get { return Runs.Count(z => z.Result.Type == TestResultType.None); }
-        }
-
-        public TestResultType Type
-        {
-            get
-            {
-                if (NoResultCount > 0)
-                    return TestResultType.None;
-                if (FailCount > 0)
-                    return TestResultType.Fail;
-                return TestResultType.Pass;
-            }
+            get { return Results.Count(z => z.PassOrFail == null); }
         }
 
         public string Summary

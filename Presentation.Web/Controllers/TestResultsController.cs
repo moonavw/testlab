@@ -7,9 +7,9 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Presentation.Web.Controllers
 {
-    public class TestRunsController : Controller<TestRun>
+    public class TestResultsController : Controller<TestResult>
     {
-        public TestRunsController(IUnitOfWork uow)
+        public TestResultsController(IUnitOfWork uow)
             : base(uow)
         {
         }

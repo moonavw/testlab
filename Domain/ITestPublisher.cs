@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TestLab.Domain
 {
     public interface ITestPublisher
     {
-        bool CanPublish(TestProject project);
+        TestBinType Type { get; }
 
-        Task Publish(TestProject project);
+        Task<IEnumerable<TestCase>> Publish(TestBin bin);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using TestLab.Domain;
 
-namespace TestLab.Application
+namespace TestLab.Domain
 {
     public interface ITestService
     {

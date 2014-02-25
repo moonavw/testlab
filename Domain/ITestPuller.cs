@@ -4,8 +4,8 @@ namespace TestLab.Domain
 {
     public interface ITestPuller
     {
-        bool CanPull(TestProject project);
+        TestRepoType Type { get; }
 
-        Task Pull(TestProject project);
+        Task Pull(TestSrc src, TestRepo repo);
     }
 }

@@ -11,8 +11,6 @@ namespace TestLab.Domain
     {
         public TestProject()
         {
-            Source = new TestSource();
-            Build = new TestBuild();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
         }
@@ -22,11 +20,11 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public TestProjectType Type { get; set; }
+        public TestRepo Repo { get; set; }
 
-        public TestSource Source { get; set; }
+        public TestSrc Src { get; set; }
 
-        public TestBuild Build { get; set; }
+        public TestBin Bin { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
 
@@ -40,10 +38,5 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
-
-        public string LocalPath
-        {
-            get { return string.IsNullOrEmpty(Name) ? null : Path.Combine(Constants.SRC_ROOT, Name); }
-        }
     }
 }

@@ -57,9 +57,9 @@ namespace TestLab.Presentation.Web
 #if !DEBUG
                             sessions.Except("edit", "update");
 #endif
-                            sessions.Resources<TestRunsController>(runs =>
+                            sessions.Resources<TestResultsController>(runs =>
                             {
-                                runs.As("runs");
+                                runs.As("results");
                                 runs.Only("index");
                             });
                         });

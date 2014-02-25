@@ -7,25 +7,9 @@
 <div class="form-horizontal">
     <fieldset>
         <legend>TestSession</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
-            @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
-            </div>
-        </div>
+
     </fieldset>
-    
-    <fieldset>
-        <legend>TestCases</legend>
-        <div class="form-group">
-            @Html.Label("TestCases", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.ListBox("TestCases", new MultiSelectList(Model.Plan.Cases, "Id", "Name", Model.Runs.Select(z => z.Case.Id)), new { @class = "form-control" })
-            </div>
-        </div>
-    </fieldset>
-    
+
     <fieldset>
         <legend>Config</legend>
         <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpServer, " has-error"))">
