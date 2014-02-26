@@ -8,7 +8,6 @@
 
 <p>
     @Html.ActionLink("Create New", "New", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to TestProject", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, new { @class = "btn btn-default" })
 </p>
 
 @Html.Grid(Model).Columns(c =>
@@ -18,9 +17,10 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        @<b>
-                             @Html.ActionLink("Open", "Show", new { id = d.Id }, new { @class = "btn btn-default btn-sm" })
-                         </b>);
+                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default btn-sm"})
+        );
+    
+    c.Add(o => o.Id);
 
     c.Add(o => o.Name);
 
@@ -32,4 +32,11 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/gridmvc")
+}
+
+@section breadcrumb{
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
+        <li class="active">Plans</li>
+    </ol>
 }

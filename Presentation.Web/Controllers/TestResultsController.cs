@@ -14,19 +14,9 @@ namespace TestLab.Presentation.Web.Controllers
         {
         }
 
-        public async Task<ActionResult> Index(int testprojectId, int testsessionId)
+        public override async Task<ActionResult> Index(TestResult searchModel)
         {
-            return View(await Repo.Query().Where(z => z.TestSessionId == testsessionId).ToListAsync());
+            return View(await Repo.Query().Where(z => z.TestSessionId == searchModel.TestSessionId).ToListAsync());
         }
-
-        #region Overrides of Controller<TestCase>
-
-        [NonAction]
-        public override Task<ActionResult> Index()
-        {
-            return base.Index();
-        }
-
-        #endregion
     }
 }

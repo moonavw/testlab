@@ -58,7 +58,7 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 
-    @Html.ActionLink("TestBuilds", "Index", "TestBuilds", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("TestPlans", "Index", "TestPlans", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("TestCases", "Index", "TestCases", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
 </p>
+@Html.Partial("../TestBuilds/Index", Model.Builds)

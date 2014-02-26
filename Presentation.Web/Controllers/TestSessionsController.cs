@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -20,33 +18,16 @@ namespace TestLab.Presentation.Web.Controllers
             _service = service;
         }
 
-        //public async Task<ActionResult> Run(int id)
-        //{
-        //    var entity = await Repo.FindAsync(id);
-        //    await _service.Run(entity);
-        //    return RedirectToAction("Show", new { id });
-        //}
-
-        public async Task<ActionResult> Index(int testplanId)
+        public async Task<ActionResult> Start(int id)
         {
-            return View(await Repo.Query().Where(z => z.TestPlanId == testplanId).ToListAsync());
+            var entity = await Repo.FindAsync(id);
+            await _service.Run(entity);
+            return RedirectToAction("Show", new {id});
         }
 
-        #region Overrides of Controller<TestCase>
-
-        [NonAction]
-        public override Task<ActionResult> Index()
+        public override async Task<ActionResult> Index(TestSession searchModel)
         {
-            return base.Index();
+            return View(await Repo.Query().Where(z => z.TestPlanId == searchModel.TestPlanId).ToListAsync());
         }
-
-        public override async Task<ActionResult> Create(TestSession model)
-        {
-            var result = await base.Create(model);
-            await _service.Run(model);
-            return result;
-        }
-
-        #endregion
     }
 }

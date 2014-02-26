@@ -6,12 +6,10 @@
 
 <h2>TestCases</h2>
 
-<p>
-    @Html.ActionLink("Back to TestProject", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, new { @class = "btn btn-default" })
-</p>
-
 @Html.Grid(Model).Columns(c =>
 {
+    c.Add(o => o.Id);
+    
     c.Add(o => o.Name);
 
     c.Add(o => o.FullName);
@@ -28,4 +26,11 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/gridmvc")
+}
+
+@section breadcrumb{
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
+        <li class="active">Cases</li>
+    </ol>
 }

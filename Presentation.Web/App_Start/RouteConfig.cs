@@ -38,8 +38,7 @@ namespace TestLab.Presentation.Web
                 map.DebugRoute("routedebug");
 #endif
 
-                //map.Root<HomeController>(x => x.Index());
-                map.Root<TestProjectsController>(x => x.Index());
+                map.Root<HomeController>(x => x.Index());
 
                 map.Resources<TestProjectsController>(projects =>
                 {
@@ -49,6 +48,8 @@ namespace TestLab.Presentation.Web
                     {
                         builds.As("builds");
                         builds.Only("index", "create", "destroy");
+
+                        builds.Member(x => x.Post("start"));
                     });
 
                     projects.Resources<TestPlansController>(plans =>
@@ -60,6 +61,7 @@ namespace TestLab.Presentation.Web
 #if !DEBUG
                             sessions.Except("edit", "update");
 #endif
+                            sessions.Member(x => x.Post("start"));
                             sessions.Resources<TestResultsController>(runs =>
                             {
                                 runs.As("results");

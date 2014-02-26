@@ -8,7 +8,6 @@
 
 <p>
     @Html.ActionLink("Create New", "New", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to TestPlan", "Show", "TestPlans", new { id = ViewContext.RouteData.Values["testplanId"] }, new { @class = "btn btn-default" })
 </p>
 
 @Html.Grid(Model).Columns(c =>
@@ -18,14 +17,32 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        @<b>
-                             @Html.ActionLink("Open", "Show", new { id = d.Id }, new { @class = "btn btn-default btn-sm" })
-                         </b>);
-    
+                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default btn-sm"})
+        );
+
+    c.Add(o => o.Id);
+   
     c.Add(o => o.Summary);
 
     c.Add(o => o.Started)
-     .SetWidth(110);
+     .SetWidth(110)
+     .Encoded(false)
+     .Sanitized(false)
+     .RenderValueAs(d =>
+                        @<div>
+                             @if (d.Started == null)
+                             {
+                                 using (Html.BeginForm("Start", "TestSessions", new {id = d.Id}))
+                                 {
+                                     <input type="submit" value="Start" class="btn btn-success" />
+                                 }
+                             }
+                             else
+                             {
+                                 @d.Started
+                             }
+                         </div>
+        );
 
     c.Add(o => o.Completed)
      .SetWidth(110);
@@ -36,4 +53,12 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/gridmvc")
+}
+
+@section breadcrumb{
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
+        <li>@Html.ActionLink("Plan", "Show", "TestPlans", new { id = ViewContext.RouteData.Values["testplanId"] }, null)</li>
+        <li class="active">Sessions</li>
+    </ol>
 }

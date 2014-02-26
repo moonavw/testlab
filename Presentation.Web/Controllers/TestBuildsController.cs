@@ -18,26 +18,17 @@ namespace TestLab.Presentation.Web.Controllers
             _service = service;
         }
 
-        public async Task<ActionResult> Index(int testprojectId)
+
+        public async Task<ActionResult> Start(int id)
         {
-            return View(await Repo.Query().Where(z => z.TestProjectId == testprojectId).ToListAsync());
+            var entity = await Repo.FindAsync(id);
+            await _service.Build(entity);
+            return RedirectToAction("Show", new { id });
         }
 
-        #region Overrides of Controller<TestBuild>
-
-        [NonAction]
-        public override Task<ActionResult> Index()
+        public override async Task<ActionResult> Index(TestBuild searchModel)
         {
-            return base.Index();
+            return View(await Repo.Query().Where(z => z.TestProjectId == searchModel.TestProjectId).ToListAsync());
         }
-
-        public override async Task<ActionResult> Create(TestBuild model)
-        {
-            var result = await base.Create(model);
-            await _service.Build(model);
-            return result;
-        }
-
-        #endregion
     }
 }

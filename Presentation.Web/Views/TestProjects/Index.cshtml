@@ -17,10 +17,11 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        @<b>
-                             @Html.ActionLink("Open", "Show", new { id = d.Id }, new { @class = "btn btn-default btn-sm" })
-                         </b>);
+                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default btn-sm"})
+        );
 
+    c.Add(o => o.Id);
+    
     c.Add(o => o.Name);
 
     c.Add(o => o.Type);

@@ -15,24 +15,33 @@ namespace TestLab.Presentation.Web.Controllers
         {
         }
 
-        public async Task<ActionResult> Index(int testprojectId)
+        public override async Task<ActionResult> Index(TestPlan searchModel)
         {
-            return View(await Repo.Query().Where(z => z.TestProjectId == testprojectId).ToListAsync());
+            return View(await Repo.Query().Where(z => z.TestProjectId == searchModel.TestProjectId).ToListAsync());
         }
 
-        public async Task<ActionResult> New(int testprojectId)
+        public override ActionResult New(TestPlan model)
         {
-            var model = new TestPlan
-            {
-                Project = await Uow.Repository<TestProject>().FindAsync(testprojectId)
-            };
+            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
             return View(model);
+        }
+
+        [NonAction]
+        public override Task<ActionResult> Create(TestPlan model)
+        {
+            return base.Create(model);
         }
 
         public async Task<ActionResult> Create(TestPlan model, int[] testcases)
         {
             model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id)).ToListAsync());
             return await Create(model);
+        }
+
+        [NonAction]
+        public override Task<ActionResult> Update(int id, TestPlan model)
+        {
+            return base.Update(id, model);
         }
 
         public async Task<ActionResult> Update(int id, TestPlan model, int[] testcases)
@@ -46,33 +55,5 @@ namespace TestLab.Presentation.Web.Controllers
 
             return await Update(id, model);
         }
-
-        #region Overrides of Controller<TestPlan>
-
-        [NonAction]
-        public override Task<ActionResult> Index()
-        {
-            return base.Index();
-        }
-
-        [NonAction]
-        public override ActionResult New()
-        {
-            return base.New();
-        }
-
-        [NonAction]
-        public override Task<ActionResult> Create(TestPlan model)
-        {
-            return base.Create(model);
-        }
-
-        [NonAction]
-        public override Task<ActionResult> Update(int id, TestPlan model)
-        {
-            return base.Update(id, model);
-        }
-
-        #endregion
     }
 }

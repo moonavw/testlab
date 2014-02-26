@@ -15,7 +15,7 @@ namespace TestLab.Presentation.Web.Controllers
             Repo = uow.Repository<T>();
         }
 
-        public virtual async Task<ActionResult> Index()
+        public virtual async Task<ActionResult> Index(T searchModel)
         {
             return View(await Repo.Query().ToListAsync());
         }
@@ -30,9 +30,9 @@ namespace TestLab.Presentation.Web.Controllers
             return View(entity);
         }
 
-        public virtual ActionResult New()
+        public virtual ActionResult New(T model)
         {
-            return View(new T());
+            return View(model ?? new T());
         }
 
         [HttpPost]
