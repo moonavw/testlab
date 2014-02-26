@@ -13,9 +13,8 @@ namespace TestLab.Infrastructure.EntityFramework.Mapping
             Property(z => z.TestSessionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             HasRequired(z => z.Case)
-                .WithMany()
-                .HasForeignKey(z => z.TestCaseId)
-                .WillCascadeOnDelete(false);
+                .WithMany(f => f.Results)
+                .HasForeignKey(z => z.TestCaseId);
 
             HasRequired(z => z.Session)
                 .WithMany(f => f.Results)

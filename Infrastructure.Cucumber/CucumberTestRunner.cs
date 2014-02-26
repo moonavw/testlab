@@ -27,6 +27,7 @@ namespace TestLab.Infrastructure.Cucumber
 
         public async Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config)
         {
+            //TODO: get features's parent folder
             string workDir = Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.FullName));
             string outputFile = Path.ChangeExtension(Path.Combine(Constants.RESULT_ROOT, build.Name, test.Name), ".html");
             string startProgram = string.Format(@"cucumber --tag @Name_{0} -f html --out {1}", test.Name, outputFile);
@@ -43,8 +44,8 @@ namespace TestLab.Infrastructure.Cucumber
                                                         workDir,
                                                         startProgram));
 
-            await ProcessEx.RunAsync(pi);
-
+            //await ProcessEx.RunAsync(pi);
+            Process.Start(pi);
             //parse result from output file
             string remoteResultFile = Path.ChangeExtension(Path.Combine(config.RemoteResultRoot, build.Name, test.Name), ".html");
             var file = new FileInfo(remoteResultFile);

@@ -23,7 +23,7 @@ namespace TestLab.Presentation.Web.Controllers
         public override ActionResult New(TestPlan model)
         {
             model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
-            return View(model);
+            return base.New(model);
         }
 
         [NonAction]
@@ -34,7 +34,15 @@ namespace TestLab.Presentation.Web.Controllers
 
         public async Task<ActionResult> Create(TestPlan model, int[] testcases)
         {
-            model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id)).ToListAsync());
+            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
+            if (testcases == null)
+            {
+                ModelState.AddModelError("testcases", "no tests picked for this plan");
+            }
+            else
+            {
+                model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id) && z.Published != null).ToListAsync());
+            }
             return await Create(model);
         }
 
@@ -46,13 +54,20 @@ namespace TestLab.Presentation.Web.Controllers
 
         public async Task<ActionResult> Update(int id, TestPlan model, int[] testcases)
         {
-            var entity = await Repo.FindAsync(id);
-            Repo.Merge(entity, model);
-            model = entity;
+            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
+            if (testcases == null)
+            {
+                ModelState.AddModelError("testcases", "no tests picked for this plan");
+            }
+            else
+            {
+                var entity = await Repo.FindAsync(id);
+                Repo.Merge(entity, model);
+                model = entity;
 
-            model.Cases.Clear();
-            model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id)).ToListAsync());
-
+                model.Cases.Clear();
+                model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id) && z.Published != null).ToListAsync());
+            }
             return await Update(id, model);
         }
     }

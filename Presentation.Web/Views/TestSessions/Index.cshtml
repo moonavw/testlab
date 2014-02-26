@@ -32,7 +32,7 @@
                         @<div>
                              @if (d.Started == null)
                              {
-                                 @Html.ActionLink("Start", "Start", "TestSessions", new {id = d.Id}, new {@class = "btn btn-success ajax-post"})
+                                 @Html.ActionLink("Start", "Start", "TestSessions", new { id = d.Id, testplanId = d.TestPlanId }, new { @class = "btn btn-success ajax-post" })
                              }
                              else
                              {

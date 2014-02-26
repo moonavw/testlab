@@ -19,7 +19,8 @@ namespace TestLab.Infrastructure.EntityFramework.Mapping
 
             HasRequired(z => z.Project)
                 .WithMany(f => f.Plans)
-                .HasForeignKey(z => z.TestProjectId);
+                .HasForeignKey(z => z.TestProjectId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

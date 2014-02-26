@@ -18,6 +18,7 @@ namespace TestLab.Presentation.Web.Controllers
             _service = service;
         }
 
+        [HttpPost]
         public async Task<ActionResult> Start(int id)
         {
             var entity = await Repo.FindAsync(id);

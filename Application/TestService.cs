@@ -44,24 +44,31 @@ namespace TestLab.Application
 
             //pull
             await puller.Pull(project);
-            await _uow.CommitAsync();
 
             //build
             await _builder.Build(build);
-            await _uow.CommitAsync();
 
             //archive
             await _archiver.Archive(build);
-            await _uow.CommitAsync();
 
             //publish
             var tests = (await publisher.Publish(build)).ToList();
             var toDel = project.Cases.ExceptBy(tests, z => z.FullName + "#" + z.Name).ToList();
             var toAdd = tests.ExceptBy(project.Cases, z => z.FullName + "#" + z.Name).ToList();
+            
+            toDel.ForEach(z =>
+            {
+                z.Plans.Clear();
+                z.Results.Clear();
+                z.Published = null;
+                //project.Cases.Remove(z);
+            });
+            toAdd.ForEach(z =>
+            {
+                project.Cases.Add(z);
+            });
 
-            toDel.ForEach(z => project.Cases.Remove(z));
-            toAdd.ForEach(z => project.Cases.Add(z));
-            await _uow.CommitAsync();
+            //await _uow.CommitAsync();
         }
 
         public async Task Run(TestSession session)
@@ -82,6 +89,7 @@ namespace TestLab.Application
             if (tests.Count == 0) throw new InvalidOperationException("no tests for this test session");
 
             //run
+            session.Started = DateTime.Now;
             session.Results.Clear();
             foreach (var t in tests)
             {
@@ -90,6 +98,7 @@ namespace TestLab.Application
                 session.Results.Add(result);
                 await _uow.CommitAsync();
             }
+            session.Completed = DateTime.Now;
         }
     }
 }

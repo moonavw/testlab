@@ -18,11 +18,13 @@ namespace TestLab.Presentation.Web.Controllers
             _service = service;
         }
 
-
+        [HttpPost]
         public async Task<ActionResult> Start(int id)
         {
             var entity = await Repo.FindAsync(id);
             await _service.Build(entity);
+            Repo.Modify(entity);
+            await Uow.CommitAsync();
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Index");

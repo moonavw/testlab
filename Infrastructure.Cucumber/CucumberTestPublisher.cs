@@ -35,7 +35,7 @@ namespace TestLab.Infrastructure.Cucumber
                                {
                                    Published = DateTime.Now,
                                    Name = m.Groups[1].Value,
-                                   FullName = f.FullName.Remove(0, srcPath.Length)
+                                   FullName = f.FullName.Remove(0, srcPath.Length + 1)
                                });
             }
 

@@ -32,6 +32,7 @@ namespace TestLab.Presentation.Web.Controllers
 
         public virtual ActionResult New(T model)
         {
+            ModelState.Clear();
             return View(model ?? new T());
         }
 

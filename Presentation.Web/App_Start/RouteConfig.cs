@@ -47,9 +47,8 @@ namespace TestLab.Presentation.Web
                     projects.Resources<TestBuildsController>(builds =>
                     {
                         builds.As("builds");
-                        builds.Only("index", "create", "destroy");
-
                         builds.Member(x => x.Post("start"));
+                        builds.Except("new", "show", "edit");
                     });
 
                     projects.Resources<TestPlansController>(plans =>
@@ -58,10 +57,10 @@ namespace TestLab.Presentation.Web
                         plans.Resources<TestSessionsController>(sessions =>
                         {
                             sessions.As("sessions");
+                            sessions.Member(x => x.Post("start"));
 #if !DEBUG
                             sessions.Except("edit", "update");
-#endif
-                            sessions.Member(x => x.Post("start"));
+#endif                            
                             sessions.Resources<TestResultsController>(runs =>
                             {
                                 runs.As("results");
