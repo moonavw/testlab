@@ -40,7 +40,7 @@ namespace TestLab.Domain
 
         public string BuildOutputDir
         {
-            get { return Path.Combine(WorkDir, BuildOutputPath); }
+            get { return Path.Combine(WorkDir, BuildOutputPath ?? ""); }
         }
 
         public virtual ICollection<TestBuild> Builds { get; set; }

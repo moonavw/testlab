@@ -12,20 +12,26 @@ namespace TestLab.Infrastructure.Zip
 
         public async Task Archive(TestBuild build)
         {
-            string filename = Path.ChangeExtension(build.ArchivePath, ".zip");
+            var fi = new FileInfo(Path.ChangeExtension(build.ArchivePath, ".zip"));
             string srcDir = build.Project.BuildOutputDir;
-            if (!File.Exists(filename))
+            if (!fi.Exists)
             {
+                if (!fi.Directory.Exists)
+                    fi.Directory.Create();
                 await Task.Run(() =>
                 {
                     //zip files
-                    using (var zip = new ZipFile(filename))
+                    using (var zip = new ZipFile(fi.FullName))
                     {
                         zip.AddDirectory(srcDir, null);
                         zip.Save();
                     }
-                    build.Archived = DateTime.Now;
                 });
+                build.Archived = DateTime.Now;
+            }
+            else
+            {
+                build.Archived = fi.CreationTime;
             }
         }
 

@@ -36,6 +36,8 @@ namespace TestLab.Application
 
         public async Task Build(TestBuild build)
         {
+            if (build.Project == null)
+                build.Project = await _uow.Repository<TestProject>().FindAsync(build.TestProjectId);
             var project = build.Project;
             var puller = _pullers.FirstOrDefault(z => z.CanPull(project));
             if (puller == null) throw new NotSupportedException("no puller for this project");
@@ -66,6 +68,8 @@ namespace TestLab.Application
 
         public async Task Run(TestSession session)
         {
+            if (session.Plan == null)
+                session.Plan = await _uow.Repository<TestPlan>().FindAsync(session.TestPlanId);
             var project = session.Plan.Project;
             var runner = _runners.FirstOrDefault(z => z.Type == project.Type);
             if (runner == null) throw new NotSupportedException("no runner for this test session");

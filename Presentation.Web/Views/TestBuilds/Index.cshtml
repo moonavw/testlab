@@ -11,6 +11,7 @@
 </p>
 @using (Html.BeginForm("Create", "TestBuilds"))
 {
+    @Html.AntiForgeryToken()
     <input type="submit" value="Create New" class="btn btn-primary" />
 }
 

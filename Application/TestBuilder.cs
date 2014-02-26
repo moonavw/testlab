@@ -12,11 +12,14 @@ namespace TestLab.Application
 
         public async Task Build(TestBuild build)
         {
-            string buildScript = build.Project.BuildScript;
-            string workDir = build.Project.WorkDir;
-            var pi = new ProcessStartInfo(buildScript) { WorkingDirectory = workDir };
             build.Started = DateTime.Now;
-            await ProcessEx.RunAsync(pi);
+            string buildScript = build.Project.BuildScript;
+            if (!string.IsNullOrEmpty(buildScript))
+            {
+                string workDir = build.Project.WorkDir;
+                var pi = new ProcessStartInfo(buildScript) { WorkingDirectory = workDir };
+                await ProcessEx.RunAsync(pi);
+            }
             build.Completed = DateTime.Now;
         }
 
