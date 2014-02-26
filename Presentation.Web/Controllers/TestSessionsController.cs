@@ -22,7 +22,11 @@ namespace TestLab.Presentation.Web.Controllers
         {
             var entity = await Repo.FindAsync(id);
             await _service.Run(entity);
-            return RedirectToAction("Show", new {id});
+            return RespondTo(formats =>
+            {
+                formats.Default = RedirectToAction("Index");
+                formats["text"] = () => Content(entity.Started.ToString());
+            });
         }
 
         public override async Task<ActionResult> Index(TestSession searchModel)

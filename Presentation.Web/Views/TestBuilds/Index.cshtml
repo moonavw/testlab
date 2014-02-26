@@ -27,10 +27,7 @@
                         @<div>
                              @if (d.Started == null)
                              {
-                                 using (Html.BeginForm("Start", "TestBuilds", new {id = d.Id}))
-                                 {
-                                     <input type="submit" value="Start" class="btn btn-success" />
-                                 }
+                                 @Html.ActionLink("Start", "Start", "TestBuilds", new { id = d.Id }, new { @class = "btn btn-success ajax-post" })                                
                              }
                              else
                              {

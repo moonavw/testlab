@@ -34,6 +34,9 @@ namespace TestLab.Presentation.Web
 
             bundles.Add(new ScriptBundle("~/bundles/gridmvc").Include(
                 "~/Scripts/gridmvc.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/site").Include(
+                "~/Scripts/site.js"));
         }
 
         public static void Start()
