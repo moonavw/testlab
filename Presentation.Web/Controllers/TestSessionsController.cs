@@ -20,12 +20,12 @@ namespace TestLab.Presentation.Web.Controllers
             _service = service;
         }
 
-        public async Task<ActionResult> Run(int id)
-        {
-            var entity = await Repo.FindAsync(id);
-            await _service.Run(entity);
-            return RedirectToAction("Show", new { id });
-        }
+        //public async Task<ActionResult> Run(int id)
+        //{
+        //    var entity = await Repo.FindAsync(id);
+        //    await _service.Run(entity);
+        //    return RedirectToAction("Show", new { id });
+        //}
 
         public async Task<ActionResult> Index(int testplanId)
         {
@@ -38,6 +38,13 @@ namespace TestLab.Presentation.Web.Controllers
         public override Task<ActionResult> Index()
         {
             return base.Index();
+        }
+
+        public override async Task<ActionResult> Create(TestSession model)
+        {
+            var result = await base.Create(model);
+            await _service.Run(model);
+            return result;
         }
 
         #endregion

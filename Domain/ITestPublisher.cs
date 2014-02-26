@@ -5,8 +5,8 @@ namespace TestLab.Domain
 {
     public interface ITestPublisher
     {
-        TestBinType Type { get; }
+        TestType Type { get; }
 
-        Task<IEnumerable<TestCase>> Publish(TestBin bin);
+        Task<IEnumerable<TestCase>> Publish(TestBuild build);
     }
 }

@@ -7,7 +7,7 @@ namespace TestLab.Infrastructure.Zip
     {
         public override void Load()
         {
-            Bind<ITestDeployer>().To<ZipTestDeployer>();
+            Bind<ITestArchiver>().To<ZipTestArchiver>();
         }
     }
 }

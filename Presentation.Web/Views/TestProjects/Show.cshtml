@@ -15,22 +15,50 @@
         <dd>
             @Html.DisplayFor(model => model.Name)
         </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.RepoPathOrUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepoPathOrUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.BuildOutputPath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BuildOutputPath)
+            &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.BuildScript)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BuildScript)
+            &nbsp;
+        </dd>
     </dl>
 </div>
 
-@Html.Partial("_ShowRepo", Model.Repo)
-@Html.Partial("_ShowSrc", Model.Src)
-@Html.Partial("_ShowBin", Model.Bin)
 @Html.Partial("_ShowAudit", Model)
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 
+    @Html.ActionLink("TestBuilds", "Index", "TestBuilds", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("TestPlans", "Index", "TestPlans", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("TestCases", "Index", "TestCases", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
 </p>
-@using (Html.BeginForm("Build", "TestProjects", new { id = Model.Id }))
-{
-    <input type="submit" value="Build" class="btn btn-success" />
-}

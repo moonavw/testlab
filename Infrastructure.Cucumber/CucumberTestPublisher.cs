@@ -14,15 +14,16 @@ namespace TestLab.Infrastructure.Cucumber
 
         #region Implementation of ITestPublisher
 
-        public TestBinType Type
+        public TestType Type
         {
-            get { return TestBinType.Cucumber; }
+            get { return TestType.Cucumber; }
         }
 
-        public async Task<IEnumerable<TestCase>> Publish(TestBin bin)
+        public async Task<IEnumerable<TestCase>> Publish(TestBuild build)
         {
+            string srcPath = build.Project.WorkDir;
             //looking for test files, publish them to db
-            var dir = new DirectoryInfo(bin.Location);
+            var dir = new DirectoryInfo(srcPath);
             var files = dir.GetFiles("*.feature", SearchOption.AllDirectories);
             var tests = new List<TestCase>();
             foreach (var f in files)
@@ -32,8 +33,9 @@ namespace TestLab.Infrastructure.Cucumber
                 tests.AddRange(from Match m in matches
                                select new TestCase
                                {
+                                   Published = DateTime.Now,
                                    Name = m.Groups[1].Value,
-                                   FullName = f.FullName.Remove(0, bin.Location.Length)
+                                   FullName = f.FullName.Remove(0, srcPath.Length)
                                });
             }
 

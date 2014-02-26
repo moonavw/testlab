@@ -14,44 +14,32 @@
                 @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
             </div>
         </div>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Repository</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Repo.PathOrUrl, " has-error"))">
-            @Html.LabelFor(m => m.Repo.PathOrUrl, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.RepoPathOrUrl, " has-error"))">
+            @Html.LabelFor(m => m.RepoPathOrUrl, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Repo.PathOrUrl, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Repo.PathOrUrl, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.RepoPathOrUrl, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.RepoPathOrUrl, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Repo.Type, " has-error"))">
-            @Html.LabelFor(m => m.Repo.Type, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Type, " has-error"))">
+            @Html.LabelFor(m => m.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(m => m.Repo.Type, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Repo.Type, null, new { @class = "help-block" })
+                @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Type, null, new { @class = "help-block" })
             </div>
         </div>
-    </fieldset>
-
-    <fieldset>
-        <legend>Source</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Src.Type, " has-error"))">
-            @Html.LabelFor(m => m.Src.Type, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.BuildOutputPath, " has-error"))">
+            @Html.LabelFor(m => m.BuildOutputPath, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(m => m.Src.Type, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Src.Type, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.BuildOutputPath, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.BuildOutputPath, null, new { @class = "help-block" })
             </div>
         </div>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Bin</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Bin.Type, " has-error"))">
-            @Html.LabelFor(m => m.Bin.Type, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.BuildScript, " has-error"))">
+            @Html.LabelFor(m => m.BuildScript, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(m => m.Bin.Type, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Bin.Type, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.BuildScript, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.BuildScript, null, new { @class = "help-block" })
             </div>
         </div>
     </fieldset>

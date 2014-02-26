@@ -23,16 +23,10 @@
 
     c.Add(o => o.Name);
 
-    c.Add(o => o.Bin.Type);
+    c.Add(o => o.Type);
 
-    c.Add(o => o.Bin.Built)
-     .SetWidth(110);
-
-    c.Add(o => o.Src.Type);
-
-    c.Add(o => o.Src.Pulled)
-     .SetWidth(110);
-
+    c.Add(o => o.Builds.Count);
+    
     c.Add(o => o.Plans.Count);
 
     c.Add(o => o.Cases.Count);

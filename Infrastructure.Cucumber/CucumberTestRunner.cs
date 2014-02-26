@@ -20,15 +20,15 @@ namespace TestLab.Infrastructure.Cucumber
 
         #region Implementation of ITestRunner
 
-        public TestBinType Type
+        public TestType Type
         {
-            get { return TestBinType.Cucumber; }
+            get { return TestType.Cucumber; }
         }
 
-        public async Task<TestResult> Run(TestCase test, TestBin bin, TestConfig config)
+        public async Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config)
         {
-            string workDir = Path.GetDirectoryName(Path.Combine(bin.Location, test.FullName));
-            string outputFile = Path.ChangeExtension(Path.Combine(bin.Location, "testresults", test.Name), ".html");
+            string workDir = Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.FullName));
+            string outputFile = Path.ChangeExtension(Path.Combine(Constants.RESULT_ROOT, build.Name, test.Name), ".html");
             string startProgram = string.Format(@"cucumber --tag @Name_{0} -f html --out {1}", test.Name, outputFile);
 
             var result = new TestResult { Started = DateTime.Now };
@@ -46,7 +46,8 @@ namespace TestLab.Infrastructure.Cucumber
             await ProcessEx.RunAsync(pi);
 
             //parse result from output file
-            var file = new FileInfo(outputFile);
+            string remoteResultFile = Path.ChangeExtension(Path.Combine(config.RemoteResultRoot, build.Name, test.Name), ".html");
+            var file = new FileInfo(remoteResultFile);
             string text = await file.OpenText().ReadToEndAsync();
 
             var summaryMatch = RxSummary.Match(text);

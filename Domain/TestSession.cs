@@ -12,7 +12,6 @@ namespace TestLab.Domain
         public TestSession()
         {
             Config = new TestConfig();
-            Bin = new TestBin();
             Results = new HashSet<TestResult>();
         }
 
@@ -23,8 +22,6 @@ namespace TestLab.Domain
         public DateTime? Completed { get; set; }
 
         public TestConfig Config { get; set; }
-
-        public TestBin Bin { get; set; }
 
         public int TestPlanId { get; set; }
 

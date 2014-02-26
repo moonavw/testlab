@@ -11,15 +11,15 @@ namespace TestLab.Infrastructure.Git
     {
         #region Implementation of ITestPuller
 
-        public TestRepoType Type
+        public bool CanPull(TestProject project)
         {
-            get { return TestRepoType.Git; }
+            return project.RepoPathOrUrl.EndsWith(".git", StringComparison.OrdinalIgnoreCase);
         }
 
-        public Task Pull(TestSrc src, TestRepo repo)
+        public Task Pull(TestProject project)
         {
-            string pathOrUrl = repo.PathOrUrl;
-            string workDir = src.Location;
+            string pathOrUrl = project.RepoPathOrUrl;
+            string workDir = project.WorkDir;
 
             //git clone or git pull
             var pi = !Directory.Exists(workDir)

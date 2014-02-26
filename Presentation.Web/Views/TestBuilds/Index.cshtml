@@ -1,0 +1,34 @@
+﻿@model IEnumerable<TestLab.Domain.TestBuild>
+
+@{
+    ViewBag.Title = "TestBuilds";
+}
+
+<h2>TestBuilds</h2>
+
+<p>
+    @Html.ActionLink("Back to TestProject", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, new { @class = "btn btn-default" })
+</p>
+@using (Html.BeginForm("Create", "TestBuilds"))
+{
+    <input type="submit" value="Create New" class="btn btn-primary" />
+}
+
+@Html.Grid(Model).Columns(c =>
+{
+    c.Add(o => o.Name);
+
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add(o => o.Archived)
+     .SetWidth(110);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
+
+@section scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+}

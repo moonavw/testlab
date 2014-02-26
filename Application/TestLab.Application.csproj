@@ -39,6 +39,10 @@
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="RunProcessAsTask, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RunProcessAsTask.1.0.0\lib\RunProcessAsTask.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -50,7 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="ITestService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBuilder.cs" />
     <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,10 +79,6 @@
     <ProjectReference Include="..\Infrastructure.Git\TestLab.Infrastructure.Git.csproj">
       <Project>{77d4db02-ac82-416b-92d4-295f93be04cb}</Project>
       <Name>TestLab.Infrastructure.Git</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure.Ruby\TestLab.Infrastructure.Ruby.csproj">
-      <Project>{10a34163-c256-4cd2-8464-120d6ec55e38}</Project>
-      <Name>TestLab.Infrastructure.Ruby</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Zip\TestLab.Infrastructure.Zip.csproj">
       <Project>{75cbed2f-cfd3-4158-aecc-acb5444913e2}</Project>

@@ -1,6 +1,6 @@
 ﻿namespace TestLab.Domain
 {
-    public enum TestBinType
+    public enum TestType
     {
         Cucumber,
         //JUnit,

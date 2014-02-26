@@ -145,6 +145,7 @@
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestBuildsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
     <Compile Include="Controllers\TestCasesController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />
@@ -214,8 +215,6 @@
     <Content Include="Views\TestPlans\Index.cshtml" />
     <Content Include="Views\TestCases\Index.cshtml" />
     <Content Include="Views\TestResults\Index.cshtml" />
-    <Content Include="Views\TestProjects\_ShowBin.cshtml" />
-    <Content Include="Views\TestProjects\_ShowSrc.cshtml" />
     <Content Include="Views\TestPlans\New.cshtml" />
     <Content Include="Views\TestPlans\_form.cshtml" />
     <Content Include="Views\TestPlans\Edit.cshtml" />
@@ -227,8 +226,8 @@
     <Content Include="Views\TestCases\Edit.cshtml" />
     <Content Include="Views\TestCases\New.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
-    <Content Include="Views\TestProjects\_ShowRepo.cshtml" />
     <Content Include="Views\TestSessions\_ShowConfig.cshtml" />
+    <Content Include="Views\TestBuilds\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

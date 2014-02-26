@@ -11,6 +11,7 @@ namespace TestLab.Domain
     {
         public TestProject()
         {
+            Builds = new HashSet<TestBuild>();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
         }
@@ -20,11 +21,29 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public TestRepo Repo { get; set; }
+        public TestType Type { get; set; }
 
-        public TestSrc Src { get; set; }
+        [Required]
+        [Display(Name = "Repository Path Or Url", Prompt = "https://user:pwd@host/path/proj.git")]
+        public string RepoPathOrUrl { get; set; }
 
-        public TestBin Bin { get; set; }
+        [Display(Name = "Build Output Path", Prompt = @"bin\Debug")]
+        public string BuildOutputPath { get; set; }
+
+        [Display(Name = "Build Script", Prompt = "build.cmd")]
+        public string BuildScript { get; set; }
+
+        public string WorkDir
+        {
+            get { return Path.Combine(Constants.PROJ_ROOT, Name); }
+        }
+
+        public string BuildOutputDir
+        {
+            get { return Path.Combine(WorkDir, BuildOutputPath); }
+        }
+
+        public virtual ICollection<TestBuild> Builds { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
 

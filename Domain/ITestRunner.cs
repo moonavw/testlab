@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace TestLab.Domain
 {
     public interface ITestRunner
     {
-        TestBinType Type { get; }
+        TestType Type { get; }
 
-        Task<TestResult> Run(TestCase test, TestBin bin, TestConfig config);
+        Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config);
     }
 }

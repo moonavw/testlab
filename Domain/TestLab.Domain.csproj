@@ -43,25 +43,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITestBuilder.cs" />
-    <Compile Include="ITestDeployer.cs" />
-    <Compile Include="ITestPuller.cs" />
-    <Compile Include="ITestRunner.cs" />
-    <Compile Include="ITestService.cs" />
-    <Compile Include="TestBin.cs" />
-    <Compile Include="TestSrcType.cs" />
+    <Compile Include="ITestArchiver.cs" />
+    <Compile Include="ITestBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITestPublisher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITestPuller.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ITestRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TestBuild.cs" />
     <Compile Include="TestConfig.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="TestRepo.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />
-    <Compile Include="TestSrc.cs" />
-    <Compile Include="TestRepoType.cs" />
-    <Compile Include="TestBinType.cs" />
+    <Compile Include="TestType.cs" />
     <Compile Include="TestPlan.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ITestPublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
