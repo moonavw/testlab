@@ -67,5 +67,8 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 </p>
+<p>
+    @Html.ActionLink("Start", "Start", "TestSessions", new { id = Model.Id, testplanId = Model.TestPlanId }, new { @class = "btn btn-success ajax-post" })
+</p>
 
 @Html.Partial("../TestResults/Index", Model.Results)

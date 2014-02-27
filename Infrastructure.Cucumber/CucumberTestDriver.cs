@@ -71,22 +71,22 @@ namespace TestLab.Infrastructure.Cucumber
             var result = new TestResult { Started = DateTime.Now, Case = test };
 
 
-            //var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
-            //                              string.Format(@"{0} {1} {2} {3} {4} {5} {6}",
-            //                                            config.RdpServer,
-            //                                            config.RdpDomain,
-            //                                            config.RdpUserName,
-            //                                            config.RdpPassword,
-            //                                            workDir,
-            //                                            startProgram, startProgramArgs));
+            var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
+                                          string.Format(@"{0} {1} {2} {3} {4} {5} {6}",
+                                                        session.Server,
+                                                        session.Domain,
+                                                        session.UserName,
+                                                        session.Password,
+                                                        workDir,
+                                                        startProgram, startProgramArgs));
 
             //debug
-            var pi = new ProcessStartInfo
-            {
-                WorkingDirectory = workDir,
-                FileName = startProgram,
-                Arguments = startProgramArgs
-            };
+            //var pi = new ProcessStartInfo
+            //{
+            //    WorkingDirectory = workDir,
+            //    FileName = startProgram,
+            //    Arguments = startProgramArgs
+            //};
 
             await ProcessEx.RunAsync(pi);
 

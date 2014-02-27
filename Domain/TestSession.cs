@@ -18,7 +18,7 @@ namespace TestLab.Domain
 
         public string Name
         {
-            get { return string.Format("{0}_{1}_{2:yyyyMMdd_hhmm}", Plan.Project.Name, Plan.Name, Started); }
+            get { return string.Format("{0}_session_{1:yyyyMMdd_hhmm}", Plan.Project.Name, Started); }
         }
 
         public DateTime? Started { get; set; }
@@ -44,7 +44,7 @@ namespace TestLab.Domain
 
         public string RemoteResultRoot
         {
-            get { return Path.Combine(string.Format(Constants.REMOTE_RESULT_ROOT_FORMAT, Server), Name); }
+            get { return string.Format(Constants.REMOTE_RESULT_ROOT_FORMAT, Server); }
         }
 
         public int TestPlanId { get; set; }
