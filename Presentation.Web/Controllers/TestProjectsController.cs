@@ -1,4 +1,5 @@
-﻿using TestLab.Infrastructure;
+﻿using System.Collections.Generic;
+using TestLab.Infrastructure;
 using TestLab.Domain;
 using System.Web.Mvc;
 using System.Threading.Tasks;
@@ -9,9 +10,18 @@ namespace TestLab.Presentation.Web.Controllers
 {
     public class TestProjectsController : Controller<TestProject>
     {
-        public TestProjectsController(IUnitOfWork uow)
+        private readonly IEnumerable<ITestDriver> _drivers;
+
+        public TestProjectsController(IUnitOfWork uow, IEnumerable<ITestDriver> drivers)
             : base(uow)
         {
+            _drivers = drivers;
+        }
+
+        protected override void SetViewData(TestProject editModel)
+        {
+            base.SetViewData(editModel);
+            ViewBag.DriverNames = _drivers.Select(z => z.Name);
         }
 
         public override async Task<ActionResult> Destroy(int id)

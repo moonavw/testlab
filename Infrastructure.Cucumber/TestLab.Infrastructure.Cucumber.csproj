@@ -48,8 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CucumberModule.cs" />
-    <Compile Include="CucumberTestPublisher.cs" />
-    <Compile Include="CucumberTestRunner.cs" />
+    <Compile Include="CucumberTestDriver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

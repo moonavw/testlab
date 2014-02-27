@@ -21,16 +21,17 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public TestType Type { get; set; }
+        [Required]
+        public string DriverName { get; set; }
 
         [Required]
-        [Display(Name = "Repository Path Or Url", Prompt = "https://user:pwd@host/path/proj.git")]
+        [Display(Name = "Repository Path Or Url")]
         public string RepoPathOrUrl { get; set; }
 
-        [Display(Name = "Build Output Path", Prompt = @"bin\Debug")]
+        [Display(Name = "Build Output Path")]
         public string BuildOutputPath { get; set; }
 
-        [Display(Name = "Build Script", Prompt = "build.cmd")]
+        [Display(Name = "Build Script")]
         public string BuildScript { get; set; }
 
         public string WorkDir

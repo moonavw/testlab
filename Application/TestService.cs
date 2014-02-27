@@ -13,24 +13,21 @@ namespace TestLab.Application
     {
         private readonly ITestBuilder _builder;
         private readonly ITestArchiver _archiver;
-        private readonly IEnumerable<ITestPublisher> _publishers;
+        private readonly IEnumerable<ITestDriver> _drivers;
         private readonly IEnumerable<ITestPuller> _pullers;
-        private readonly IEnumerable<ITestRunner> _runners;
         private readonly IUnitOfWork _uow;
 
         public TestService(
             IEnumerable<ITestPuller> pullers,
             ITestBuilder builder,
             ITestArchiver archiver,
-            IEnumerable<ITestPublisher> publishers,
-            IEnumerable<ITestRunner> runners,
+            IEnumerable<ITestDriver> drivers,
             IUnitOfWork uow)
         {
             _pullers = pullers;
             _builder = builder;
             _archiver = archiver;
-            _publishers = publishers;
-            _runners = runners;
+            _drivers = drivers;
             _uow = uow;
         }
 
@@ -39,8 +36,8 @@ namespace TestLab.Application
             var project = build.Project;
             var puller = _pullers.FirstOrDefault(z => z.CanPull(project));
             if (puller == null) throw new NotSupportedException("no puller for this project");
-            var publisher = _publishers.FirstOrDefault(z => z.Type == project.Type);
-            if (publisher == null) throw new NotSupportedException("no publisher for this project");
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this project");
 
             //pull
             await puller.Pull(project);
@@ -52,9 +49,9 @@ namespace TestLab.Application
             await _archiver.Archive(build);
 
             //publish
-            var tests = (await publisher.Publish(build)).ToList();
-            var toDel = project.Cases.ExceptBy(tests, z => z.FullName + "#" + z.Name).ToList();
-            var toAdd = tests.ExceptBy(project.Cases, z => z.FullName + "#" + z.Name).ToList();
+            var tests = (await driver.Publish(build)).ToList();
+            var toDel = project.Cases.ExceptBy(tests, z => z.FullName).ToList();
+            var toAdd = tests.ExceptBy(project.Cases, z => z.FullName).ToList();
             
             toDel.ForEach(z =>
             {
@@ -74,8 +71,8 @@ namespace TestLab.Application
         public async Task Run(TestSession session)
         {
             var project = session.Plan.Project;
-            var runner = _runners.FirstOrDefault(z => z.Type == project.Type);
-            if (runner == null) throw new NotSupportedException("no runner for this test session");
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this test session");
 
             //find last build
             var build = project.Builds.LastOrDefault(z => z.Completed != null && z.Archived != null);
@@ -93,7 +90,7 @@ namespace TestLab.Application
             session.Results.Clear();
             foreach (var t in tests)
             {
-                var result = await runner.Run(t, build, session.Config);
+                var result = await driver.Run(t, build, session.Config);
                 result.Completed = DateTime.Now;
                 session.Results.Add(result);
                 await _uow.CommitAsync();

@@ -21,11 +21,11 @@
                 @Html.ValidationMessageFor(m => m.RepoPathOrUrl, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Type, " has-error"))">
-            @Html.LabelFor(m => m.Type, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.DriverName, " has-error"))">
+            @Html.LabelFor(m => m.DriverName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Type, null, new { @class = "help-block" })
+                @Html.DropDownListFor(m => m.DriverName, new SelectList(ViewBag.DriverNames), new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.DriverName, null, new { @class = "help-block" })
             </div>
         </div>
         <div class="form-group@(Html.ValidationErrorFor(m => m.BuildOutputPath, " has-error"))">

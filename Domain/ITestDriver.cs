@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 
 namespace TestLab.Domain
 {
-    public interface ITestPublisher
+    public interface ITestDriver
     {
-        TestType Type { get; }
+        string Name { get; }
 
         Task<IEnumerable<TestCase>> Publish(TestBuild build);
+
+        Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config);
     }
 }

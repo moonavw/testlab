@@ -15,6 +15,11 @@ namespace TestLab.Presentation.Web.Controllers
             Repo = uow.Repository<T>();
         }
 
+        protected virtual void SetViewData(T editModel)
+        {
+            
+        }
+
         public virtual async Task<ActionResult> Index(T searchModel)
         {
             return View(await Repo.Query().ToListAsync());
@@ -33,7 +38,8 @@ namespace TestLab.Presentation.Web.Controllers
         public virtual ActionResult New(T model)
         {
             ModelState.Clear();
-            return View(model ?? new T());
+            SetViewData(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -57,6 +63,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetViewData(entity);
             return View(entity);
         }
 

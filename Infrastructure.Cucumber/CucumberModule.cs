@@ -7,8 +7,7 @@ namespace TestLab.Infrastructure.Cucumber
     {
         public override void Load()
         {
-            Bind<ITestPublisher>().To<CucumberTestPublisher>();
-            Bind<ITestRunner>().To<CucumberTestRunner>();
+            Bind<ITestDriver>().To<CucumberTestDriver>();
         }
     }
 }

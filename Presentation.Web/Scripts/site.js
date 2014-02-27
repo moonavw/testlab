@@ -1,5 +1,5 @@
 ﻿$(function() {
-    $("a.ajax-post").click(function () {
+    $('a.ajax-post').click(function () {
         var btn = $(this);
         btn.button('loading');
         var parent = btn.parent();
@@ -9,5 +9,12 @@
         },"text");
         
         return false;
+    });
+
+    $('select[multiple].listbox').bootstrapDualListbox({
+        nonselectedlistlabel: 'Non-selected',
+        selectedlistlabel: 'Selected',
+        preserveselectiononmove: 'moved',
+        moveonselect: false
     });
 });

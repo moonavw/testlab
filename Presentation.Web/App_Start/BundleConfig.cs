@@ -23,12 +23,12 @@ namespace TestLab.Presentation.Web
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      //"~/Scripts/bootstrap-*",
+                      "~/Scripts/bootstrap-*",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      //"~/Content/bootstrap-*",
+                      "~/Content/bootstrap-*",
                       "~/Content/gridmvc.css",
                       "~/Content/site.css"));
 

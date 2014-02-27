@@ -47,13 +47,10 @@
     <Compile Include="ITestBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ITestPublisher.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ITestPuller.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ITestRunner.cs">
+    <Compile Include="ITestDriver.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestBuild.cs" />
@@ -61,7 +58,6 @@
     <Compile Include="TestProject.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />
-    <Compile Include="TestType.cs" />
     <Compile Include="TestPlan.cs" />
     <Compile Include="TestResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

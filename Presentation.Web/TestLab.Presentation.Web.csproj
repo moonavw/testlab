@@ -158,6 +158,7 @@
     <Compile Include="Helpers\Validation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-duallistbox.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -180,6 +181,7 @@
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\bootstrap-duallistbox.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -245,6 +247,22 @@
     <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
       <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
       <Name>TestLab.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Cucumber\TestLab.Infrastructure.Cucumber.csproj">
+      <Project>{a08ca30e-2b38-4731-8ebc-cd0ab3333e32}</Project>
+      <Name>TestLab.Infrastructure.Cucumber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.EntityFramework\TestLab.Infrastructure.EntityFramework.csproj">
+      <Project>{81fdf2c5-d875-4b50-b0c1-9fe6b509e9d9}</Project>
+      <Name>TestLab.Infrastructure.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Git\TestLab.Infrastructure.Git.csproj">
+      <Project>{77d4db02-ac82-416b-92d4-295f93be04cb}</Project>
+      <Name>TestLab.Infrastructure.Git</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Zip\TestLab.Infrastructure.Zip.csproj">
+      <Project>{75cbed2f-cfd3-4158-aecc-acb5444913e2}</Project>
+      <Name>TestLab.Infrastructure.Zip</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\TestLab.Infrastructure.csproj">
       <Project>{0c647087-605b-4818-b357-949976f23f75}</Project>
