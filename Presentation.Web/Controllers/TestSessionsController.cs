@@ -23,6 +23,8 @@ namespace TestLab.Presentation.Web.Controllers
         {
             var entity = await Repo.FindAsync(id);
             await _service.Run(entity);
+            Repo.Modify(entity);
+            await Uow.CommitAsync();
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Index");

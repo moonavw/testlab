@@ -15,20 +15,17 @@ namespace TestLab.Application
         private readonly ITestArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
         private readonly IEnumerable<ITestPuller> _pullers;
-        private readonly IUnitOfWork _uow;
 
         public TestService(
             IEnumerable<ITestPuller> pullers,
             ITestBuilder builder,
             ITestArchiver archiver,
-            IEnumerable<ITestDriver> drivers,
-            IUnitOfWork uow)
+            IEnumerable<ITestDriver> drivers)
         {
             _pullers = pullers;
             _builder = builder;
             _archiver = archiver;
             _drivers = drivers;
-            _uow = uow;
         }
 
         public async Task Build(TestBuild build)
@@ -64,8 +61,6 @@ namespace TestLab.Application
             {
                 project.Cases.Add(z);
             });
-
-            //await _uow.CommitAsync();
         }
 
         public async Task Run(TestSession session)
@@ -91,9 +86,7 @@ namespace TestLab.Application
             foreach (var t in tests)
             {
                 var result = await driver.Run(t, build, session.Config);
-                result.Completed = DateTime.Now;
                 session.Results.Add(result);
-                await _uow.CommitAsync();
             }
             session.Completed = DateTime.Now;
         }

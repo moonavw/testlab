@@ -22,7 +22,7 @@ namespace TestLab.Infrastructure.Cucumber
             "<p id=\"totals\">(.+)<br>(.+)</p>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        #region Implementation of ITestRunner
+        #region Implementation of ITestDriver
 
         public string Name
         {
@@ -55,33 +55,44 @@ namespace TestLab.Infrastructure.Cucumber
 
         public async Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config)
         {
-            //TODO: get features's parent folder
-            string workDir = Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location));
-            string outputFile = Path.ChangeExtension(Path.Combine(Constants.RESULT_ROOT, build.Name, test.Name), ".html");
-            string startProgram = string.Format(@"cucumber --tag @Name_{0} -f html --out {1}", test.Name, outputFile);
+            //get features's parent folder
+            string workDir = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location))).Parent.FullName;
+            string outputFileName = Path.ChangeExtension(Path.Combine(build.Name, test.Name), ".html");
+            string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
+            string startProgramArgs = string.Format(@"--tag @Name_{0} -f html --out {1}", test.Name, Path.Combine(Constants.RESULT_ROOT, outputFileName));
+            //var remoteResultFile = new FileInfo(Path.Combine(config.RemoteResultRoot, outputFileName));
+            var remoteResultFile = new FileInfo(Path.Combine(Constants.RESULT_ROOT, outputFileName));
+            if (!remoteResultFile.Directory.Exists)
+                remoteResultFile.Directory.Create();
 
             var result = new TestResult { Started = DateTime.Now };
 
 
-            var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
-                                          string.Format(@"{0} {1} {2} {3} {4} {5}",
-                                                        config.RdpServer,
-                                                        config.RdpDomain,
-                                                        config.RdpUserName,
-                                                        config.RdpPassword,
-                                                        workDir,
-                                                        startProgram));
+            //var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
+            //                              string.Format(@"{0} {1} {2} {3} {4} {5} {6}",
+            //                                            config.RdpServer,
+            //                                            config.RdpDomain,
+            //                                            config.RdpUserName,
+            //                                            config.RdpPassword,
+            //                                            workDir,
+            //                                            startProgram, startProgramArgs));
+            
+            //debug
+            var pi = new ProcessStartInfo
+            {
+                WorkingDirectory = workDir,
+                FileName = startProgram,
+                Arguments = startProgramArgs
+            };
 
-            //await ProcessEx.RunAsync(pi);
-            Process.Start(pi);
+            await ProcessEx.RunAsync(pi);
+
             //parse result from output file
-            string remoteResultFile = Path.ChangeExtension(Path.Combine(config.RemoteResultRoot, build.Name, test.Name), ".html");
-            var file = new FileInfo(remoteResultFile);
-            string text = await file.OpenText().ReadToEndAsync();
+            string text = await remoteResultFile.OpenText().ReadToEndAsync();
 
             var summaryMatch = RxSummary.Match(text);
             var failMatch = RxFailed.Match(text);
-            result.File = file.FullName;
+            result.File = remoteResultFile.FullName;
             result.Summary = summaryMatch.Groups[1].Value + "\n" + summaryMatch.Groups[2].Value + (failMatch.Success ? "\n" + failMatch.Groups[1].Value : "");
             result.PassOrFail = !failMatch.Success;
             result.Completed = DateTime.Now;

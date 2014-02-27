@@ -4,7 +4,7 @@
     {
         public static readonly string DATETIME_FORMAT = "yyyyMMdd_hhmm";
 
-        public static readonly string RDP_CLIENT = @"d:\MMtool\rdp\rdpex.exe";
+        public static readonly string RDP_CLIENT = @"d:\MMtool\rdp\rdp.exe";
 
         public static readonly string BUILD_ROOT = @"d:\testlab\builds\";
         public static readonly string PROJ_ROOT = @"d:\testlab\projects\";

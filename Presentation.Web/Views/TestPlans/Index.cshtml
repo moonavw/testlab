@@ -17,7 +17,7 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default btn-sm"})
+                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default"})
         );
     
     c.Add(o => o.Id);
