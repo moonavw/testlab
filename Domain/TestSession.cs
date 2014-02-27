@@ -11,17 +11,41 @@ namespace TestLab.Domain
     {
         public TestSession()
         {
-            Config = new TestConfig();
             Results = new HashSet<TestResult>();
         }
 
         public int Id { get; set; }
 
+        public string Name
+        {
+            get { return string.Format("{0}_{1}_{2:yyyyMMdd_hhmm}", Plan.Project.Name, Plan.Name, Started); }
+        }
+
         public DateTime? Started { get; set; }
 
         public DateTime? Completed { get; set; }
 
-        public TestConfig Config { get; set; }
+        [Required]
+        public string Server { get; set; }
+
+        [Required]
+        public string Domain { get; set; }
+
+        [Required]
+        public string UserName { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        public string RemoteBuildRoot
+        {
+            get { return string.Format(Constants.REMOTE_BUILD_ROOT_FORMAT, Server); }
+        }
+
+        public string RemoteResultRoot
+        {
+            get { return Path.Combine(string.Format(Constants.REMOTE_RESULT_ROOT_FORMAT, Server), Name); }
+        }
 
         public int TestPlanId { get; set; }
 

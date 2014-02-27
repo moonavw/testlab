@@ -35,10 +35,10 @@ namespace TestLab.Infrastructure.Zip
             }
         }
 
-        public async Task Extract(TestBuild build, TestConfig config)
+        public async Task Extract(TestBuild build, TestSession session)
         {
             string filename = Path.ChangeExtension(build.ArchivePath, ".zip");
-            string remotePath = Path.Combine(config.RemoteBuildRoot, build.Name);
+            string remotePath = Path.Combine(session.RemoteBuildRoot, build.Name);
             if (!Directory.Exists(remotePath))
             {
                 await Task.Run(() =>

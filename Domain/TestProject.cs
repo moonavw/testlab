@@ -7,7 +7,7 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestProject : Entity, IAuditable
+    public class TestProject : AggregateRoot, IAuditable
     {
         public TestProject()
         {

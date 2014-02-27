@@ -54,7 +54,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestBuild.cs" />
-    <Compile Include="TestConfig.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />

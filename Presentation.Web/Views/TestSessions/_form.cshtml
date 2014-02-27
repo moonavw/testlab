@@ -7,37 +7,32 @@
 <div class="form-horizontal">
     <fieldset>
         <legend>TestSession</legend>
-
-    </fieldset>
-
-    <fieldset>
-        <legend>Config</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpServer, " has-error"))">
-            @Html.LabelFor(m => m.Config.RdpServer, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Server, " has-error"))">
+            @Html.LabelFor(m => m.Server, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Config.RdpServer, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Config.RdpServer, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Server, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Server, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpDomain, " has-error"))">
-            @Html.LabelFor(m => m.Config.RdpDomain, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Domain, " has-error"))">
+            @Html.LabelFor(m => m.Domain, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Config.RdpDomain, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Config.RdpDomain, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Domain, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Domain, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpUserName, " has-error"))">
-            @Html.LabelFor(m => m.Config.RdpUserName, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.UserName, " has-error"))">
+            @Html.LabelFor(m => m.UserName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Config.RdpUserName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Config.RdpUserName, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.RdpPassword, " has-error"))">
-            @Html.LabelFor(m => m.Config.RdpPassword, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Password, " has-error"))">
+            @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(m => m.Config.RdpPassword, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Config.RdpPassword, null, new { @class = "help-block" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-block" })
             </div>
         </div>
     </fieldset>

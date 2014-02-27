@@ -57,14 +57,14 @@ namespace TestLab.Infrastructure.Cucumber
         }
 
 
-        public async Task<TestResult> Run(TestCase test, TestBuild build, TestConfig config)
+        public async Task<TestResult> Run(TestCase test, TestBuild build, TestSession session)
         {
             //get features's parent folder
             string workDir = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location))).Parent.FullName;
-            string outputFileName = Path.ChangeExtension(Path.Combine(build.Name, test.Name), ".html");
+            string outputFileName = Path.ChangeExtension(Path.Combine(session.Name, test.Name), ".html");
             string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
             string startProgramArgs = string.Format(@"--tag @Name_{0} -f html --out {1}", test.Name, Path.Combine(Constants.RESULT_ROOT, outputFileName));
-            var remoteResultFile = new FileInfo(Path.Combine(config.RemoteResultRoot, outputFileName));
+            var remoteResultFile = new FileInfo(Path.Combine(session.RemoteResultRoot, outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
 

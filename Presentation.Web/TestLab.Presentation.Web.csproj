@@ -229,7 +229,6 @@
     <Content Include="Views\TestCases\Edit.cshtml" />
     <Content Include="Views\TestCases\New.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
-    <Content Include="Views\TestSessions\_ShowConfig.cshtml" />
     <Content Include="Views\TestBuilds\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

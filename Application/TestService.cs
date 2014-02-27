@@ -74,7 +74,7 @@ namespace TestLab.Application
             if (build == null) throw new InvalidOperationException("no archived build for this test session");
 
             //extract
-            await _archiver.Extract(build, session.Config);
+            await _archiver.Extract(build, session);
 
             //find tests
             var tests = session.Plan.Cases.Where(z => z.Published != null).ToList();
@@ -85,7 +85,7 @@ namespace TestLab.Application
             session.Results.Clear();
             foreach (var t in tests)
             {
-                var result = await driver.Run(t, build, session.Config);
+                var result = await driver.Run(t, build, session);
                 session.Results.Add(result);
             }
             session.Completed = DateTime.Now;

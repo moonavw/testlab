@@ -6,6 +6,6 @@ namespace TestLab.Domain
     {
         Task Archive(TestBuild build);
 
-        Task Extract(TestBuild build, TestConfig config);
+        Task Extract(TestBuild build, TestSession session);
     }
 }
