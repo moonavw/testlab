@@ -18,7 +18,13 @@
 
     c.Add(o => o.PassOrFail);
 
-    c.Add(o => o.Summary);
+    c.Add(o => o.Summary)
+     .Encoded(false)
+     .Sanitized(false)
+     .RenderValueAs(d =>
+        @<pre>
+            @d.Summary
+         </pre>);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

@@ -14,12 +14,16 @@ namespace TestLab.Infrastructure.Cucumber
     {
         private static readonly Regex RxTag = new Regex(@"@Name_(\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Regex RxFailed = new Regex(
-            "<td class=\"failed\" colspan=\"\\d+\"><pre>(.+)</pre></td>",
+        private static readonly Regex RxFail = new Regex(
+            "<td class=\"failed\" colspan=\"\\d+\">(.+)</td>",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        private static readonly Regex RxFailDetails = new Regex(
+            "<pre>([^<]+)</pre>",
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private static readonly Regex RxSummary = new Regex(
-            "<p id=\"totals\">(.+)<br>(.+)</p>",
+            @"(\d+ scenarios [^<]*)<br />(\d+ steps \([^\)]+\))",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #region Implementation of ITestDriver
@@ -60,12 +64,11 @@ namespace TestLab.Infrastructure.Cucumber
             string outputFileName = Path.ChangeExtension(Path.Combine(build.Name, test.Name), ".html");
             string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
             string startProgramArgs = string.Format(@"--tag @Name_{0} -f html --out {1}", test.Name, Path.Combine(Constants.RESULT_ROOT, outputFileName));
-            //var remoteResultFile = new FileInfo(Path.Combine(config.RemoteResultRoot, outputFileName));
-            var remoteResultFile = new FileInfo(Path.Combine(Constants.RESULT_ROOT, outputFileName));
+            var remoteResultFile = new FileInfo(Path.Combine(config.RemoteResultRoot, outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
 
-            var result = new TestResult { Started = DateTime.Now };
+            var result = new TestResult { Started = DateTime.Now, Case = test };
 
 
             //var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
@@ -76,7 +79,7 @@ namespace TestLab.Infrastructure.Cucumber
             //                                            config.RdpPassword,
             //                                            workDir,
             //                                            startProgram, startProgramArgs));
-            
+
             //debug
             var pi = new ProcessStartInfo
             {
@@ -91,10 +94,17 @@ namespace TestLab.Infrastructure.Cucumber
             string text = await remoteResultFile.OpenText().ReadToEndAsync();
 
             var summaryMatch = RxSummary.Match(text);
-            var failMatch = RxFailed.Match(text);
+            var failMatch = RxFail.Match(text);
             result.File = remoteResultFile.FullName;
-            result.Summary = summaryMatch.Groups[1].Value + "\n" + summaryMatch.Groups[2].Value + (failMatch.Success ? "\n" + failMatch.Groups[1].Value : "");
+            result.Summary = summaryMatch.Groups[1].Value + summaryMatch.Groups[2].Value;            
             result.PassOrFail = !failMatch.Success;
+            if (result.PassOrFail == false)
+            {
+                foreach (Match m in RxFailDetails.Matches(failMatch.Groups[1].Value))
+                {
+                    result.Summary += "\n" + m.Groups[1].Value;
+                }
+            }
             result.Completed = DateTime.Now;
 
             return result;
