@@ -12,7 +12,7 @@ namespace TestLab.Domain
     {
         public TestProject()
         {
-            Builds = new HashSet<TestBuild>();
+            Build = new TestBuild();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
         }
@@ -45,12 +45,7 @@ namespace TestLab.Domain
             get { return Path.Combine(WorkDir, BuildOutputPath ?? ""); }
         }
 
-        public TestBuild LastBuild
-        {
-            get { return Builds.LastOrDefault(z => z.Completed != null && z.Archived != null); }
-        }
-
-        public virtual ICollection<TestBuild> Builds { get; set; }
+        public TestBuild Build { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
 

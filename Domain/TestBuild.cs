@@ -4,14 +4,9 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestBuild : Entity
+    public class TestBuild : ValueObject
     {
-        public int Id { get; set; }
-
-        public string Name
-        {
-            get { return string.Format("{0}_{1:yyyyMMdd_hhmm}", Project.Name, Completed); }
-        }
+        public string Name { get; set; }
 
         public string ArchivePath
         {
@@ -23,9 +18,5 @@ namespace TestLab.Domain
         public DateTime? Completed { get; set; }
 
         public DateTime? Archived { get; set; }
-
-        public int TestProjectId { get; set; }
-
-        public virtual TestProject Project { get; set; }
     }
 }

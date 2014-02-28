@@ -44,12 +44,7 @@ namespace TestLab.Presentation.Web
                 {
                     projects.As("projects");
 
-                    projects.Resources<TestBuildsController>(builds =>
-                    {
-                        builds.As("builds");
-                        builds.Member(x => x.Post("start"));
-                        builds.Except("new", "show", "edit");
-                    });
+                    projects.Member(x => x.Post("build"));
 
                     projects.Resources<TestPlansController>(plans =>
                     {

@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="DbContext.cs" />
     <Compile Include="EntityFrameworkModule.cs" />
-    <Compile Include="Mapping\TestBuildMapping.cs" />
     <Compile Include="Mapping\TestSessionMapping.cs" />
     <Compile Include="Mapping\TestCaseMapping.cs" />
     <Compile Include="Mapping\TestPlanMapping.cs" />

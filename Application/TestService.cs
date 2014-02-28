@@ -12,14 +12,14 @@ namespace TestLab.Application
     public class TestService : ITestService
     {
         private readonly ITestBuilder _builder;
-        private readonly ITestArchiver _archiver;
+        private readonly IArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly IEnumerable<ITestPuller> _pullers;
+        private readonly IEnumerable<IRepoPuller> _pullers;
 
         public TestService(
-            IEnumerable<ITestPuller> pullers,
+            IEnumerable<IRepoPuller> pullers,
             ITestBuilder builder,
-            ITestArchiver archiver,
+            IArchiver archiver,
             IEnumerable<ITestDriver> drivers)
         {
             _pullers = pullers;
@@ -28,28 +28,28 @@ namespace TestLab.Application
             _drivers = drivers;
         }
 
-        public async Task Build(TestBuild build)
+        public async Task Build(TestProject project)
         {
-            var project = build.Project;
-            var puller = _pullers.FirstOrDefault(z => z.CanPull(project));
+            var puller = _pullers.FirstOrDefault(z => z.CanPull(project.RepoPathOrUrl));
             if (puller == null) throw new NotSupportedException("no puller for this project");
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this project");
 
             //pull
-            await puller.Pull(project);
+            await puller.Pull(project.RepoPathOrUrl, project.WorkDir);
 
             //build
-            await _builder.Build(build);
+            var build = project.Build = await _builder.Build(project);
 
             //archive
-            await _archiver.Archive(build);
+            await _archiver.Archive(project.BuildOutputDir, build.ArchivePath);
+            build.Archived = DateTime.Now;
 
             //publish
-            var tests = (await driver.Publish(build)).ToList();
+            var tests = (await driver.Publish(project)).ToList();
             var toDel = project.Cases.ExceptBy(tests, z => z.FullName).ToList();
             var toAdd = tests.ExceptBy(project.Cases, z => z.FullName).ToList();
-            
+
             toDel.ForEach(z =>
             {
                 z.Plans.Clear();
@@ -70,21 +70,20 @@ namespace TestLab.Application
             if (driver == null) throw new NotSupportedException("no driver for this test session");
 
             //find last build
-            var build = project.LastBuild;
-            if (build == null) throw new InvalidOperationException("no build for this test session");
+            var build = project.Build;
+            if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
 
             //start
             session.Started = DateTime.Now;
 
             //extract
-            await _archiver.Extract(build, session);
+            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
 
             //find tests
             var tests = session.Plan.Cases.Where(z => z.Published != null).ToList();
             if (tests.Count == 0) throw new InvalidOperationException("no tests for this test session");
 
             //run
-            
             session.Results.Clear();
             foreach (var t in tests)
             {

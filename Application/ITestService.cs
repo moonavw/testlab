@@ -5,7 +5,7 @@ namespace TestLab.Application
 {
     public interface ITestService
     {
-        Task Build(TestBuild build);
+        Task Build(TestProject project);
 
         Task Run(TestSession session);
     }

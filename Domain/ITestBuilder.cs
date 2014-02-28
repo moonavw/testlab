@@ -4,6 +4,6 @@ namespace TestLab.Domain
 {
     public interface ITestBuilder
     {
-        Task Build(TestBuild build);
+        Task<TestBuild> Build(TestProject project);
     }
 }

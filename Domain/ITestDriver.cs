@@ -7,7 +7,7 @@ namespace TestLab.Domain
     {
         string Name { get; }
 
-        Task<IEnumerable<TestCase>> Publish(TestBuild build);
+        Task<IEnumerable<TestCase>> Publish(TestProject project);
 
         Task<TestResult> Run(TestCase test, TestBuild build, TestSession session);
     }

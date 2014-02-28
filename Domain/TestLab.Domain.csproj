@@ -43,11 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITestArchiver.cs" />
     <Compile Include="ITestBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ITestPuller.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ITestDriver.cs">

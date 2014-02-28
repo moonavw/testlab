@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using RunProcessAsTask;
 using TestLab.Domain;
 using Microsoft.Win32.TaskScheduler;
 using System.Threading;
@@ -35,9 +33,9 @@ namespace TestLab.Infrastructure.Cucumber
             get { return "Cucumber"; }
         }
 
-        public async Task<IEnumerable<TestCase>> Publish(TestBuild build)
+        public async Task<IEnumerable<TestCase>> Publish(TestProject project)
         {
-            string srcPath = build.Project.WorkDir;
+            string srcPath = project.WorkDir;
             //looking for test files, publish them to db
             var dir = new DirectoryInfo(srcPath);
             var files = dir.GetFiles("*.feature", SearchOption.AllDirectories);

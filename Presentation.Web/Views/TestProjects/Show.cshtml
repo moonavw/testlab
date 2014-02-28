@@ -49,6 +49,41 @@
             @Html.DisplayFor(model => model.BuildScript)
             &nbsp;
         </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Build.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Build.Name)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Build.Started)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Build.Started)
+            &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Build.Completed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Build.Completed)
+            &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Build.Archived)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Build.Archived)
+            &nbsp;
+        </dd>
     </dl>
 </div>
 
@@ -58,7 +93,9 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
 
-    @Html.ActionLink("TestPlans", "Index", "TestPlans", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
     @Html.ActionLink("TestCases", "Index", "TestCases", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
 </p>
-@Html.Partial("../TestBuilds/Index", Model.Builds)
+<p>
+    @Html.ActionLink("Build", "Build", "TestProjects", new { id = Model.Id }, new { @class = "btn btn-success ajax-post" })
+</p>
+@Html.Partial("../TestPlans/Index", Model.Plans)

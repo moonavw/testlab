@@ -1,5 +1,4 @@
 ﻿using Ninject.Modules;
-using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Zip
 {
@@ -7,7 +6,7 @@ namespace TestLab.Infrastructure.Zip
     {
         public override void Load()
         {
-            Bind<ITestArchiver>().To<ZipTestArchiver>();
+            Bind<IArchiver>().To<ZipArchiver>();
         }
     }
 }

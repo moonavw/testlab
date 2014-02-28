@@ -145,7 +145,6 @@
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\TestBuildsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
     <Compile Include="Controllers\TestCasesController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />

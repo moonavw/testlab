@@ -3,27 +3,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using RunProcessAsTask;
-using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Git
 {
-    public class GitTestPuller : ITestPuller
+    public class GitRepoPuller : IRepoPuller
     {
         #region Implementation of ITestPuller
 
-        public bool CanPull(TestProject project)
+        public bool CanPull(string repoPathOrUrl)
         {
-            return project.RepoPathOrUrl.EndsWith(".git", StringComparison.OrdinalIgnoreCase);
+            return repoPathOrUrl.EndsWith(".git", StringComparison.OrdinalIgnoreCase);
         }
 
-        public Task Pull(TestProject project)
+        public Task Pull(string repoPathOrUrl, string workDir)
         {
-            string pathOrUrl = project.RepoPathOrUrl;
-            string workDir = project.WorkDir;
-
             //git clone or git pull
             var pi = !Directory.Exists(workDir)
-                ? new ProcessStartInfo("git", string.Format("clone {0} {1}", pathOrUrl, workDir))
+                ? new ProcessStartInfo("git", string.Format("clone {0} {1}", repoPathOrUrl, workDir))
                 : new ProcessStartInfo("git", "pull") { WorkingDirectory = workDir };
 
             return ProcessEx.RunAsync(pi);

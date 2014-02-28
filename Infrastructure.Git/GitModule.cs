@@ -1,5 +1,4 @@
 ﻿using Ninject.Modules;
-using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Git
 {
@@ -7,7 +6,7 @@ namespace TestLab.Infrastructure.Git
     {
         public override void Load()
         {
-            Bind<ITestPuller>().To<GitTestPuller>();
+            Bind<IRepoPuller>().To<GitRepoPuller>();
         }
     }
 }

@@ -1,19 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Ionic.Zip;
-using TestLab.Domain;
 
 namespace TestLab.Infrastructure.Zip
 {
-    public class ZipTestArchiver : ITestArchiver
+    public class ZipArchiver : IArchiver
     {
         #region Implementation of ITestArchiver
 
-        public async Task Archive(TestBuild build)
+        public async Task Archive(string srcDir, string archiveFile)
         {
-            var fi = new FileInfo(Path.ChangeExtension(build.ArchivePath, ".zip"));
-            string srcDir = build.Project.BuildOutputDir;
+            var fi = new FileInfo(Path.ChangeExtension(archiveFile, ".zip"));
             if (!fi.Exists)
             {
                 if (!fi.Directory.Exists)
@@ -27,26 +24,20 @@ namespace TestLab.Infrastructure.Zip
                         zip.Save();
                     }
                 });
-                build.Archived = DateTime.Now;
-            }
-            else
-            {
-                build.Archived = fi.CreationTime;
             }
         }
 
-        public async Task Extract(TestBuild build, TestSession session)
+        public async Task Extract(string archiveFile, string destDir)
         {
-            string filename = Path.ChangeExtension(build.ArchivePath, ".zip");
-            string remotePath = Path.Combine(session.RemoteBuildRoot, build.Name);
-            if (!Directory.Exists(remotePath))
+            string filename = Path.ChangeExtension(archiveFile, ".zip");
+            if (!Directory.Exists(destDir))
             {
                 await Task.Run(() =>
                 {
                     //unzip files
                     using (var zip = ZipFile.Read(filename))
                     {
-                        zip.ExtractAll(remotePath);
+                        zip.ExtractAll(destDir);
                     }
                 });
             }
