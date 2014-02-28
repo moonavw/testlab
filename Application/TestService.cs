@@ -62,11 +62,9 @@ namespace TestLab.Application
             });
         }
 
-        public async Task Run(TestSession session)
+        private async Task OnSessionStarting(TestSession session)
         {
             var project = session.Plan.Project;
-            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
-            if (driver == null) throw new NotSupportedException("no driver for this test session");
 
             //find build
             var build = session.Build;
@@ -76,11 +74,20 @@ namespace TestLab.Application
             }
             if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
 
+            //extract
+            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
+        }
+
+        public async Task Run(TestSession session)
+        {
+            var project = session.Plan.Project;
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this test session");
+
             //start
             session.Started = DateTime.Now;
 
-            //extract
-            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
+            await OnSessionStarting(session);
 
             //runs
             var runs = session.Runs;
@@ -100,19 +107,11 @@ namespace TestLab.Application
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this test session");
 
-            //find build
-            var build = session.Build;
-            if (build.Completed == null)
-            {//pick project's build if session's null
-                build = session.Build = project.Build;
+            if (session.Started == null)
+            {
+                session.Started = DateTime.Now;
+                await OnSessionStarting(session);
             }
-            if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
-
-            //start
-            session.Started = DateTime.Now;
-
-            //extract
-            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
 
             //run
             run.Result = await driver.Run(run);

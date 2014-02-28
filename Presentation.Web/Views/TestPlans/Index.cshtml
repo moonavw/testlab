@@ -7,7 +7,10 @@
 <h2>TestPlans</h2>
 
 <p>
-    @Html.ActionLink("Create New", "New", null, new { @class = "btn btn-default" })
+    @{
+        var routeData = ViewContext.RouteData.Values["testprojectId"] == null ? new { testprojectId = ViewContext.RouteData.Values["id"] } : null;
+        }
+    @Html.ActionLink("Create New", "New", "TestPlans", routeData, new { @class = "btn btn-default" })
 </p>
 
 @Html.Grid(Model).Columns(c =>
