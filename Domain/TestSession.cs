@@ -40,8 +40,8 @@ namespace TestLab.Domain
 
         public string EncryptedPassword
         {
-            get { return Encrypter.Encrypt(Password, Constants.EncryptionKey); }
-            set { Password = Encrypter.Decrypt(value, Constants.EncryptionKey); }
+            get { return PasswordProtector.Encrypt(Password, Constants.EncryptionKey); }
+            set { Password = PasswordProtector.Decrypt(value, Constants.EncryptionKey); }
         }
 
         public string DomainUser

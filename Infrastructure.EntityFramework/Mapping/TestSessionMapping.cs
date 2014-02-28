@@ -14,6 +14,7 @@ namespace TestLab.Infrastructure.EntityFramework.Mapping
                 .HasForeignKey(z => z.TestPlanId);
 
             Ignore(z => z.Password);
+            Property(z => z.EncryptedPassword).HasColumnName("Password");
         }
     }
 }

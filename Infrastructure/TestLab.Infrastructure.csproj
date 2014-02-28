@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Encrypter.cs" />
+    <Compile Include="PasswordProtector.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
