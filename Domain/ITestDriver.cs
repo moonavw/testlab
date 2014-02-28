@@ -9,6 +9,6 @@ namespace TestLab.Domain
 
         Task<IEnumerable<TestCase>> Publish(TestProject project);
 
-        Task<TestResult> Run(TestCase test, TestBuild build, TestSession session);
+        Task<TestResult> Run(TestRun run);
     }
 }

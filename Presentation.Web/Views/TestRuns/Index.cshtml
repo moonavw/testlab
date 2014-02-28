@@ -1,32 +1,49 @@
-﻿@model IEnumerable<TestLab.Domain.TestResult>
+﻿@model IEnumerable<TestLab.Domain.TestRun>
 
 @{
-    ViewBag.Title = "TestResults";
+    ViewBag.Title = "TestRuns";
 }
 
-<h2>TestResults</h2>
+<h2>TestRuns</h2>
 
 @Html.Grid(Model).Columns(c =>
 {
     c.Add(o => o.Case.Name);
 
     c.Add(o => o.Started)
-     .SetWidth(110);
+     .SetWidth(110)
+     .Encoded(false)
+     .Sanitized(false)
+     .RenderValueAs(d =>
+                        @<div>
+                             @if (d.Started == null)
+                             {
+                                 @Html.ActionLink("Start", "Start", "TestRuns", new {id = d.TestCaseId, testsessionId = d.TestSessionId}, new {@class = "btn btn-success ajax-post"})
+                             }
+                             else
+                             {
+                                 @d.Started
+                             }
+                         </div>
+        );
 
     c.Add(o => o.Completed)
      .SetWidth(110);
 
-    c.Add(o => o.Summary)
+    c.Add(o => o.Result.Summary)
      .Encoded(false)
      .Sanitized(false)
      .RenderValueAs(d =>
-        @<pre>
-            @d.Summary
+                        @<pre>
+            @d.Result.Summary
 
-            @d.Output</pre>);
+            @d.Result.ErrorDetails
+
+            @d.Result.Output</pre>
+        );
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20).SetRowCssClasses(item => {
-    switch (item.PassOrFail)
+    switch (item.Result.PassOrFail)
     {
         case true:
             return "success";
@@ -46,6 +63,6 @@
         <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
         <li>@Html.ActionLink("Plan", "Show", "TestPlans", new { id = ViewContext.RouteData.Values["testplanId"] }, null)</li>
         <li>@Html.ActionLink("Session", "Show", "TestSessions", new { id = ViewContext.RouteData.Values["testsessionId"] }, null)</li>
-        <li class="active">Results</li>
+        <li class="active">Runs</li>
     </ol>
 }

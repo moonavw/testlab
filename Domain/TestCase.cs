@@ -11,7 +11,6 @@ namespace TestLab.Domain
         public TestCase()
         {
             Plans = new HashSet<TestPlan>();
-            Results = new HashSet<TestResult>();
         }
 
         public int Id { get; set; }
@@ -34,7 +33,5 @@ namespace TestLab.Domain
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
-
-        public virtual ICollection<TestResult> Results { get; set; }
     }
 }

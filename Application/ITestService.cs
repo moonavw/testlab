@@ -8,5 +8,7 @@ namespace TestLab.Application
         Task Build(TestProject project);
 
         Task Run(TestSession session);
+
+        Task Run(TestRun run);
     }
 }

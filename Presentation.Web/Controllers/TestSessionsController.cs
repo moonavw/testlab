@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -35,6 +36,14 @@ namespace TestLab.Presentation.Web.Controllers
         public override async Task<ActionResult> Index(TestSession searchModel)
         {
             return View(await Repo.Query().Where(z => z.TestPlanId == searchModel.TestPlanId).ToListAsync());
+        }
+
+        public override async Task<ActionResult> Create(TestSession model)
+        {
+            var plan = await Uow.Repository<TestPlan>().FindAsync(model.TestPlanId);
+            model.Build = plan.Project.Build;
+            model.Runs = new HashSet<TestRun>(plan.Cases.Where(z => z.Published != null).ToList().Select(z => new TestRun {Case = z}));
+            return await base.Create(model);
         }
     }
 }

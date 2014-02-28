@@ -71,4 +71,4 @@
     @Html.ActionLink("Start", "Start", "TestSessions", new { id = Model.Id, testplanId = Model.TestPlanId }, new { @class = "btn btn-success ajax-post" })
 </p>
 
-@Html.Partial("../TestResults/Index", Model.Results)
+@Html.Partial("../TestRuns/Index", Model.Runs)

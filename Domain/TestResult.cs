@@ -1,26 +1,15 @@
-﻿using System;
-using TestLab.Infrastructure;
+﻿using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestResult : Entity
+    public class TestResult : ValueObject
     {
-        public int TestCaseId { get; set; }
-
-        public int TestSessionId { get; set; }
-
-        public DateTime? Started { get; set; }
-
-        public DateTime? Completed { get; set; }
+        public bool? PassOrFail { get; set; }
 
         public string Output { get; set; }
 
         public string Summary { get; set; }
 
-        public bool? PassOrFail { get; set; }
-
-        public virtual TestCase Case { get; set; }
-
-        public virtual TestSession Session { get; set; }
+        public string ErrorDetails { get; set; }
     }
 }

@@ -57,8 +57,12 @@ namespace TestLab.Infrastructure.Cucumber
         }
 
 
-        public async Task<TestResult> Run(TestCase test, TestBuild build, TestSession session)
+        public async Task<TestResult> Run(TestRun run)
         {
+            var test = run.Case;
+            var session = run.Session;
+            var build = session.Build;
+
             //get test's feature file
             string workFile = Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location);
             string outputFileName = Path.ChangeExtension(Path.Combine(session.Name, test.Name), ".html");
@@ -67,8 +71,6 @@ namespace TestLab.Infrastructure.Cucumber
             var remoteResultFile = new FileInfo(Path.Combine(session.RemoteResultRoot, outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
-
-            var result = new TestResult { Started = DateTime.Now, Case = test };
 
             using (TaskService ts = new TaskService(session.Server, session.UserName, session.Domain, session.Password))
             {
@@ -91,17 +93,22 @@ namespace TestLab.Infrastructure.Cucumber
 
             var summaryMatch = RxSummary.Match(text);
             var failMatch = RxFail.Match(text);
-            result.Output = remoteResultFile.FullName;
-            result.Summary = summaryMatch.Groups[1].Value + " " + summaryMatch.Groups[2].Value;
-            result.PassOrFail = !failMatch.Success;
+
+            var result = new TestResult
+            {
+                Output = remoteResultFile.FullName,
+                Summary = summaryMatch.Groups[1].Value + " " + summaryMatch.Groups[2].Value,
+                PassOrFail = !failMatch.Success
+            };
             if (result.PassOrFail == false)
             {
+                result.ErrorDetails = "";
                 foreach (Match m in RxFailDetails.Matches(failMatch.Groups[1].Value))
                 {
-                    result.Summary += "\n" + m.Groups[1].Value;
+                    result.ErrorDetails += "\n" + m.Groups[1].Value;
                 }
             }
-            result.Completed = DateTime.Now;
+            run.Completed = DateTime.Now;
 
             return result;
         }

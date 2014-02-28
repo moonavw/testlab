@@ -19,11 +19,12 @@ namespace TestLab.Infrastructure.EntityFramework
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.ComplexType<TestBuild>();
+            modelBuilder.ComplexType<TestResult>();
             modelBuilder.Configurations.Add(new TestProjectMapping());
             modelBuilder.Configurations.Add(new TestSessionMapping());
             modelBuilder.Configurations.Add(new TestPlanMapping());
             modelBuilder.Configurations.Add(new TestCaseMapping());
-            modelBuilder.Configurations.Add(new TestResultMapping());
+            modelBuilder.Configurations.Add(new TestRunMapping());
         }
     }
 }

@@ -51,6 +51,7 @@
     </Compile>
     <Compile Include="TestBuild.cs" />
     <Compile Include="TestProject.cs" />
+    <Compile Include="TestRun.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="TestPlan.cs" />

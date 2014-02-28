@@ -4,20 +4,20 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.EntityFramework.Mapping
 {
-    internal class TestResultMapping : EntityTypeConfiguration<TestResult>
+    internal class TestRunMapping : EntityTypeConfiguration<TestRun>
     {
-        public TestResultMapping()
+        public TestRunMapping()
         {
             HasKey(z => new { z.TestCaseId, z.TestSessionId });
             Property(z => z.TestCaseId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
             Property(z => z.TestSessionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             HasRequired(z => z.Case)
-                .WithMany(f => f.Results)
+                .WithMany()
                 .HasForeignKey(z => z.TestCaseId);
 
             HasRequired(z => z.Session)
-                .WithMany(f => f.Results)
+                .WithMany(f => f.Runs)
                 .HasForeignKey(z => z.TestSessionId);
         }
     }

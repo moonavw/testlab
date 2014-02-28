@@ -1,29 +1,32 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using NPatterns.ObjectRelational;
 using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSession : Entity
+    public class TestSession : Entity, IAuditable
     {
         public TestSession()
         {
-            Results = new HashSet<TestResult>();
+            Build = new TestBuild();
+            Runs = new HashSet<TestRun>();
         }
 
         public int Id { get; set; }
 
         public string Name
         {
-            get { return string.Format("{0}_session_{1:yyyyMMdd_hhmm}", Plan.Project.Name, Started); }
+            get { return string.Format("{0}_session_{1:yyyyMMdd_hhmm}", Plan.Project.Name, Created); }
         }
 
         public DateTime? Started { get; set; }
 
         public DateTime? Completed { get; set; }
+
+        public TestBuild Build { get; set; }
 
         [Required]
         public string Server { get; set; }
@@ -63,21 +66,21 @@ namespace TestLab.Domain
 
         public virtual TestPlan Plan { get; set; }
 
-        public virtual ICollection<TestResult> Results { get; set; }
+        public virtual ICollection<TestRun> Runs { get; set; }
 
         public int PassCount
         {
-            get { return Results.Count(z => z.PassOrFail == true); }
+            get { return Runs.Count(z => z.Result.PassOrFail == true); }
         }
 
         public int FailCount
         {
-            get { return Results.Count(z => z.PassOrFail == false); }
+            get { return Runs.Count(z => z.Result.PassOrFail == false); }
         }
 
         public int NoResultCount
         {
-            get { return Results.Count(z => z.PassOrFail == null); }
+            get { return Runs.Count(z => z.Result.PassOrFail == null); }
         }
 
         public string Summary
@@ -90,5 +93,14 @@ namespace TestLab.Domain
                     NoResultCount);
             }
         }
+
+        #region Implementation of IAuditable
+
+        public DateTime? Created { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? Updated { get; set; }
+        public string UpdatedBy { get; set; }
+
+        #endregion
     }
 }

@@ -53,7 +53,6 @@ namespace TestLab.Application
             toDel.ForEach(z =>
             {
                 z.Plans.Clear();
-                z.Results.Clear();
                 z.Published = null;
                 //project.Cases.Remove(z);
             });
@@ -69,8 +68,12 @@ namespace TestLab.Application
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this test session");
 
-            //find last build
-            var build = project.Build;
+            //find build
+            var build = session.Build;
+            if (build.Completed == null)
+            {//pick project's build if session's null
+                build = session.Build = project.Build;
+            }
             if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
 
             //start
@@ -79,18 +82,40 @@ namespace TestLab.Application
             //extract
             await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
 
-            //find tests
-            var tests = session.Plan.Cases.Where(z => z.Published != null).ToList();
-            if (tests.Count == 0) throw new InvalidOperationException("no tests for this test session");
+            //runs
+            var runs = session.Runs;
+            if (runs.Count == 0) throw new InvalidOperationException("no tests for this test session");
 
-            //run
-            session.Results.Clear();
-            foreach (var t in tests)
+            foreach (var t in runs)
             {
-                var result = await driver.Run(t, build, session);
-                session.Results.Add(result);
+                t.Result = await driver.Run(t);
             }
             session.Completed = DateTime.Now;
+        }
+
+        public async Task Run(TestRun run)
+        {
+            var session = run.Session;
+            var project = session.Plan.Project;
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this test session");
+
+            //find build
+            var build = session.Build;
+            if (build.Completed == null)
+            {//pick project's build if session's null
+                build = session.Build = project.Build;
+            }
+            if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
+
+            //start
+            session.Started = DateTime.Now;
+
+            //extract
+            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
+
+            //run
+            run.Result = await driver.Run(run);
         }
     }
 }
