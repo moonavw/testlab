@@ -20,8 +20,14 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default"})
-        );
+         @<div>
+             @if(ViewContext.RouteData.Values["testprojectId"] == null){
+                 @Html.ActionLink("Open", "Show", "TestPlans", new { id = d.Id, testprojectId = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" })
+             }else{
+                 @Html.ActionLink("Open", "Show", "TestPlans", new { id = d.Id }, new { @class = "btn btn-default" })
+             }
+          </div>
+     );
     
     c.Add(o => o.Id);
 
