@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RunProcessAsTask;
 using TestLab.Domain;
+using Microsoft.Win32.TaskScheduler;
+using System.Threading;
 
 namespace TestLab.Infrastructure.Cucumber
 {
@@ -59,44 +61,40 @@ namespace TestLab.Infrastructure.Cucumber
 
         public async Task<TestResult> Run(TestCase test, TestBuild build, TestSession session)
         {
-            //get features's parent folder
-            string workDir = new DirectoryInfo(Path.GetDirectoryName(Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location))).Parent.FullName;
+            //get test's feature file
+            string workFile = Path.Combine(Constants.BUILD_ROOT, build.Name, test.Location);
             string outputFileName = Path.ChangeExtension(Path.Combine(session.Name, test.Name), ".html");
             string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
-            string startProgramArgs = string.Format(@"--tag @Name_{0} -f html --out {1}", test.Name, Path.Combine(Constants.RESULT_ROOT, outputFileName));
+            string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, Path.Combine(Constants.RESULT_ROOT, outputFileName));
             var remoteResultFile = new FileInfo(Path.Combine(session.RemoteResultRoot, outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
 
             var result = new TestResult { Started = DateTime.Now, Case = test };
 
-
-            var pi = new ProcessStartInfo(Constants.RDP_CLIENT,
-                                          string.Format(@"{0} {1} {2} {3} {4} {5} {6}",
-                                                        session.Server,
-                                                        session.Domain,
-                                                        session.UserName,
-                                                        session.Password,
-                                                        workDir,
-                                                        startProgram, startProgramArgs));
-
-            //debug
-            //var pi = new ProcessStartInfo
-            //{
-            //    WorkingDirectory = workDir,
-            //    FileName = startProgram,
-            //    Arguments = startProgramArgs
-            //};
-
-            await ProcessEx.RunAsync(pi);
+            using (TaskService ts = new TaskService(session.Server, session.UserName, session.Domain, session.Password))
+            {
+                string taskName = string.Format("{0}_{1}", session.Name, test.Name);
+                var td = ts.NewTask();
+                td.Actions.Add(new ExecAction(startProgram, startProgramArgs));
+                var t = ts.RootFolder.RegisterTaskDefinition(taskName, td, TaskCreation.CreateOrUpdate,
+                    session.DomainUser, session.Password, TaskLogonType.Password);
+                t.Run();
+                do
+                {
+                    Thread.Sleep(1000);
+                }
+                while (t.State == TaskState.Running);
+                ts.RootFolder.DeleteTask(taskName);
+            }
 
             //parse result from output file
             string text = await remoteResultFile.OpenText().ReadToEndAsync();
 
             var summaryMatch = RxSummary.Match(text);
             var failMatch = RxFail.Match(text);
-            result.File = remoteResultFile.FullName;
-            result.Summary = summaryMatch.Groups[1].Value + summaryMatch.Groups[2].Value;            
+            result.Output = remoteResultFile.FullName;
+            result.Summary = summaryMatch.Groups[1].Value + " " + summaryMatch.Groups[2].Value;
             result.PassOrFail = !failMatch.Success;
             if (result.PassOrFail == false)
             {

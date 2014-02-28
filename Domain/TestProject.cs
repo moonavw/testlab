@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using NPatterns.ObjectRelational;
@@ -42,6 +43,11 @@ namespace TestLab.Domain
         public string BuildOutputDir
         {
             get { return Path.Combine(WorkDir, BuildOutputPath ?? ""); }
+        }
+
+        public TestBuild LastBuild
+        {
+            get { return Builds.LastOrDefault(z => z.Completed != null && z.Archived != null); }
         }
 
         public virtual ICollection<TestBuild> Builds { get; set; }

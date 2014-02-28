@@ -13,7 +13,7 @@ namespace TestLab.Domain
 
         public DateTime? Completed { get; set; }
 
-        public string File { get; set; }
+        public string Output { get; set; }
 
         public string Summary { get; set; }
 

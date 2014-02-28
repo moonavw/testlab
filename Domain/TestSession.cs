@@ -35,7 +35,19 @@ namespace TestLab.Domain
         public string UserName { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string EncryptedPassword
+        {
+            get { return Encrypter.Encrypt(Password, Constants.EncryptionKey); }
+            set { Password = Encrypter.Decrypt(value, Constants.EncryptionKey); }
+        }
+
+        public string DomainUser
+        {
+            get { return string.Format(@"{0}\{1}", Domain, UserName); }
+        }
 
         public string RemoteBuildRoot
         {

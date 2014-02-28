@@ -12,6 +12,8 @@ namespace TestLab.Infrastructure.EntityFramework.Mapping
             HasRequired(z => z.Plan)
                 .WithMany(f => f.Sessions)
                 .HasForeignKey(z => z.TestPlanId);
+
+            Ignore(z => z.Password);
         }
     }
 }

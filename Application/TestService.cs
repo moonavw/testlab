@@ -70,8 +70,11 @@ namespace TestLab.Application
             if (driver == null) throw new NotSupportedException("no driver for this test session");
 
             //find last build
-            var build = project.Builds.LastOrDefault(z => z.Completed != null && z.Archived != null);
-            if (build == null) throw new InvalidOperationException("no archived build for this test session");
+            var build = project.LastBuild;
+            if (build == null) throw new InvalidOperationException("no build for this test session");
+
+            //start
+            session.Started = DateTime.Now;
 
             //extract
             await _archiver.Extract(build, session);
@@ -81,7 +84,7 @@ namespace TestLab.Application
             if (tests.Count == 0) throw new InvalidOperationException("no tests for this test session");
 
             //run
-            session.Started = DateTime.Now;
+            
             session.Results.Clear();
             foreach (var t in tests)
             {
