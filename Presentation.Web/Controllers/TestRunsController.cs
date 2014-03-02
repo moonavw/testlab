@@ -2,39 +2,45 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using TestLab.Application;
 using TestLab.Domain;
 using TestLab.Infrastructure;
 
 namespace TestLab.Presentation.Web.Controllers
 {
-    public class TestRunsController : Controller<TestRun>
+    public class TestRunsController : ApplicationController
     {
-        private readonly ITestService _service;
+        private readonly IRepository<TestProject> _projRepo;
 
-        public TestRunsController(IUnitOfWork uow, ITestService service)
-            : base(uow)
+        public TestRunsController(IUnitOfWork uow)
         {
-            _service = service;
+            _projRepo = uow.Repository<TestProject>();
         }
 
-        public override async Task<ActionResult> Index(TestRun searchModel)
+        public async Task<ActionResult> Index(int testprojectId, int testsessionId)
         {
-            return View(await Repo.Query().Where(z => z.TestSessionId == searchModel.TestSessionId).ToListAsync());
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Start(int id, int testsessionId)
-        {
-            var entity = await Repo.FindAsync(id, testsessionId);
-            await _service.Run(entity);
-            Repo.Modify(entity);
-            await Uow.CommitAsync();
-            return RespondTo(formats =>
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
             {
-                formats.Default = RedirectToAction("Index");
-                formats["text"] = () => Content(entity.Started.ToString());
-            });
+                return HttpNotFound();
+            }
+            var session = project.Sessions.FirstOrDefault(z => z.Id == testsessionId);
+            if (session == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Session = session;
+            ViewBag.Project = project;
+
+            return View(session.Runs);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _projRepo.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

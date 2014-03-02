@@ -1,11 +1,13 @@
 ﻿@model TestLab.Domain.TestProject
 
 @{
-    ViewBag.Title = "TestProject";
+    ViewBag.Title = "Test Project";
 }
 
 <div>
-    <h2>TestProject</h2>
+    <h2>Test Project</h2>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.Partial("_ShowAudit", Model)
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -51,56 +53,16 @@
         </dd>
     </dl>
 </div>
-<div>
-    <h3>Build</h3>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Build.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Build.Name)
-        </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Build.Started)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Build.Started)
-            &nbsp;
-        </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Build.Completed)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Build.Completed)
-            &nbsp;
-        </dd>
-        
-        <dt>
-            @Html.DisplayNameFor(model => model.Build.Archived)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Build.Archived)
-            &nbsp;
-        </dd>
-    </dl>
-</div>
-
-@Html.Partial("_ShowAudit", Model)
-
+@Html.Partial("_ShowBuild", Model.Build)
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Start New Build", "Build", "TestProjects", new { id = Model.Id }, new { @class = "btn btn-success ajax-post" })
+</p>
 
-    @Html.ActionLink("TestCases", "Index", "TestCases", new { testprojectId = Model.Id }, new { @class = "btn btn-default" })
-</p>
-<p>
-    @Html.ActionLink("Build", "Build", "TestProjects", new { id = Model.Id }, new { @class = "btn btn-success ajax-post" })
-</p>
-@Html.Partial("../TestPlans/Index", Model.Plans)
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li class="active">@Html.ActionLink("Project", "Edit", "TestProjects", new { id = Model.Id }, null)</li>
+        <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
+        <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>
+    </ul>
+}

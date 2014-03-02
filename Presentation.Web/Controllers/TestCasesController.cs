@@ -7,16 +7,33 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Presentation.Web.Controllers
 {
-    public class TestCasesController : Controller<TestCase>
+    public class TestCasesController : ApplicationController
     {
+        private readonly IRepository<TestProject> _projRepo;
+
         public TestCasesController(IUnitOfWork uow)
-            : base(uow)
         {
+            _projRepo = uow.Repository<TestProject>();
         }
 
-        public override async Task<ActionResult> Index(TestCase searchModel)
+        public async Task<ActionResult> Index(int testprojectId)
         {
-            return View(await Repo.Query().Where(z => z.TestProjectId == searchModel.TestProjectId).ToListAsync());
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Project = project;
+            return View(project.Cases);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _projRepo.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

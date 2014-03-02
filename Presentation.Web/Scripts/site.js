@@ -7,7 +7,7 @@
             btn.remove();
             parent.append(data);
         },"text");
-        
+
         return false;
     });
 
@@ -17,4 +17,6 @@
         preserveselectiononmove: 'moved',
         moveonselect: false
     });
+
+    $('select.selectpicker').selectpicker();
 });

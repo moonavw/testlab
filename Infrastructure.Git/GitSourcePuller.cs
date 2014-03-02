@@ -6,7 +6,7 @@ using RunProcessAsTask;
 
 namespace TestLab.Infrastructure.Git
 {
-    public class GitRepoPuller : IRepoPuller
+    public class GitSourcePuller : ISourcePuller
     {
         #region Implementation of ITestPuller
 

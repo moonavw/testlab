@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<TestLab.Domain.TestProject>
 
 @{
-    ViewBag.Title = "TestProjects";
+    ViewBag.Title = "Test Projects";
 }
 
-<h2>TestProjects</h2>
-
+<h2>Test Projects</h2>
 <p>
-    @Html.ActionLink("Create New", "New", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Create New", "New", "TestProjects", null, new { @class = "btn btn-default" })
 </p>
 
 @Html.Grid(Model).Columns(c =>
@@ -17,7 +16,7 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", new {id = d.Id}, new {@class = "btn btn-default"})
+                        Html.ActionLink("Open", "Show", "TestProjects", new { id = d.Id }, new { @class = "btn btn-default" })
         );
 
     c.Add(o => o.Id);
@@ -26,29 +25,13 @@
 
     c.Add(o => o.DriverName);
 
-    c.Add(o => o.Build.Started)
-     .SetWidth(110)
-     .Encoded(false)
-     .Sanitized(false)
-     .RenderValueAs(d =>
-                        @<div>
-                             @if (d.Build.Started == null)
-                             {
-                                 @Html.ActionLink("Build", "Build", "TestProjects", new {id = d.Id}, new {@class = "btn btn-success ajax-post"})
-                             }
-                             else
-                             {
-                                 @d.Build.Started
-                             }
-                         </div>
-        );
-
-    c.Add(o => o.Build.Completed)
-     .SetWidth(110);
+    c.Add(o => o.Build.Name);
     
     c.Add(o => o.Plans.Count);
 
     c.Add(o => o.Cases.Count);
+
+    c.Add(o => o.Sessions.Count);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

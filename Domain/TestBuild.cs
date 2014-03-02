@@ -4,19 +4,22 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestBuild : ValueObject
+    public class TestBuild : ValueObject, IStartable
     {
         public string Name { get; set; }
 
-        public string ArchivePath
+        public string Location
         {
             get { return Path.Combine(Constants.BUILD_ROOT, Name); }
         }
 
-        public DateTime? Started { get; set; }
+        public DateTime? Archived { get; set; }
 
+        #region Implementation of IStartable
+
+        public DateTime? Started { get; set; }
         public DateTime? Completed { get; set; }
 
-        public DateTime? Archived { get; set; }
+        #endregion
     }
 }

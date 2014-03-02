@@ -1,7 +1,12 @@
 ﻿@model NPatterns.ObjectRelational.IAuditable
 
-<div>
-    <h4>Audit</h4>
+
+<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#show-audit">
+    Audit
+</button>
+
+
+<div id="show-audit" class="collapse">
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -11,7 +16,15 @@
         <dd>
             @Html.DisplayFor(model => model.Created)
             &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
             @Html.DisplayFor(model => model.CreatedBy)
+            &nbsp;
         </dd>
 
         <dt>
@@ -21,7 +34,15 @@
         <dd>
             @Html.DisplayFor(model => model.Updated)
             &nbsp;
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+
+        <dd>
             @Html.DisplayFor(model => model.UpdatedBy)
+            &nbsp;
         </dd>
     </dl>
 </div>

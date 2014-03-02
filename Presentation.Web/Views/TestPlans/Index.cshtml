@@ -1,16 +1,13 @@
 ﻿@model IEnumerable<TestLab.Domain.TestPlan>
 
 @{
-    ViewBag.Title = "TestPlans";
+    ViewBag.Title = "Test Plans";
+    TestLab.Domain.TestProject project = ViewBag.Project;
 }
 
-<h2>TestPlans</h2>
-
+<h2>Test Plans</h2>
 <p>
-    @{
-        var routeData = ViewContext.RouteData.Values["testprojectId"] == null ? new { testprojectId = ViewContext.RouteData.Values["id"] } : null;
-        }
-    @Html.ActionLink("Create New", "New", "TestPlans", routeData, new { @class = "btn btn-default" })
+    @Html.ActionLink("Create New", "New", "TestPlans", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
 </p>
 
 @Html.Grid(Model).Columns(c =>
@@ -20,14 +17,8 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-         @<div>
-             @if(ViewContext.RouteData.Values["testprojectId"] == null){
-                 @Html.ActionLink("Open", "Show", "TestPlans", new { id = d.Id, testprojectId = ViewContext.RouteData.Values["id"] }, new { @class = "btn btn-default" })
-             }else{
-                 @Html.ActionLink("Open", "Show", "TestPlans", new { id = d.Id }, new { @class = "btn btn-default" })
-             }
-          </div>
-     );
+                        Html.ActionLink("Open", "Show", "TestPlans", new {id = d.Id, testprojectId = project.Id}, new {@class = "btn btn-default"})
+        );
     
     c.Add(o => o.Id);
 
@@ -43,9 +34,11 @@
     @Scripts.Render("~/bundles/gridmvc")
 }
 
-@section breadcrumb{
-    <ol class="breadcrumb">
-        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
-        <li class="active">Plans</li>
-    </ol>
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = project.Id }, null)</li>
+        <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = project.Id }, null)</li>
+        <li class="active">@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = project.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = project.Id }, null)</li>
+    </ul>
 }

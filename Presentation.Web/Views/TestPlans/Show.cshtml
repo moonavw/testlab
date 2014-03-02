@@ -1,11 +1,13 @@
 ﻿@model TestLab.Domain.TestPlan
 
 @{
-    ViewBag.Title = "TestPlan";
+    ViewBag.Title = "Test Plan";
 }
 
 <div>
-    <h2>TestPlan</h2>
+    <h2>Test Plan</h2>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.Partial("_ShowAudit", Model)
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -17,11 +19,15 @@
         </dd>
     </dl>
 </div>
-@Html.Partial("_ShowAudit", Model)
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("TestSessions", "Index", "TestSessions", new { testplanId = Model.Id }, new { @class = "btn btn-default" })
-</p>
 
 @Html.Partial("../TestCases/Index", Model.Cases)
+
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
+        <li class="active">@Html.ActionLink("Plan", "Show", "TestPlans", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
+    </ul>
+}

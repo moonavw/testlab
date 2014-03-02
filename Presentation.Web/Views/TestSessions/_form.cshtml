@@ -6,33 +6,68 @@
 
 <div class="form-horizontal">
     <fieldset>
-        <legend>TestSession</legend>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Server, " has-error"))">
-            @Html.LabelFor(m => m.Server, new { @class = "control-label col-md-2" })
+        <legend>Test Session</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
+            @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Server, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Server, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Domain, " has-error"))">
-            @Html.LabelFor(m => m.Domain, new { @class = "control-label col-md-2" })
+        @if (Model.Id == 0)
+        {
+            <div class="form-group@(Html.ValidationError("TestPlanId", " has-error"))">
+                @Html.Label("TestPlanId", new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.DropDownList("TestPlanId", new SelectList(Model.Project.Plans, "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
+                    @Html.ValidationMessage("TestPlanId", null, new {@class = "help-block"})
+                </div>
+            </div>
+        }
+    </fieldset>
+    
+    <fieldset>
+        <legend>Build</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Build.Name, " has-error"))">
+            @Html.LabelFor(m => m.Build.Name, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Domain, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Domain, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Build.Name, new { @class = "form-control", @readonly=true })
+                @Html.ValidationMessageFor(m => m.Build.Name, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.UserName, " has-error"))">
-            @Html.LabelFor(m => m.UserName, new { @class = "control-label col-md-2" })
+        @Html.HiddenFor(m => m.Build.Started)
+        @Html.HiddenFor(m => m.Build.Completed)
+        @Html.HiddenFor(m => m.Build.Archived)
+    </fieldset>
+    
+    <fieldset>
+        <legend>Agent</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Agent.Server, " has-error"))">
+            @Html.LabelFor(m => m.Agent.Server, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Agent.Server, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Agent.Server, null, new { @class = "help-block" })
             </div>
         </div>
-        <div class="form-group@(Html.ValidationErrorFor(m => m.Password, " has-error"))">
-            @Html.LabelFor(m => m.Password, new { @class = "control-label col-md-2" })
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Agent.Domain, " has-error"))">
+            @Html.LabelFor(m => m.Agent.Domain, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-block" })
+                @Html.TextBoxFor(m => m.Agent.Domain, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Agent.Domain, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Agent.UserName, " has-error"))">
+            @Html.LabelFor(m => m.Agent.UserName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Agent.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Agent.UserName, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Agent.Password, " has-error"))">
+            @Html.LabelFor(m => m.Agent.Password, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Agent.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Agent.Password, null, new { @class = "help-block" })
             </div>
         </div>
     </fieldset>

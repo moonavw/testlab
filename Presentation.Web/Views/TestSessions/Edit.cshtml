@@ -1,14 +1,14 @@
 ﻿@model TestLab.Domain.TestSession
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Test Session";
 }
 
 <h2>Edit</h2>
 <p>
-    @Html.ActionLink("Cancel", "Show", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Cancel", "Show", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-default" })
 </p>
-@using (Html.BeginForm("Update", "TestSessions", new { id = Model.Id }))
+@using (Html.BeginForm("Update", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }))
 {
     @Html.HttpMethodOverride(HttpVerbs.Put)
 
@@ -24,4 +24,14 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
+        <li class="active">@Html.ActionLink("Session", "Edit", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
+    </ul>
 }

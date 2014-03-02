@@ -28,7 +28,7 @@ namespace TestLab.Domain
 
         public DateTime? Published { get; set; }
 
-        public int TestProjectId { get; set; }
+        //public int TestProjectId { get; set; }
 
         public virtual TestProject Project { get; set; }
 

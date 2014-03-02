@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GitModule.cs" />
-    <Compile Include="GitRepoPuller.cs" />
+    <Compile Include="GitSourcePuller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

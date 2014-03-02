@@ -8,67 +8,125 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Presentation.Web.Controllers
 {
-    public class TestPlansController : Controller<TestPlan>
+    public class TestPlansController : ApplicationController
     {
+        private readonly IUnitOfWork _uow;
+        private readonly IRepository<TestProject> _projRepo;
+        private readonly IRepository<TestPlan> _planRepo;
+
         public TestPlansController(IUnitOfWork uow)
-            : base(uow)
         {
+            _uow = uow;
+            _projRepo = uow.Repository<TestProject>();
+            _planRepo = uow.Repository<TestPlan>();
         }
 
-        public override async Task<ActionResult> Index(TestPlan searchModel)
+        public async Task<ActionResult> Index(int testprojectId)
         {
-            return View(await Repo.Query().Where(z => z.TestProjectId == searchModel.TestProjectId).ToListAsync());
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.Project = project;
+            return View(project.Plans);
         }
 
-        public override ActionResult New(TestPlan model)
+        public async Task<ActionResult> Show(int id, int testprojectId)
         {
-            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
-            return base.New(model);
+            var entity = await _planRepo.FindAsync(id);
+            if (entity == null || entity.Project.Id != testprojectId)
+            {
+                return HttpNotFound();
+            }
+            return View(entity);
         }
 
-        [NonAction]
-        public override Task<ActionResult> Create(TestPlan model)
+        public async Task<ActionResult> New(int testprojectId)
         {
-            return base.Create(model);
+            var model = new TestPlan { Project = await _projRepo.FindAsync(testprojectId) };
+            if (model.Project == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
         }
 
-        public async Task<ActionResult> Create(TestPlan model, int[] testcases)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(int testprojectId, TestPlan model, int[] testcases)
         {
-            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
+            var project = model.Project = await _projRepo.FindAsync(testprojectId);
             if (testcases == null)
             {
                 ModelState.AddModelError("testcases", "no tests picked for this plan");
             }
             else
             {
-                model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id) && z.Published != null).ToListAsync());
+                model.Cases = new HashSet<TestCase>(project.Cases.Where(z => testcases.Contains(z.Id)));
             }
-            return await Create(model);
+            if (ModelState.IsValid)
+            {
+                project.Plans.Add(model);
+                await _uow.CommitAsync();
+                return RedirectToAction("Show", new { id = model.Id, testprojectId });
+            }
+
+            return View("new", model);
         }
 
-        [NonAction]
-        public override Task<ActionResult> Update(int id, TestPlan model)
+        public Task<ActionResult> Edit(int id, int testprojectId)
         {
-            return base.Update(id, model);
+            return Show(id, testprojectId);
         }
 
-        public async Task<ActionResult> Update(int id, TestPlan model, int[] testcases)
+        [HttpPut]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Update(int id, int testprojectId, TestPlan model, int[] testcases)
         {
-            model.Project = Uow.Repository<TestProject>().Find(model.TestProjectId);
+            var project = model.Project = await _projRepo.FindAsync(testprojectId);
             if (testcases == null)
             {
                 ModelState.AddModelError("testcases", "no tests picked for this plan");
             }
             else
             {
-                var entity = await Repo.FindAsync(id);
-                Repo.Merge(entity, model);
-                model = entity;
+                if (ModelState.IsValid)
+                {
+                    var entity = project.Plans.First(z => z.Id == id);
+                    _planRepo.Merge(entity, model);
 
-                model.Cases.Clear();
-                model.Cases = new HashSet<TestCase>(await Uow.Repository<TestCase>().Query().Where(z => testcases.Contains(z.Id) && z.Published != null).ToListAsync());
+                    entity.Cases.Clear();
+                    entity.Cases = new HashSet<TestCase>(project.Cases.Where(z => testcases.Contains(z.Id)));
+                    await _uow.CommitAsync();
+
+                    return RedirectToAction("Show", new { id, testprojectId });
+                }
             }
-            return await Update(id, model);
+            return View("edit", model);
+        }
+
+        [HttpDelete]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Destroy(int id, int testprojectId)
+        {
+            var entity = await _planRepo.FindAsync(id);
+            if (entity == null || entity.Project.Id != testprojectId)
+            {
+                return HttpNotFound();
+            }
+            _planRepo.Remove(entity);
+            await _uow.CommitAsync();
+            return RedirectToAction("Index", new {testprojectId});
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _uow.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

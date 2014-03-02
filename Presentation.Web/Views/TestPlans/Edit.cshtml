@@ -1,12 +1,12 @@
 ﻿@model TestLab.Domain.TestPlan
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Test Plan";
 }
 
 <h2>Edit</h2>
 <p>
-    @Html.ActionLink("Cancel", "Show", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("Cancel", "Show", "TestPlans", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-default" })
 </p>
 @using (Html.BeginForm("Update", "TestPlans", new {id = Model.Id}))
 {
@@ -15,13 +15,23 @@
     @Html.Partial("_form", Model)
 }
 
-@using (Html.BeginForm("Destroy", "TestPlans", new { id = Model.Id }))
+@using (Html.BeginForm("Destroy", "TestPlans", new { id = Model.Id, testprojectId = Model.Project.Id }))
 {
     @Html.HttpMethodOverride(HttpVerbs.Delete)
-    
+    @Html.AntiForgeryToken()
     <input type="submit" value="Delete" class="btn btn-danger" />
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+}
+
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
+        <li class="active">@Html.ActionLink("Plan", "Edit", "TestPlans", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
+    </ul>
 }

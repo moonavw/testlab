@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace TestLab.Infrastructure
 {
-    public interface IRepoPuller
+    public interface ISourcePuller
     {
         bool CanPull(string repoPathOrUrl);
 

@@ -9,12 +9,10 @@ namespace TestLab.Infrastructure.EntityFramework.Mapping
         {
             HasKey(z => z.Id);
 
-            HasRequired(z => z.Plan)
+            HasRequired(z => z.Project)
                 .WithMany(f => f.Sessions)
-                .HasForeignKey(z => z.TestPlanId);
-
-            Ignore(z => z.Password);
-            Property(z => z.EncryptedPassword).HasColumnName("Password");
+                //.HasForeignKey(z => z.TestProjectId);
+                .Map(m => m.MapKey("TestProjectId"));
         }
     }
 }

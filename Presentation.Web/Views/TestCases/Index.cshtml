@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<TestLab.Domain.TestCase>
 
 @{
-    ViewBag.Title = "TestCases";
+    ViewBag.Title = "Test Cases";
+    TestLab.Domain.TestProject project = ViewBag.Project;
 }
 
-<h2>TestCases</h2>
+<h2>Test Cases</h2>
 
 @Html.Grid(Model).Columns(c =>
 {
@@ -25,9 +26,11 @@
     @Scripts.Render("~/bundles/gridmvc")
 }
 
-@section breadcrumb{
-    <ol class="breadcrumb">
-        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = ViewContext.RouteData.Values["testprojectId"] }, null)</li>
-        <li class="active">Cases</li>
-    </ol>
+@section tabs{
+    <ul class="nav nav-tabs">
+        <li>@Html.ActionLink("Project", "Show", "TestProjects", new { id = project.Id }, null)</li>
+        <li class="active">@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = project.Id }, null)</li>
+        <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = project.Id }, null)</li>
+        <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = project.Id }, null)</li>
+    </ul>
 }

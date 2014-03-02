@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using NPatterns.ObjectRelational;
@@ -7,64 +8,42 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSession : Entity, IAuditable
+    public class TestSession : Entity, IAuditable, IStartable
     {
         public TestSession()
         {
             Build = new TestBuild();
             Runs = new HashSet<TestRun>();
+            Agent = new TestAgent();
         }
 
         public int Id { get; set; }
 
-        public string Name
-        {
-            get { return string.Format("{0}_session_{1:yyyyMMdd_hhmm}", Plan.Project.Name, Created); }
-        }
-
-        public DateTime? Started { get; set; }
-
-        public DateTime? Completed { get; set; }
+        [Required]
+        public string Name { get; set; }
 
         public TestBuild Build { get; set; }
 
-        [Required]
-        public string Server { get; set; }
+        public TestAgent Agent { get; set; }
 
-        [Required]
-        public string Domain { get; set; }
-
-        [Required]
-        public string UserName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        public string EncryptedPassword
+        public string OutputDir
         {
-            get { return PasswordProtector.Encrypt(Password, Constants.EncryptionKey); }
-            set { Password = PasswordProtector.Decrypt(value, Constants.EncryptionKey); }
+            get { return Path.Combine(Constants.RESULT_ROOT, ToString()); }
         }
 
-        public string DomainUser
+        public string OutputDirOnAgent
         {
-            get { return string.Format(@"{0}\{1}", Domain, UserName); }
+            get { return Path.Combine(Agent.ResultRoot, ToString()); }
         }
 
-        public string RemoteBuildRoot
+        public string BuildDirOnAgent
         {
-            get { return string.Format(Constants.REMOTE_BUILD_ROOT_FORMAT, Server); }
+            get { return Path.Combine(Agent.BuildRoot, Build.Name); }
         }
 
-        public string RemoteResultRoot
-        {
-            get { return string.Format(Constants.REMOTE_RESULT_ROOT_FORMAT, Server); }
-        }
+        //public int TestProjectId { get; set; }
 
-        public int TestPlanId { get; set; }
-
-        public virtual TestPlan Plan { get; set; }
+        public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestRun> Runs { get; set; }
 
@@ -102,5 +81,17 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        #region Implementation of IStartable
+
+        public DateTime? Started { get; set; }
+        public DateTime? Completed { get; set; }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return string.Format("{0}_{1}", Project, Name.Replace(" ", ""));
+        }
     }
 }

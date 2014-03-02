@@ -9,6 +9,7 @@ namespace TestLab.Presentation.Web
         private static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new AuthorizeAttribute());
         }
 
         public static void Start()

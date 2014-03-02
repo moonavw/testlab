@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MoreLinq;
@@ -14,10 +13,10 @@ namespace TestLab.Application
         private readonly ITestBuilder _builder;
         private readonly IArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly IEnumerable<IRepoPuller> _pullers;
+        private readonly IEnumerable<ISourcePuller> _pullers;
 
         public TestService(
-            IEnumerable<IRepoPuller> pullers,
+            IEnumerable<ISourcePuller> pullers,
             ITestBuilder builder,
             IArchiver archiver,
             IEnumerable<ITestDriver> drivers)
@@ -42,7 +41,7 @@ namespace TestLab.Application
             var build = project.Build = await _builder.Build(project);
 
             //archive
-            await _archiver.Archive(project.BuildOutputDir, build.ArchivePath);
+            await _archiver.Archive(project.BuildOutputDir, build.Location);
             build.Archived = DateTime.Now;
 
             //publish
@@ -62,32 +61,17 @@ namespace TestLab.Application
             });
         }
 
-        private async Task OnSessionStarting(TestSession session)
-        {
-            var project = session.Plan.Project;
-
-            //find build
-            var build = session.Build;
-            if (build.Completed == null)
-            {//pick project's build if session's null
-                build = session.Build = project.Build;
-            }
-            if (build.Completed == null) throw new InvalidOperationException("no build for this test session");
-
-            //extract
-            await _archiver.Extract(build.ArchivePath, Path.Combine(session.RemoteBuildRoot, build.Name));
-        }
-
         public async Task Run(TestSession session)
         {
-            var project = session.Plan.Project;
+            var project = session.Project;
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this test session");
 
             //start
             session.Started = DateTime.Now;
 
-            await OnSessionStarting(session);
+            //extract
+            await _archiver.Extract(session.Build.Location, session.BuildDirOnAgent);
 
             //runs
             var runs = session.Runs;
@@ -98,23 +82,6 @@ namespace TestLab.Application
                 t.Result = await driver.Run(t);
             }
             session.Completed = DateTime.Now;
-        }
-
-        public async Task Run(TestRun run)
-        {
-            var session = run.Session;
-            var project = session.Plan.Project;
-            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
-            if (driver == null) throw new NotSupportedException("no driver for this test session");
-
-            if (session.Started == null)
-            {
-                session.Started = DateTime.Now;
-                await OnSessionStarting(session);
-            }
-
-            //run
-            run.Result = await driver.Run(run);
         }
     }
 }

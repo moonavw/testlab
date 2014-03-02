@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Ninject.Planning;
 using RestfulRouting;
 using TestLab.Presentation.Web.Controllers;
 
@@ -43,33 +42,29 @@ namespace TestLab.Presentation.Web
                 map.Resources<TestProjectsController>(projects =>
                 {
                     projects.As("projects");
-
                     projects.Member(x => x.Post("build"));
 
                     projects.Resources<TestPlansController>(plans =>
                     {
                         plans.As("plans");
-                        plans.Resources<TestSessionsController>(sessions =>
-                        {
-                            sessions.As("sessions");
-                            sessions.Member(x => x.Post("start"));
-#if !DEBUG
-                            sessions.Except("edit", "update");
-#endif                            
-                            sessions.Resources<TestRunsController>(runs =>
-                            {
-                                runs.As("runs");
-                                runs.Member(x => x.Post("start"));
-                                runs.Only("index");
-                            });
-                        });
                     });
+
                     projects.Resources<TestCasesController>(cases =>
                     {
                         cases.As("cases");
-#if !DEBUG
                         cases.Only("index");
-#endif
+                    });
+
+                    projects.Resources<TestSessionsController>(sessions =>
+                    {
+                        sessions.As("sessions");
+                        sessions.Member(x => x.Post("start"));
+
+                        sessions.Resources<TestRunsController>(runs =>
+                        {
+                            runs.As("runs");
+                            runs.Only("index");
+                        });
                     });
                 });
             }

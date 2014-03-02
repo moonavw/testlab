@@ -20,7 +20,7 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public int TestProjectId { get; set; }
+        //public int TestProjectId { get; set; }
 
         public virtual TestProject Project { get; set; }
 

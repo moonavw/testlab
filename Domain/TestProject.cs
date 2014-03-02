@@ -15,6 +15,7 @@ namespace TestLab.Domain
             Build = new TestBuild();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
+            Sessions = new HashSet<TestSession>();
         }
 
         public int Id { get; set; }
@@ -37,7 +38,7 @@ namespace TestLab.Domain
 
         public string WorkDir
         {
-            get { return Path.Combine(Constants.PROJ_ROOT, Name); }
+            get { return Path.Combine(Constants.PROJ_ROOT, ToString()); }
         }
 
         public string BuildOutputDir
@@ -51,6 +52,8 @@ namespace TestLab.Domain
 
         public virtual ICollection<TestCase> Cases { get; set; }
 
+        public virtual ICollection<TestSession> Sessions { get; set; }
+
         #region Implementation of IAuditable
 
         public DateTime? Created { get; set; }
@@ -59,5 +62,10 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            return Name.Replace(" ", "");
+        }
     }
 }

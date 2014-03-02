@@ -45,8 +45,9 @@
   <ItemGroup>
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="ITestArchiver.cs" />
-    <Compile Include="ITestPuller.cs" />
+    <Compile Include="IArchiver.cs" />
+    <Compile Include="ISourcePuller.cs" />
+    <Compile Include="IStartable.cs" />
     <Compile Include="PasswordProtector.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IRepository.cs" />

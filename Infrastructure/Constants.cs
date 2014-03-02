@@ -8,7 +8,7 @@
         public static readonly string PROJ_ROOT = @"d:\testlab\projects\";
         public static readonly string RESULT_ROOT = @"d:\testlab\results";
 
-        public static readonly string REMOTE_BUILD_ROOT_FORMAT = @"\\{0}\d$\testlab\builds";
-        public static readonly string REMOTE_RESULT_ROOT_FORMAT = @"\\{0}\d$\testlab\results";
+        public static readonly string AGENT_BUILD_ROOT_FORMAT = @"\\{0}\d$\testlab\builds";
+        public static readonly string AGENT_RESULT_ROOT_FORMAT = @"\\{0}\d$\testlab\results";
     }
 }

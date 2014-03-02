@@ -143,7 +143,6 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
-    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestRunsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
@@ -158,6 +157,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-duallistbox.css" />
+    <Content Include="Content\bootstrap-select.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -174,6 +175,8 @@
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
+    <Content Include="Scripts\bootstrap-select.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\gridmvc.js" />
@@ -225,10 +228,10 @@
     <Content Include="Views\TestSessions\New.cshtml" />
     <Content Include="Views\TestSessions\Show.cshtml" />
     <Content Include="Views\TestSessions\_form.cshtml" />
-    <Content Include="Views\TestCases\_form.cshtml" />
-    <Content Include="Views\TestCases\Edit.cshtml" />
-    <Content Include="Views\TestCases\New.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
+    <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
+    <Content Include="Views\TestProjects\_ShowBuild.cshtml" />
+    <Content Include="Views\TestSessions\_ShowAgent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
