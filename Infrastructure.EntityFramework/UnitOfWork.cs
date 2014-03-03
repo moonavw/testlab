@@ -9,7 +9,7 @@
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : Entity
         {
-            return new Repository<TEntity>(Context);
+            return new Repository<TEntity>((TestLabDbContext) Context);
         }
     }
 }
