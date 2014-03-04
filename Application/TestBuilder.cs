@@ -17,7 +17,7 @@ namespace TestLab.Application
             var build = new TestBuild
             {
                 Started = DateTime.Now,
-                Name = string.Format("{0}_{1:yyyyMMdd_hhmm}", project, DateTime.Now)
+                Name = string.Format("{0}_{1:yyyyMMddhhmm}", project, DateTime.Now)
             };
 
             if (!string.IsNullOrEmpty(project.BuildScript))

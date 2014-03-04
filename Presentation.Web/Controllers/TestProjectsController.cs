@@ -76,7 +76,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 _projRepo.Add(model);
                 await _uow.CommitAsync();
-                return RedirectToAction("Show", new {id = model.Id});
+                return RedirectToAction("Show", new { id = model.Id });
             }
 
             return View("new", model);
@@ -111,9 +111,13 @@ namespace TestLab.Presentation.Web.Controllers
         public async Task<ActionResult> Destroy(int id)
         {
             var entity = await _projRepo.FindAsync(id);
-            entity.Sessions.Clear();
-            entity.Plans.Clear();
-            entity.Cases.Clear();
+
+            var sessionRepo = _uow.Repository<TestSession>();
+            entity.Sessions.ToList().ForEach(z => sessionRepo.Remove(z));
+
+            var planRepo = _uow.Repository<TestPlan>();
+            entity.Plans.ToList().ForEach(z => planRepo.Remove(z));
+
             _projRepo.Remove(entity);
             await _uow.CommitAsync();
             return RedirectToAction("Index");

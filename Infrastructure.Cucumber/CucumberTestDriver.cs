@@ -63,23 +63,30 @@ namespace TestLab.Infrastructure.Cucumber
             var test = run.Case;
             var session = run.Session;
             var build = session.Build;
+            var agent = session.Agent;
 
             //get test's feature file
             string workFile = Path.Combine(build.Location, test.Location);
             string outputFileName = Path.ChangeExtension(test.Name, ".html");
-            const string startProgram = "cucumber";//@"c:\ruby200-x64\bin\cucumber.bat";
+
+            //find ruby folder for startProgram
+            //const string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
+            var rubyDir = new DirectoryInfo(string.Format(@"\\{0}\c$", agent.Server)).GetDirectories("ruby*", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (rubyDir == null) throw new DirectoryNotFoundException("ruby installation not found on " + agent.Server);
+            string startProgram = string.Format(@"c:\{0}\bin\cucumber.bat", rubyDir.Name);
+
             string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, Path.Combine(session.OutputDir, outputFileName));
             var remoteResultFile = new FileInfo(Path.Combine(session.OutputDirOnAgent, outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
 
-            using (var ts = new TaskService(session.Agent.Server, session.Agent.UserName, session.Agent.Domain, session.Agent.Password))
+            using (var ts = new TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
             {
                 string taskName = string.Format("{0}_{1}", session, test.Name);
                 var td = ts.NewTask();
                 td.Actions.Add(new ExecAction(startProgram, startProgramArgs));
                 var t = ts.RootFolder.RegisterTaskDefinition(taskName, td, TaskCreation.CreateOrUpdate,
-                    session.Agent.DomainUser, session.Agent.Password, TaskLogonType.Password);
+                    agent.DomainUser, agent.Password, TaskLogonType.Password);
                 t.Run();
                 do
                 {
