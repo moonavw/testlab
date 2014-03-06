@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using TestLab.Application;
-using TestLab.Infrastructure;
-using TestLab.Domain;
-using System.Web.Mvc;
-using System.Threading.Tasks;
-using System.Linq;
+﻿using NPatterns.Messaging;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using TestLab.Domain;
+using TestLab.Infrastructure;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -14,14 +14,14 @@ namespace TestLab.Presentation.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly ITestService _service;
+        private readonly IMessageBus _bus;
 
-        public TestProjectsController(IUnitOfWork uow, IEnumerable<ITestDriver> drivers, ITestService service)
+        public TestProjectsController(IUnitOfWork uow, IEnumerable<ITestDriver> drivers, IMessageBus bus)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _drivers = drivers;
-            _service = service;
+            _bus = bus;
         }
 
         [HttpPost]
@@ -32,13 +32,11 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
-            await _service.Build(entity);
-            _projRepo.Modify(entity);
-            await _uow.CommitAsync();
+            await _bus.PublishAsync(new BuildProjectCommand { Project = entity });
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id });
-                formats["text"] = () => Content(entity.Build.Started.ToString());
+                formats["text"] = () => Content("Done");
             });
         }
 

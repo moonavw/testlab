@@ -13,8 +13,6 @@ namespace TestLab.Domain
             get { return Path.Combine(Constants.BUILD_ROOT, Name); }
         }
 
-        public DateTime? Archived { get; set; }
-
         #region Implementation of IStartable
 
         public DateTime? Started { get; set; }

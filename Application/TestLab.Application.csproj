@@ -32,6 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommonServiceLocator.NinjectAdapter.Unofficial">
+      <HintPath>..\packages\CommonServiceLocator.NinjectAdapter.Unofficial.3.0.1.12\lib\Net40\CommonServiceLocator.NinjectAdapter.Unofficial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="MoreLinq, Version=1.0.16006.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
@@ -53,13 +60,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArchiveBuildOnBuildProjectCompletedEventHandler.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="ITestService.cs" />
+    <Compile Include="BuildProjectCommandHandler.cs" />
+    <Compile Include="PublishTestOnBuildProjectCompletedEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartTestRunCommandHandler.cs" />
+    <Compile Include="StartTestSessionCommandHandler.cs" />
     <Compile Include="TestBuilder.cs" />
-    <Compile Include="TestService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\npatterns\src\NPatterns.Messaging.IoC\NPatterns.Messaging.IoC.csproj">
+      <Project>{b5e706fb-387f-4243-9006-e9c4b06a8af0}</Project>
+      <Name>NPatterns.Messaging.IoC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
       <Project>{9BDF56E3-6B17-438B-AFEE-11120410B9C8}</Project>
       <Name>NPatterns</Name>

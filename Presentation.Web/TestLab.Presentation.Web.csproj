@@ -237,6 +237,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NPatterns\src\NPatterns.ObjectRelational.EntityFramework\NPatterns.ObjectRelational.EntityFramework.csproj">
+      <Project>{935e7a2c-af4a-433a-a8d4-8410f88c3d74}</Project>
+      <Name>NPatterns.ObjectRelational.EntityFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
       <Project>{9BDF56E3-6B17-438B-AFEE-11120410B9C8}</Project>
       <Name>NPatterns</Name>

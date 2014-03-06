@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using NPatterns.Messaging;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using TestLab.Application;
 using TestLab.Domain;
 using TestLab.Infrastructure;
 
@@ -14,14 +14,14 @@ namespace TestLab.Presentation.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IRepository<TestSession> _sessionRepo;
-        private readonly ITestService _service;
+        private readonly IMessageBus _bus;
 
-        public TestSessionsController(IUnitOfWork uow, ITestService service)
+        public TestSessionsController(IUnitOfWork uow, IMessageBus bus)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _sessionRepo = uow.Repository<TestSession>();
-            _service = service;
+            _bus = bus;
         }
 
         [HttpPost]
@@ -33,13 +33,11 @@ namespace TestLab.Presentation.Web.Controllers
                 return HttpNotFound();
             }
 
-            await _service.Run(entity);
-            _sessionRepo.Modify(entity);
-            await _uow.CommitAsync();
+            await _bus.PublishAsync(new StartTestSessionCommand { Session = entity });
             return RespondTo(formats =>
             {
-                formats.Default = RedirectToAction("Show", new {id, testprojectId});
-                formats["text"] = () => Content(entity.Started.ToString());
+                formats.Default = RedirectToAction("Show", new { id, testprojectId });
+                formats["text"] = () => Content("Done");
             });
         }
 
@@ -106,7 +104,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 project.Sessions.Add(model);
                 await _uow.CommitAsync();
-                return RedirectToAction("Show", new {id = model.Id, testprojectId});
+                return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
 
             return View("new", model);
@@ -142,7 +140,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             _sessionRepo.Remove(entity);
             await _uow.CommitAsync();
-            return RedirectToAction("Index", new {testprojectId});
+            return RedirectToAction("Index", new { testprojectId });
         }
 
         protected override void Dispose(bool disposing)
