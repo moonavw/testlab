@@ -6,7 +6,7 @@ namespace TestLab.Infrastructure.EntityFramework
     {
         public override void Load()
         {
-            Bind<IUnitOfWork>().To<UnitOfWork>();
+            Bind<IUnitOfWork>().To<UnitOfWork>().InThreadScope();
         }
     }
 }

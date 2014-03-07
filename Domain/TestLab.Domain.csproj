@@ -64,8 +64,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
-      <Project>{9BDF56E3-6B17-438B-AFEE-11120410B9C8}</Project>
+    <ProjectReference Include="..\..\npatterns\NPatterns\NPatterns.csproj">
+      <Project>{9bdf56e3-6b17-438b-afee-11120410b9c8}</Project>
       <Name>NPatterns</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\TestLab.Infrastructure.csproj">

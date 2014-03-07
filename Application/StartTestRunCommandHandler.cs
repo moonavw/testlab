@@ -29,7 +29,7 @@ namespace TestLab.Application
 
         public void Handle(StartTestRunCommand message)
         {
-            Task.WaitAll(HandleAsync(message));
+            HandleAsync(message).Wait();
         }
 
         public async Task HandleAsync(StartTestRunCommand message)

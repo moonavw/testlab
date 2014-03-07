@@ -20,7 +20,7 @@ namespace TestLab.Application
 
         public void Handle(BuildProjectCompletedEvent message)
         {
-            Task.WaitAll(HandleAsync(message));
+            HandleAsync(message).Wait();
         }
 
         public async Task HandleAsync(BuildProjectCompletedEvent message)

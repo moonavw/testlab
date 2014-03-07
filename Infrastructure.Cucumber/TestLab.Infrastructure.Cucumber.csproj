@@ -52,7 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NPatterns\src\NPatterns\NPatterns.csproj">
+    <ProjectReference Include="..\..\npatterns\NPatterns\NPatterns.csproj">
       <Project>{9bdf56e3-6b17-438b-afee-11120410b9c8}</Project>
       <Name>NPatterns</Name>
     </ProjectReference>

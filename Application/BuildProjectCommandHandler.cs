@@ -32,7 +32,7 @@ namespace TestLab.Application
 
         public void Handle(BuildProjectCommand message)
         {
-            Task.WaitAll(HandleAsync(message));
+            HandleAsync(message).Wait();
         }
 
         public async Task HandleAsync(BuildProjectCommand message)

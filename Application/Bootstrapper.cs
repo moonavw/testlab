@@ -1,9 +1,8 @@
-﻿using CommonServiceLocator.NinjectAdapter.Unofficial;
-using Microsoft.Practices.ServiceLocation;
-using Ninject;
+﻿using Ninject;
 using NPatterns;
 using NPatterns.Messaging;
-using NPatterns.Messaging.IoC;
+using System;
+using System.Collections.Generic;
 using TestLab.Domain;
 
 namespace TestLab.Application
@@ -22,9 +21,9 @@ namespace TestLab.Application
             kernel.Bind<IHandler<StartTestSessionCommand>>().To<StartTestSessionCommandHandler>();
             kernel.Bind<IHandler<StartTestRunCommand>>().To<StartTestRunCommandHandler>();
 
-            kernel.Bind<IMessageBus>().To<IocMessageBus>().InSingletonScope();
+            kernel.Bind<IMessageBus>().To<MessageBusEx>().InSingletonScope();
 
-            ServiceLocator.SetLocatorProvider(() => new NinjectServiceLocator(kernel));
+            kernel.Bind<Func<Type, IEnumerable<object>>>().ToMethod(ctx => (type) => ctx.Kernel.GetAll(type));
         }
     }
 }
