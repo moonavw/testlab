@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NPatterns.Messaging;
 using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
@@ -14,18 +13,14 @@ namespace TestLab.Application
 {
     public class StartTestSessionJob : IJob
     {
-        private readonly IMessageBus _bus;
         private readonly IUnitOfWork _uow;
         private readonly IArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
 
-        public StartTestSessionJob(
-            IMessageBus bus,
-            IUnitOfWork uow,
-            IArchiver archiver,
-            IEnumerable<ITestDriver> drivers)
+        public StartTestSessionJob(IUnitOfWork uow,
+                                   IArchiver archiver,
+                                   IEnumerable<ITestDriver> drivers)
         {
-            _bus = bus;
             _uow = uow;
             _archiver = archiver;
             _drivers = drivers;
@@ -66,11 +61,6 @@ namespace TestLab.Application
             await _archiver.Extract(session.Build.Location, session.BuildDirOnAgent);
 
             //runs
-            //var tasks = from t in session.Runs
-            //            select _bus.PublishAsync(new RunTestCommand(t.TestCaseId, t.TestSessionId));
-
-            //await Task.WhenAll(tasks);
-
             var tasks = (from t in session.Runs
                          select driver.CreateTask(t)).ToList();
 
@@ -84,7 +74,10 @@ namespace TestLab.Application
                       .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
                                               agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
                       .Run();
+
+                    t.Run.Started = DateTime.Now;
                 }
+                await _uow.CommitAsync();
 
                 //wait for result
                 var waitings = (from t in tasks
@@ -96,17 +89,12 @@ namespace TestLab.Application
                                         Thread.Sleep(1000);
                                     }
                                     while (st.State == TS.TaskState.Running);
-
-                                    t.Run.Started = DateTime.Now;
-                                    await _uow.CommitAsync();
+                                    st.TaskService.RootFolder.DeleteTask(t.Name);
 
                                     t.Run.Result = await driver.ParseResult(t);
 
                                     t.Run.Completed = DateTime.Now;
                                     await _uow.CommitAsync();
-
-                                    //ts.RootFolder.DeleteTask(t.Name);
-                                    //st.TaskService.RootFolder.DeleteTask(t.Name);
                                 })).ToArray();
 
                 await Task.WhenAll(waitings);

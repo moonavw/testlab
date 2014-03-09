@@ -9,8 +9,6 @@ namespace TestLab.Domain
 
         Task<IEnumerable<TestCase>> Publish(TestProject project);
 
-        Task<TestResult> Run(TestRun run);
-
         TestRunTask CreateTask(TestRun run);
 
         Task<TestResult> ParseResult(TestRunTask task);

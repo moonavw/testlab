@@ -17,10 +17,7 @@ namespace TestLab.Application
             kernel.Bind<ITestBuilder>().To<TestBuilder>();
 
             kernel.Bind<IHandler<BuildProjectCommand>>().To<BuildProjectCommandHandler>();
-            kernel.Bind<IHandler<BuildProjectCompletedEvent>>().To<BuildProjectCompletedEventHandler>();
             kernel.Bind<IHandler<StartTestSessionCommand>>().To<StartTestSessionCommandHandler>();
-            kernel.Bind<IHandler<RunTestCommand>>().To<RunTestCommandHandler>();
-            kernel.Bind<IHandler<RunTestCompletedEvent>>().To<RunTestCompletedEventHandler>();
 
             kernel.Bind<IMessageBus>()
                   .ToConstructor(ctorArg => new MessageBus(type => ctorArg.Context.Kernel.GetAll(type)))

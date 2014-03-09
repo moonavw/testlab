@@ -51,8 +51,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildProjectCompletedEvent.cs" />
-    <Compile Include="RunTestCommand.cs" />
-    <Compile Include="RunTestCompletedEvent.cs" />
     <Compile Include="StartTestSessionCommand.cs" />
     <Compile Include="TestAgent.cs" />
     <Compile Include="TestBuild.cs" />

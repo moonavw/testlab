@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using NPatterns.Messaging;
+using MoreLinq;
 using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
@@ -12,24 +12,23 @@ namespace TestLab.Application
 {
     public class BuildProjectJob : IJob
     {
-        private readonly IMessageBus _bus;
         private readonly IUnitOfWork _uow;
         private readonly ITestBuilder _builder;
         private readonly IArchiver _archiver;
+        private readonly IEnumerable<ITestDriver> _drivers;
         private readonly IEnumerable<ISourcePuller> _pullers;
 
-        public BuildProjectJob(
-            IMessageBus bus,
-            IUnitOfWork uow,
-            IEnumerable<ISourcePuller> pullers,
-            ITestBuilder builder,
-            IArchiver archiver)
+        public BuildProjectJob(IUnitOfWork uow,
+                               IEnumerable<ISourcePuller> pullers,
+                               ITestBuilder builder,
+                               IArchiver archiver,
+                               IEnumerable<ITestDriver> drivers)
         {
-            _bus = bus;
             _uow = uow;
             _pullers = pullers;
             _builder = builder;
             _archiver = archiver;
+            _drivers = drivers;
         }
 
         #region IJob Members
@@ -68,7 +67,24 @@ namespace TestLab.Application
             //archive
             await _archiver.Archive(project.BuildOutputDir, project.Build.Location);
 
-            await _bus.PublishAsync(new BuildProjectCompletedEvent(projectId));
+
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this project");
+
+            //publish
+            var tests = (await driver.Publish(project)).ToList();
+            var toDel = project.Cases.ExceptBy(tests, z => z.FullName).ToList();
+            var toAdd = tests.ExceptBy(project.Cases, z => z.FullName).ToList();
+
+            toDel.ForEach(z =>
+            {
+                z.Plans.Clear();
+                z.Published = null;
+                //project.Cases.Remove(z);
+            });
+            toAdd.ForEach(z => project.Cases.Add(z));
+
+            await _uow.CommitAsync();
         }
     }
 }
