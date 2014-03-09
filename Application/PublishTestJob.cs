@@ -61,7 +61,6 @@ namespace TestLab.Application
             });
             toAdd.ForEach(z => project.Cases.Add(z));
 
-            repo.Modify(project);
             await _uow.CommitAsync();
         }
     }

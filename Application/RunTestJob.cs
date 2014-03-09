@@ -54,10 +54,11 @@ namespace TestLab.Application
             if (driver == null) throw new NotSupportedException("no driver for this test");
 
             run.Started = DateTime.Now;
-            run.Result = await driver.Run(run);
-            run.Completed = DateTime.Now;
+            await _uow.CommitAsync();
 
-            repo.Modify(run);
+            run.Result = await driver.Run(run);
+            
+            run.Completed = DateTime.Now;
             await _uow.CommitAsync();
 
             await _bus.PublishAsync(new RunTestCompletedEvent(caseId, sessionId));

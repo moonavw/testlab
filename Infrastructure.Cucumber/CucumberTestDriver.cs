@@ -59,7 +59,6 @@ namespace TestLab.Infrastructure.Cucumber
 
         public async Task<TestResult> Run(TestRun run)
         {
-            run.Started = DateTime.Now;
             var test = run.Case;
             var session = run.Session;
             var build = session.Build;
@@ -114,7 +113,6 @@ namespace TestLab.Infrastructure.Cucumber
                         select m.Groups[1].Value;
                 result.ErrorDetails = string.Join("\n", q);
             }
-            run.Completed = DateTime.Now;
 
             return result;
         }

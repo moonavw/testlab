@@ -60,7 +60,6 @@ namespace TestLab.Application
             //build
             project.Build = await _builder.Build(project);
 
-            repo.Modify(project);
             await _uow.CommitAsync();
 
             await _bus.PublishAsync(new BuildProjectCompletedEvent(projectId));
