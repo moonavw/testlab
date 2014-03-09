@@ -117,6 +117,64 @@ namespace TestLab.Infrastructure.Cucumber
             return result;
         }
 
+        public TestRunTask CreateTask(TestRun run)
+        {
+            var test = run.Case;
+            var session = run.Session;
+            var build = session.Build;
+            var agent = session.Agent;
+
+            //get test's feature file
+            string workFile = Path.Combine(build.Location, test.Location);
+            string outputFileName = Path.ChangeExtension(test.Name, ".html");
+
+            //find ruby folder for startProgram
+            //const string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
+            var rubyDir = new DirectoryInfo(string.Format(@"\\{0}\c$", agent.Server)).GetDirectories("ruby*", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (rubyDir == null) throw new DirectoryNotFoundException("ruby installation not found on " + agent.Server);
+            string startProgram = string.Format(@"c:\{0}\bin\cucumber.bat", rubyDir.Name);
+
+            string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, Path.Combine(session.OutputDir, outputFileName));
+            var remoteResultFile = new FileInfo(Path.Combine(session.OutputDirOnAgent, outputFileName));
+            if (!remoteResultFile.Directory.Exists)
+                remoteResultFile.Directory.Create();
+
+            return new TestRunTask
+            {
+                Run = run,
+                StartProgram = startProgram,
+                StartProgramArgs = startProgramArgs,
+                OutputFile = remoteResultFile.FullName
+            };
+        }
+
+        public async Task<TestResult> ParseResult(TestRunTask task)
+        {
+            var remoteResultFile = new FileInfo(task.OutputFile);
+            if (!remoteResultFile.Exists) return null;
+
+            //parse result from output file
+            string text = await remoteResultFile.OpenText().ReadToEndAsync();
+
+            var summaryMatch = RxSummary.Match(text);
+            var failMatch = RxFail.Match(text);
+
+            var result = new TestResult
+            {
+                Output = remoteResultFile.FullName,
+                Summary = summaryMatch.Groups[1].Value + " " + summaryMatch.Groups[2].Value,
+                PassOrFail = !failMatch.Success
+            };
+            if (result.PassOrFail == false)
+            {
+                var q = from Match m in RxFailDetails.Matches(failMatch.Groups[1].Value)
+                        select m.Groups[1].Value;
+                result.ErrorDetails = string.Join("\n", q);
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }

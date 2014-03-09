@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NPatterns.Messaging;
 using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TS = Microsoft.Win32.TaskScheduler;
 
 namespace TestLab.Application
 {
@@ -14,15 +17,18 @@ namespace TestLab.Application
         private readonly IMessageBus _bus;
         private readonly IUnitOfWork _uow;
         private readonly IArchiver _archiver;
+        private readonly IEnumerable<ITestDriver> _drivers;
 
         public StartTestSessionJob(
             IMessageBus bus,
             IUnitOfWork uow,
-            IArchiver archiver)
+            IArchiver archiver,
+            IEnumerable<ITestDriver> drivers)
         {
             _bus = bus;
             _uow = uow;
             _archiver = archiver;
+            _drivers = drivers;
         }
 
         #region IJob Members
@@ -46,6 +52,11 @@ namespace TestLab.Application
         {
             var repo = _uow.Repository<TestSession>();
             var session = await repo.FindAsync(sessionId);
+            var project = session.Project;
+            var agent = session.Agent;
+
+            var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
+            if (driver == null) throw new NotSupportedException("no driver for this test");
 
             //start
             session.Started = DateTime.Now;
@@ -55,10 +66,54 @@ namespace TestLab.Application
             await _archiver.Extract(session.Build.Location, session.BuildDirOnAgent);
 
             //runs
-            var tasks = from t in session.Runs
-                        select _bus.PublishAsync(new RunTestCommand(t.TestCaseId, t.TestSessionId));
+            //var tasks = from t in session.Runs
+            //            select _bus.PublishAsync(new RunTestCommand(t.TestCaseId, t.TestSessionId));
 
-            await Task.WhenAll(tasks);
+            //await Task.WhenAll(tasks);
+
+            var tasks = (from t in session.Runs
+                         select driver.CreateTask(t)).ToList();
+
+            using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+            {
+                foreach (var t in tasks)
+                {
+                    var td = ts.NewTask();
+                    td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
+                    ts.RootFolder
+                      .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
+                                              agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
+                      .Run();
+                }
+
+                //wait for result
+                var waitings = (from t in tasks
+                                let st = ts.GetTask(t.Name)
+                                select Task.Run(async () =>
+                                {
+                                    do
+                                    {
+                                        Thread.Sleep(1000);
+                                    }
+                                    while (st.State == TS.TaskState.Running);
+
+                                    t.Run.Started = DateTime.Now;
+                                    await _uow.CommitAsync();
+
+                                    t.Run.Result = await driver.ParseResult(t);
+
+                                    t.Run.Completed = DateTime.Now;
+                                    await _uow.CommitAsync();
+
+                                    //ts.RootFolder.DeleteTask(t.Name);
+                                    //st.TaskService.RootFolder.DeleteTask(t.Name);
+                                })).ToArray();
+
+                await Task.WhenAll(waitings);
+            }
+
+            session.Completed = DateTime.Now;
+            await _uow.CommitAsync();
         }
     }
 }

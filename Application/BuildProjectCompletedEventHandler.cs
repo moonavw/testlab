@@ -5,12 +5,12 @@ using TestLab.Domain;
 
 namespace TestLab.Application
 {
-    public class ArchiveOnBuildProjectCompletedEventHandler : IHandler<BuildProjectCompletedEvent>
+    public class BuildProjectCompletedEventHandler : IHandler<BuildProjectCompletedEvent>
     {
         private readonly IScheduler _scheduler;
 
-        public ArchiveOnBuildProjectCompletedEventHandler(
-            IScheduler scheduler)
+        public BuildProjectCompletedEventHandler(
+             IScheduler scheduler)
         {
             _scheduler = scheduler;
         }
@@ -19,8 +19,8 @@ namespace TestLab.Application
 
         public void Handle(BuildProjectCompletedEvent message)
         {
-            string key = string.Format("archive-build-Project-{0}", message.TestProjectId);
-            IJobDetail job = JobBuilder.Create<ArchiveBuildJob>()
+            string key = string.Format("publish-build-Project-{0}", message.TestProjectId);
+            IJobDetail job = JobBuilder.Create<PublishTestJob>()
                                        .WithIdentity(key)
                                        .UsingJobData("TestProjectId", message.TestProjectId)
                                        .Build();

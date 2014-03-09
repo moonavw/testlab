@@ -15,18 +15,21 @@ namespace TestLab.Application
         private readonly IMessageBus _bus;
         private readonly IUnitOfWork _uow;
         private readonly ITestBuilder _builder;
+        private readonly IArchiver _archiver;
         private readonly IEnumerable<ISourcePuller> _pullers;
 
         public BuildProjectJob(
             IMessageBus bus,
             IUnitOfWork uow,
             IEnumerable<ISourcePuller> pullers,
-            ITestBuilder builder)
+            ITestBuilder builder,
+            IArchiver archiver)
         {
             _bus = bus;
             _uow = uow;
             _pullers = pullers;
             _builder = builder;
+            _archiver = archiver;
         }
 
         #region IJob Members
@@ -61,6 +64,9 @@ namespace TestLab.Application
             project.Build = await _builder.Build(project);
 
             await _uow.CommitAsync();
+
+            //archive
+            await _archiver.Archive(project.BuildOutputDir, project.Build.Location);
 
             await _bus.PublishAsync(new BuildProjectCompletedEvent(projectId));
         }
