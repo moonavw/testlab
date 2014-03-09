@@ -1,8 +1,12 @@
-﻿
-namespace TestLab.Domain
+﻿namespace TestLab.Domain
 {
     public class StartTestSessionCommand
     {
-        public TestSession Session { get; set; }
+        public StartTestSessionCommand(int testSessionId)
+        {
+            TestSessionId = testSessionId;
+        }
+
+        public int TestSessionId { get; private set; }
     }
 }

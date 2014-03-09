@@ -30,6 +30,7 @@ namespace TestLab.Presentation.Web
         /// </summary>
         public static void Stop()
         {
+            Application.Bootstrapper.Shutdown(bootstrapper.Kernel);
             bootstrapper.ShutDown();
         }
 

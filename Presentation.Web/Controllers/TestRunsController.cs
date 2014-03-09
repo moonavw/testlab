@@ -33,14 +33,5 @@ namespace TestLab.Presentation.Web.Controllers
 
             return View(session.Runs);
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _projRepo.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

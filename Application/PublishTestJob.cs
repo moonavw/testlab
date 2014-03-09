@@ -1,20 +1,21 @@
-﻿using MoreLinq;
-using NPatterns;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using MoreLinq;
+using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
 
 namespace TestLab.Application
 {
-    public class PublishTestOnBuildProjectCompletedEventHandler : IHandler<BuildProjectCompletedEvent>
+    public class PublishTestJob : IJob
     {
         private readonly IUnitOfWork _uow;
         private readonly IEnumerable<ITestDriver> _drivers;
 
-        public PublishTestOnBuildProjectCompletedEventHandler(
+        public PublishTestJob(
             IUnitOfWork uow,
             IEnumerable<ITestDriver> drivers)
         {
@@ -22,16 +23,27 @@ namespace TestLab.Application
             _drivers = drivers;
         }
 
-        #region IHandler<BuildProjectCompletedEvent> Members
+        #region IJob Members
 
-        public void Handle(BuildProjectCompletedEvent message)
+        public void Execute(IJobExecutionContext context)
         {
-            HandleAsync(message).Wait();
+            JobKey key = context.JobDetail.Key;
+
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+
+            int projectId = dataMap.GetInt("TestProjectId");
+
+            Trace.TraceInformation("Instance {0} of {1} for project {2}", key, GetType().Name, projectId);
+
+            PublishTest(projectId).Wait();
         }
 
-        public async Task HandleAsync(BuildProjectCompletedEvent message)
+        #endregion
+
+        private async Task PublishTest(int projectId)
         {
-            var project = message.Project;
+            var repo = _uow.Repository<TestProject>();
+            var project = await repo.FindAsync(projectId);
 
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this project");
@@ -47,15 +59,10 @@ namespace TestLab.Application
                 z.Published = null;
                 //project.Cases.Remove(z);
             });
-            toAdd.ForEach(z =>
-            {
-                project.Cases.Add(z);
-            });
+            toAdd.ForEach(z => project.Cases.Add(z));
 
-            _uow.Repository<TestProject>().Modify(project);
+            repo.Modify(project);
             await _uow.CommitAsync();
         }
-
-        #endregion
     }
 }

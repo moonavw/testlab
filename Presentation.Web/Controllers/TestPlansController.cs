@@ -119,14 +119,5 @@ namespace TestLab.Presentation.Web.Controllers
             await _uow.CommitAsync();
             return RedirectToAction("Index", new {testprojectId});
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _uow.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

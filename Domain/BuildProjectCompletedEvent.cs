@@ -1,8 +1,10 @@
-﻿
-namespace TestLab.Domain
+﻿namespace TestLab.Domain
 {
-    public class BuildProjectCompletedEvent
+    public class BuildProjectCompletedEvent : BuildProjectCommand
     {
-        public TestProject Project { get; set; }
+        public BuildProjectCompletedEvent(int testProjectId)
+            : base(testProjectId)
+        {
+        }
     }
 }

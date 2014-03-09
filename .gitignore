@@ -8,3 +8,5 @@ packages
 ._*
 Thumbs.db
 App_Data
+*.log
+logs

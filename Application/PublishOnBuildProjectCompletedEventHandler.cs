@@ -5,32 +5,32 @@ using TestLab.Domain;
 
 namespace TestLab.Application
 {
-    public class BuildProjectCommandHandler : IHandler<BuildProjectCommand>
+    public class PublishOnBuildProjectCompletedEventHandler : IHandler<BuildProjectCompletedEvent>
     {
         private readonly IScheduler _scheduler;
 
-        public BuildProjectCommandHandler(
-            IScheduler scheduler)
+        public PublishOnBuildProjectCompletedEventHandler(
+             IScheduler scheduler)
         {
             _scheduler = scheduler;
         }
 
-        #region IHandler<BuildProjectCommand> Members
+        #region IHandler<BuildProjectCompletedEvent> Members
 
-        public void Handle(BuildProjectCommand message)
+        public void Handle(BuildProjectCompletedEvent message)
         {
-            IJobDetail job = JobBuilder.Create<BuildProjectJob>()
-                                       .WithIdentity("job-build" + message.TestProjectId, "TestProjects")
+            IJobDetail job = JobBuilder.Create<PublishTestJob>()
+                                       .WithIdentity("job-build-publish-" + message.TestProjectId, "TestProjects")
                                        .UsingJobData("TestProjectId", message.TestProjectId)
                                        .Build();
             ITrigger trigger = TriggerBuilder.Create()
-                                             .WithIdentity("trigger-build" + message.TestProjectId, "TestProjects")
+                                             .WithIdentity("trigger-build-publish-" + message.TestProjectId, "TestProjects")
                                              .StartNow()
                                              .Build();
             _scheduler.ScheduleJob(job, trigger);
         }
 
-        public Task HandleAsync(BuildProjectCommand message)
+        public Task HandleAsync(BuildProjectCompletedEvent message)
         {
             return Task.Run(() => Handle(message));
         }

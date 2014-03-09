@@ -27,12 +27,7 @@ namespace TestLab.Presentation.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Build(int id)
         {
-            var entity = await _projRepo.FindAsync(id);
-            if (entity == null)
-            {
-                return HttpNotFound();
-            }
-            await _bus.PublishAsync(new BuildProjectCommand { Project = entity });
+            await _bus.PublishAsync(new BuildProjectCommand(id));
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id });
@@ -119,15 +114,6 @@ namespace TestLab.Presentation.Web.Controllers
             _projRepo.Remove(entity);
             await _uow.CommitAsync();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _uow.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

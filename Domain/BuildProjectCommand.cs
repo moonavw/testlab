@@ -1,8 +1,12 @@
-﻿
-namespace TestLab.Domain
+﻿namespace TestLab.Domain
 {
     public class BuildProjectCommand
     {
-        public TestProject Project { get; set; }
+        public BuildProjectCommand(int testProjectId)
+        {
+            TestProjectId = testProjectId;
+        }
+
+        public int TestProjectId { get; private set; }
     }
 }

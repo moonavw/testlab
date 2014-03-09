@@ -26,14 +26,5 @@ namespace TestLab.Presentation.Web.Controllers
             ViewBag.Project = project;
             return View(project.Cases);
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _projRepo.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

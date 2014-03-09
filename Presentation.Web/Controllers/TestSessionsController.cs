@@ -27,13 +27,7 @@ namespace TestLab.Presentation.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Start(int id, int testprojectId)
         {
-            var entity = await _sessionRepo.FindAsync(id);
-            if (entity == null || entity.Project.Id != testprojectId)
-            {
-                return HttpNotFound();
-            }
-
-            await _bus.PublishAsync(new StartTestSessionCommand { Session = entity });
+            await _bus.PublishAsync(new StartTestSessionCommand(id));
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id, testprojectId });
@@ -141,15 +135,6 @@ namespace TestLab.Presentation.Web.Controllers
             _sessionRepo.Remove(entity);
             await _uow.CommitAsync();
             return RedirectToAction("Index", new { testprojectId });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _uow.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

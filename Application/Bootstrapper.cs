@@ -1,8 +1,9 @@
 ﻿using Ninject;
 using NPatterns;
 using NPatterns.Messaging;
-using System;
-using System.Collections.Generic;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using TestLab.Domain;
 
 namespace TestLab.Application
@@ -16,14 +17,29 @@ namespace TestLab.Application
             kernel.Bind<ITestBuilder>().To<TestBuilder>();
 
             kernel.Bind<IHandler<BuildProjectCommand>>().To<BuildProjectCommandHandler>();
-            kernel.Bind<IHandler<BuildProjectCompletedEvent>>().To<ArchiveBuildOnBuildProjectCompletedEventHandler>();
-            kernel.Bind<IHandler<BuildProjectCompletedEvent>>().To<PublishTestOnBuildProjectCompletedEventHandler>();
+            kernel.Bind<IHandler<BuildProjectCompletedEvent>>().To<ArchiveOnBuildProjectCompletedEventHandler>();
+            kernel.Bind<IHandler<BuildProjectCompletedEvent>>().To<PublishOnBuildProjectCompletedEventHandler>();
             kernel.Bind<IHandler<StartTestSessionCommand>>().To<StartTestSessionCommandHandler>();
-            kernel.Bind<IHandler<StartTestRunCommand>>().To<StartTestRunCommandHandler>();
+            kernel.Bind<IHandler<RunTestCommand>>().To<RunTestCommandHandler>();
+            kernel.Bind<IHandler<RunTestCompletedEvent>>().To<RunTestCompletedEventHandler>();
 
-            kernel.Bind<IMessageBus>().To<MessageBusEx>().InSingletonScope();
+            kernel.Bind<IMessageBus>()
+                  .ToConstructor(ctorArg => new MessageBus(type => ctorArg.Context.Kernel.GetAll(type)))
+                  .InSingletonScope();
 
-            kernel.Bind<Func<Type, IEnumerable<object>>>().ToMethod(ctx => (type) => ctx.Kernel.GetAll(type));
+            kernel.Bind<IJobFactory>().To<NinjectJobFactory>();
+
+            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+            scheduler.JobFactory = kernel.Get<IJobFactory>();
+            kernel.Bind<IScheduler>().ToConstant(scheduler).InSingletonScope();
+
+            scheduler.Start();
+        }
+
+        public static void Shutdown(IKernel kernel)
+        {
+            IScheduler scheduler = kernel.Get<IScheduler>();
+            scheduler.Shutdown(true);
         }
     }
 }
