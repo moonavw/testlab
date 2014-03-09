@@ -19,13 +19,15 @@ namespace TestLab.Application
 
         public void Handle(StartTestSessionCommand message)
         {
+            string key = string.Format("start-TestSession-{0}", message.TestSessionId);
             IJobDetail job = JobBuilder.Create<StartTestSessionJob>()
-                                       .WithIdentity("job-" + message.TestSessionId, "TestSessions")
+                                       .WithIdentity(key)
                                        .UsingJobData("TestSessionId", message.TestSessionId)
                                        .Build();
             ITrigger trigger = TriggerBuilder.Create()
-                                             .WithIdentity("trigger-" + message.TestSessionId, "TestSessions")
+                                             .WithIdentity(key)
                                              .StartNow()
+                                             .ForJob(job)
                                              .Build();
             _scheduler.ScheduleJob(job, trigger);
         }

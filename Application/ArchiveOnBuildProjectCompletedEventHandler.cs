@@ -19,13 +19,15 @@ namespace TestLab.Application
 
         public void Handle(BuildProjectCompletedEvent message)
         {
+            string key = string.Format("archive-build-Project-{0}", message.TestProjectId);
             IJobDetail job = JobBuilder.Create<ArchiveBuildJob>()
-                                       .WithIdentity("job-build-archive-" + message.TestProjectId, "TestProjects")
+                                       .WithIdentity(key)
                                        .UsingJobData("TestProjectId", message.TestProjectId)
                                        .Build();
             ITrigger trigger = TriggerBuilder.Create()
-                                             .WithIdentity("trigger-build-archive-" + message.TestProjectId, "TestProjects")
+                                             .WithIdentity(key)
                                              .StartNow()
+                                             .ForJob(job)
                                              .Build();
             _scheduler.ScheduleJob(job, trigger);
         }
