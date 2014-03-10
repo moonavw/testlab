@@ -266,9 +266,9 @@
       <Project>{a08ca30e-2b38-4731-8ebc-cd0ab3333e32}</Project>
       <Name>TestLab.Infrastructure.Cucumber</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Infrastructure.EntityFramework\TestLab.Infrastructure.EntityFramework.csproj">
+    <ProjectReference Include="..\Infrastructure.EF\TestLab.Infrastructure.EF.csproj">
       <Project>{81fdf2c5-d875-4b50-b0c1-9fe6b509e9d9}</Project>
-      <Name>TestLab.Infrastructure.EntityFramework</Name>
+      <Name>TestLab.Infrastructure.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Git\TestLab.Infrastructure.Git.csproj">
       <Project>{77d4db02-ac82-416b-92d4-295f93be04cb}</Project>

@@ -1,6 +1,6 @@
-﻿namespace TestLab.Infrastructure.EntityFramework
+﻿namespace TestLab.Infrastructure.EF
 {
-    public class UnitOfWork : NPatterns.ObjectRelational.EntityFramework.UnitOfWork, IUnitOfWork
+    public class UnitOfWork : NPatterns.ObjectRelational.EF.UnitOfWork, IUnitOfWork
     {
         public UnitOfWork()
             : base(new TestLabDbContext())

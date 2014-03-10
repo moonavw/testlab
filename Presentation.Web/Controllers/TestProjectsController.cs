@@ -31,7 +31,7 @@ namespace TestLab.Presentation.Web.Controllers
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id });
-                formats["text"] = () => Content("Done");
+                formats["text"] = () => Content("Started");
             });
         }
 
