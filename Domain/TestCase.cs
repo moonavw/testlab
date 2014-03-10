@@ -28,10 +28,13 @@ namespace TestLab.Domain
 
         public DateTime? Published { get; set; }
 
-        //public int TestProjectId { get; set; }
-
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }

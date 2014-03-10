@@ -9,7 +9,7 @@ namespace TestLab.Domain
 
         Task<IEnumerable<TestCase>> Publish(TestProject project);
 
-        TestRunTask CreateTask(TestRun run);
+        TestRunTask CreateTask(TestRun run, TestAgent agent);
 
         Task<TestResult> ParseResult(TestRunTask task);
     }

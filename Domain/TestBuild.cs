@@ -19,5 +19,10 @@ namespace TestLab.Domain
         public DateTime? Completed { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

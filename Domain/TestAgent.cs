@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using TestLab.Infrastructure;
 
 namespace TestLab.Domain
@@ -33,14 +37,21 @@ namespace TestLab.Domain
             get { return string.Format(@"{0}\{1}", Domain, UserName); }
         }
 
-        public string BuildRoot
+        public string GetOutputDir(TestSession session)
         {
-            get { return string.Format(Constants.AGENT_BUILD_ROOT_FORMAT, Server); }
+            string resultRoot = string.Format(Constants.AGENT_RESULT_ROOT_FORMAT, Server);
+            return Path.Combine(resultRoot, session.ToString());
         }
 
-        public string ResultRoot
+        public string GetBuildDir(TestBuild build)
         {
-            get { return string.Format(Constants.AGENT_RESULT_ROOT_FORMAT, Server); }
+            string buildRoot = string.Format(Constants.AGENT_BUILD_ROOT_FORMAT, Server);
+            return Path.Combine(buildRoot, build.Name);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}@{1}", DomainUser, Server);
         }
     }
 }

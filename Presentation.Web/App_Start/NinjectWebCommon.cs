@@ -55,7 +55,6 @@ namespace TestLab.Presentation.Web
         private static void RegisterServices(IKernel kernel)
         {
             Application.Bootstrapper.Initialize(kernel);
-            //kernel.Rebind<Infrastructure.IUnitOfWork>().To<Infrastructure.EntityFramework.UnitOfWork>().InRequestScope();
         }
     }
 }

@@ -54,12 +54,11 @@ namespace TestLab.Infrastructure.Cucumber
             return tests;
         }
 
-        public TestRunTask CreateTask(TestRun run)
+        public TestRunTask CreateTask(TestRun run, TestAgent agent)
         {
             var test = run.Case;
             var session = run.Session;
             var build = session.Build;
-            var agent = session.Agent;
 
             //get test's feature file
             string workFile = Path.Combine(build.Location, test.Location);
@@ -72,13 +71,14 @@ namespace TestLab.Infrastructure.Cucumber
             string startProgram = string.Format(@"c:\{0}\bin\cucumber.bat", rubyDir.Name);
 
             string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, Path.Combine(session.OutputDir, outputFileName));
-            var remoteResultFile = new FileInfo(Path.Combine(session.OutputDirOnAgent, outputFileName));
+            var remoteResultFile = new FileInfo(Path.Combine(agent.GetOutputDir(session), outputFileName));
             if (!remoteResultFile.Directory.Exists)
                 remoteResultFile.Directory.Create();
 
             return new TestRunTask
             {
                 Run = run,
+                Agent = agent,
                 StartProgram = startProgram,
                 StartProgramArgs = startProgramArgs,
                 OutputFile = remoteResultFile.FullName

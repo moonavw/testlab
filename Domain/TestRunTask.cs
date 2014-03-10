@@ -4,6 +4,8 @@
     {
         public TestRun Run { get; set; }
 
+        public TestAgent Agent { get; set; }
+
         public string Name
         {
             get { return string.Format("{0}_{1}", Run.Session, Run.Case.Name); }

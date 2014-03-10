@@ -25,7 +25,7 @@
 
     c.Add(o => o.DriverName);
 
-    c.Add(o => o.Build.Name);
+    c.Add(o => o.Build);
     
     c.Add(o => o.Plans.Count);
 
@@ -37,4 +37,8 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/gridmvc")
+}
+
+@section nav{
+    <li class="active">@Html.ActionLink("Projects", "Index", "TestProjects", null, null)</li>
 }

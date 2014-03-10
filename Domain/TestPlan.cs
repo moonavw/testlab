@@ -20,8 +20,6 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        //public int TestProjectId { get; set; }
-
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestCase> Cases { get; set; }

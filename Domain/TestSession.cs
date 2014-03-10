@@ -31,18 +31,6 @@ namespace TestLab.Domain
             get { return Path.Combine(Constants.RESULT_ROOT, ToString()); }
         }
 
-        public string OutputDirOnAgent
-        {
-            get { return Path.Combine(Agent.ResultRoot, ToString()); }
-        }
-
-        public string BuildDirOnAgent
-        {
-            get { return Path.Combine(Agent.BuildRoot, Build.Name); }
-        }
-
-        //public int TestProjectId { get; set; }
-
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestRun> Runs { get; set; }
@@ -92,6 +80,19 @@ namespace TestLab.Domain
         public override string ToString()
         {
             return string.Format("{0}_{1}", Project, Name.Replace(" ", ""));
+        }
+
+
+        public IEnumerable<TestAgent> GetAgents()
+        {
+            return from s in Agent.Server.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                   select new TestAgent
+                   {
+                       Server = s.Trim(),
+                       Domain = Agent.Domain,
+                       Password = Agent.Password,
+                       UserName = Agent.UserName
+                   };
         }
     }
 }
