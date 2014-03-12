@@ -8,7 +8,7 @@ using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
 using TS = Microsoft.Win32.TaskScheduler;
-using PagedList;
+using System.Collections.Concurrent;
 
 namespace TestLab.Application
 {
@@ -66,69 +66,115 @@ namespace TestLab.Application
                 await _archiver.Extract(session.Build.Location, agent.GetBuildDir(session.Build));
             }
 
+            var bag = new ConcurrentBag<TestRun>(session.Runs);
+            var consumers = (from a in agents
+                             select Task.Run(async () =>
+                             {
+                                 TestRun run;
+                                 while (bag.TryTake(out run))
+                                 {
+                                     var t = driver.CreateTask(run, a);
+                                     Trace.TraceInformation("Start TestRunTask {0}", t);
+                                     var agent = t.Agent;
+                                     using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                                     {
+                                         var td = ts.NewTask();
+                                         td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
+                                         ts.RootFolder
+                                           .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
+                                                                   agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
+                                           .Run();
+                                     }
+
+                                     t.Run.Started = DateTime.Now;
+                                     await _uow.CommitAsync();
+
+                                     Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
+                                     //wait for result
+                                     bool completed = false;
+                                     do
+                                     {
+                                         Thread.Sleep(5000);
+                                         using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                                         {
+                                             var st = ts.GetTask(t.Name);
+                                             if (st.State != TS.TaskState.Running)
+                                             {
+                                                 st.TaskService.RootFolder.DeleteTask(t.Name);
+                                                 completed = true;
+                                             }
+                                         }
+                                     } while (!completed);
+
+                                     t.Run.Result = await driver.ParseResult(t);
+
+                                     t.Run.Completed = DateTime.Now;
+                                     await _uow.CommitAsync();
+                                     Trace.TraceInformation("Completed TestRunTask {0}", t);
+                                 }
+                             })).ToArray();
+
+            Task.WaitAll(consumers);
+
             //runs
-            int page = 1;
-            while (true)
-            {
-                var pagedRuns = session.Runs.ToPagedList(page++, agents.Count);
+            //int page = 1;
+            //while (true)
+            //{
+            //    var pagedRuns = session.Runs.ToPagedList(page++, agents.Count);
 
-                var tasks = new List<TestRunTask>();
-                for (int i = 0; i < pagedRuns.Count; i++)
-                {
-                    tasks.Add(driver.CreateTask(pagedRuns[i], agents[i]));
-                }
+            //    var tasks = pagedRuns.Select((t, i) => driver.CreateTask(t, agents[i])).ToList();
 
-                foreach (var t in tasks)
-                {
-                    Trace.TraceInformation("Start TestRunTask {0}", t);
-                    var agent = t.Agent;
-                    using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-                    {
-                        var td = ts.NewTask();
-                        td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
-                        ts.RootFolder
-                          .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
-                                                  agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
-                          .Run();
-                    }
+            //    foreach (var t in tasks)
+            //    {
+            //        Trace.TraceInformation("Start TestRunTask {0}", t);
+            //        var agent = t.Agent;
+            //        using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+            //        {
+            //            var td = ts.NewTask();
+            //            td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
+            //            ts.RootFolder
+            //              .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
+            //                                      agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
+            //              .Run();
+            //        }
 
-                    t.Run.Started = DateTime.Now;
-                }
-                await _uow.CommitAsync();
+            //        t.Run.Started = DateTime.Now;
+            //    }
+            //    await _uow.CommitAsync();
 
-                //wait for result
-                var waitings = (from t in tasks
-                                select Task.Run(async () =>
-                                {
-                                    Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
-                                    var agent = t.Agent;
-                                    //wait for result
-                                    bool completed = false;
-                                    do
-                                    {
-                                        Thread.Sleep(5000);
-                                        using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-                                        {
-                                            var st = ts.GetTask(t.Name);
-                                            if (st.State != TS.TaskState.Running)
-                                            {
-                                                st.TaskService.RootFolder.DeleteTask(t.Name);
-                                                completed = true;
-                                            }
-                                        }
-                                    } while (!completed);
+            //    //wait for result
+            //    var waitings = (from t in tasks
+            //                    select Task.Run(async () =>
+            //                    {
+            //                        Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
+            //                        var agent = t.Agent;
+            //                        //wait for result
+            //                        bool completed = false;
+            //                        do
+            //                        {
+            //                            Thread.Sleep(5000);
+            //                            using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+            //                            {
+            //                                var st = ts.GetTask(t.Name);
+            //                                if (st.State != TS.TaskState.Running)
+            //                                {
+            //                                    st.TaskService.RootFolder.DeleteTask(t.Name);
+            //                                    completed = true;
+            //                                }
+            //                            }
+            //                        } while (!completed);
 
-                                    t.Run.Result = await driver.ParseResult(t);
+            //                        t.Run.Result = await driver.ParseResult(t);
 
-                                    t.Run.Completed = DateTime.Now;
-                                    await _uow.CommitAsync();
-                                })).ToArray();
+            //                        t.Run.Completed = DateTime.Now;
+            //                        await _uow.CommitAsync();
+            //                    })).ToArray();
 
-                await Task.WhenAll(waitings);
-                Trace.TraceInformation("Completed {0} TestRun(s)", pagedRuns.Count);
+            //    await Task.WhenAll(waitings);
+            //    Trace.TraceInformation("Completed {0} TestRun(s)", pagedRuns.Count);
 
-                if (!pagedRuns.HasNextPage) break;
-            }
+            //    if (!pagedRuns.HasNextPage) break;
+            //}
             session.Completed = DateTime.Now;
             await _uow.CommitAsync();
             Trace.TraceInformation("Completed TestSession {0}", session);
