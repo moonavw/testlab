@@ -9,10 +9,6 @@ namespace TestLab.Domain
 {
     public class TestAgent
     {
-        public TestAgent()
-        {
-        }
-
         [Required]
         public string Server { get; set; }
 

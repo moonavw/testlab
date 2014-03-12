@@ -56,17 +56,21 @@ namespace TestLab.Application
             var puller = _pullers.FirstOrDefault(z => z.CanPull(project.RepoPathOrUrl));
             if (puller == null) throw new NotSupportedException("no puller for this project");
 
+            Trace.TraceInformation("Start Build for {0}", project);
+
             //pull
             await puller.Pull(project.RepoPathOrUrl, project.WorkDir);
+            Trace.TraceInformation("Pulled Source Code for {0} from {1}", project, project.RepoPathOrUrl);
 
             //build
             project.Build = await _builder.Build(project);
+            Trace.TraceInformation("Built Source Code for {0} to output {1}", project, project.BuildOutputPath);
 
             await _uow.CommitAsync();
 
             //archive
             await _archiver.Archive(project.BuildOutputDir, project.Build.Location);
-
+            Trace.TraceInformation("Archived Build for {0} to {1}", project, project.Build.Location);
 
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this project");
@@ -83,6 +87,7 @@ namespace TestLab.Application
                 //project.Cases.Remove(z);
             });
             toAdd.ForEach(z => project.Cases.Add(z));
+            Trace.TraceInformation("Published {1} Tests for {0}", project, toAdd.Count);
 
             await _uow.CommitAsync();
         }

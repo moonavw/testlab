@@ -16,5 +16,10 @@
         public string StartProgramArgs { get; set; }
 
         public string OutputFile { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} via {1}", Name, Agent);
+        }
     }
 }

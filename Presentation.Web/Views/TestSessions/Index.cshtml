@@ -36,7 +36,13 @@
     c.Add(o => o.Completed)
      .SetWidth(110);
 
-    c.Add(o => o.Runs.Count);
+    c.Add()
+        .Titled("Running/Completed/Total")
+        .RenderValueAs(d =>
+            string.Format("{0}/{1}/{2}",
+                    d.Runs.Count(z => z.Started != null && z.Completed == null),
+                    d.Runs.Count(z => z.Completed != null),
+                    d.Runs.Count));
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

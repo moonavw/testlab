@@ -54,6 +54,7 @@ namespace TestLab.Application
             if (driver == null) throw new NotSupportedException("no driver for this test");
 
             //start
+            Trace.TraceInformation("Start Test Session {0}", session);
             session.Started = DateTime.Now;
             await _uow.CommitAsync();
 
@@ -61,6 +62,7 @@ namespace TestLab.Application
             foreach (var agent in agents)
             {
                 //extract
+                Trace.TraceInformation("Extract Build to {0}", agent.Server);
                 await _archiver.Extract(session.Build.Location, agent.GetBuildDir(session.Build));
             }
 
@@ -78,6 +80,7 @@ namespace TestLab.Application
 
                 foreach (var t in tasks)
                 {
+                    Trace.TraceInformation("Start TestRunTask {0}", t);
                     var agent = t.Agent;
                     using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
                     {
@@ -95,9 +98,9 @@ namespace TestLab.Application
 
                 //wait for result
                 var waitings = (from t in tasks
-                                //let st = ts.GetTask(t.Name)
                                 select Task.Run(async () =>
                                 {
+                                    Trace.TraceInformation("Wait for Result of TestRunTask {0}", t.Name);
                                     var agent = t.Agent;
                                     //wait for result
                                     bool completed = false;
@@ -122,11 +125,13 @@ namespace TestLab.Application
                                 })).ToArray();
 
                 await Task.WhenAll(waitings);
+                Trace.TraceInformation("Completed {0} TestRun(s)", pagedRuns.Count);
 
                 if (!pagedRuns.HasNextPage) break;
             }
             session.Completed = DateTime.Now;
             await _uow.CommitAsync();
+            Trace.TraceInformation("Completed TestSession {0}", session);
         }
     }
 }
