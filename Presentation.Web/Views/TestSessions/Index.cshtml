@@ -37,12 +37,21 @@
      .SetWidth(110);
 
     c.Add()
-        .Titled("Running/Completed/Total")
-        .RenderValueAs(d =>
-            string.Format("{0}/{1}/{2}",
-                    d.Runs.Count(z => z.Started != null && z.Completed == null),
-                    d.Runs.Count(z => z.Completed != null),
-                    d.Runs.Count));
+     .Encoded(false)
+     .Sanitized(false)
+     .Titled("Progress")
+     .RenderValueAs(d =>
+            @<div class="progress">
+  <div class="progress-bar progress-bar-success" style="width: @(d.PassCount*100/d.Runs.Count)%">
+    <span class="sr-only">@d.PassCount passed</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: @(d.FailCount*100/d.Runs.Count)%">
+    <span class="sr-only">@d.FailCount failed</span>
+  </div>
+  <div class="progress-bar progress-bar-info" style="width: @(d.Runs.Count(z => z.Started != null && z.Completed == null)*100/d.Runs.Count)%">
+    <span class="sr-only">@d.Runs.Count(z => z.Started != null && z.Completed == null) running</span>
+  </div>
+</div>);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
 

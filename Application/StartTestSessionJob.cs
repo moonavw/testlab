@@ -100,7 +100,7 @@ namespace TestLab.Application
                 var waitings = (from t in tasks
                                 select Task.Run(async () =>
                                 {
-                                    Trace.TraceInformation("Wait for Result of TestRunTask {0}", t.Name);
+                                    Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
                                     var agent = t.Agent;
                                     //wait for result
                                     bool completed = false;
