@@ -20,7 +20,7 @@ namespace TestLab.Infrastructure.Git
             //git clone or git pull
             var pi = !Directory.Exists(workDir)
                 ? new ProcessStartInfo("git", string.Format("clone {0} {1}", repoPathOrUrl, workDir))
-                : new ProcessStartInfo("git", "pull") { WorkingDirectory = workDir };
+                : new ProcessStartInfo("git", string.Format("pull {0}", repoPathOrUrl)) { WorkingDirectory = workDir };
 
             return ProcessEx.RunAsync(pi);
         }
