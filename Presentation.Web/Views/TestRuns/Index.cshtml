@@ -25,12 +25,14 @@
                         @<div>
                              @if (d.Completed != null)
                              {
-                                 <pre>
-@d.Result.Summary
+                                 <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#result-@d.TestCaseId">
+                                     @d.Result.Summary
+                                 </button>
 
-@d.Result.ErrorDetails
-
-@d.Result.Output</pre>
+                                 <div id="result-@d.TestCaseId" class="collapse">
+                                     <pre>@d.Result.ErrorDetails
+                                         @d.Result.Output</pre>
+                                 </div>
                              }
                          </div>
         );

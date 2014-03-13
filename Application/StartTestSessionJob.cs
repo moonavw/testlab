@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Quartz;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Quartz;
 using TestLab.Domain;
 using TestLab.Infrastructure;
 using TS = Microsoft.Win32.TaskScheduler;
-using System.Collections.Concurrent;
 
 namespace TestLab.Application
 {
@@ -36,15 +35,16 @@ namespace TestLab.Application
             JobDataMap dataMap = context.JobDetail.JobDataMap;
 
             int sessionId = dataMap.GetInt("TestSessionId");
+            int agentIndex = dataMap.GetInt("TestAgentIndex");
 
-            Trace.TraceInformation("Instance {0} of {1} for test session {2}", key, GetType().Name, sessionId);
+            Trace.TraceInformation("Instance {0} of {1} for test session {2} on Agent {3}", key, GetType().Name, sessionId, agentIndex);
 
-            StartSession(sessionId).Wait();
+            StartSession(sessionId, agentIndex).Wait();
         }
 
         #endregion
 
-        private async Task StartSession(int sessionId)
+        private async Task StartSession(int sessionId, int agentIndex)
         {
             var repo = _uow.Repository<TestSession>();
             var session = await repo.FindAsync(sessionId);
@@ -53,131 +53,66 @@ namespace TestLab.Application
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this test");
 
-            //start
-            Trace.TraceInformation("Start Test Session {0}", session);
-            session.Started = DateTime.Now;
-            await _uow.CommitAsync();
-
             var agents = session.GetAgents().ToList();
-            foreach (var agent in agents)
+            var agent = agents[agentIndex];
+
+            //start
+            Trace.TraceInformation("Start Test Session {0} on Agent {1}", session, agent);
+
+            var trRepo = _uow.Repository<TestRun>();
+            var pendingRuns = from r in trRepo.Query()
+                              where r.TestSessionId == sessionId && r.Started == null
+                              select r;
+
+
+            //extract
+            Trace.TraceInformation("Extract Build to {0}", agent.Server);
+            await _archiver.Extract(session.Build.Location, agent.GetBuildDir(session.Build));
+
+            TestRun run;
+            while ((run = pendingRuns.FirstOrDefault()) != null)
             {
-                //extract
-                Trace.TraceInformation("Extract Build to {0}", agent.Server);
-                await _archiver.Extract(session.Build.Location, agent.GetBuildDir(session.Build));
+                run.Started = DateTime.Now;
+                await _uow.CommitAsync();
+
+                var t = driver.CreateTask(run, agent);
+                Trace.TraceInformation("Start TestRunTask {0}", t);
+
+                using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                {
+                    var td = ts.NewTask();
+                    td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
+                    ts.RootFolder
+                      .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
+                                              agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
+                      .Run();
+                }
+
+                //wait for result
+                bool completed = false;
+                do
+                {
+                    Thread.Sleep(5000);
+                    using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                    {
+                        var st = ts.GetTask(t.Name);
+                        if (st.State != TS.TaskState.Running)
+                        {
+                            st.TaskService.RootFolder.DeleteTask(t.Name);
+                            completed = true;
+                        }
+                    }
+                } while (!completed);
+
+                run.Result = await driver.ParseResult(t);
+                run.Completed = DateTime.Now;
+
+                await _uow.CommitAsync();
+                Trace.TraceInformation("Completed TestRunTask {0}", t);
             }
-
-            var bag = new ConcurrentBag<TestRun>(session.Runs);
-            var consumers = (from a in agents
-                             select Task.Run(async () =>
-                             {
-                                 TestRun run;
-                                 while (bag.TryTake(out run))
-                                 {
-                                     var t = driver.CreateTask(run, a);
-                                     Trace.TraceInformation("Start TestRunTask {0}", t);
-                                     var agent = t.Agent;
-                                     using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-                                     {
-                                         var td = ts.NewTask();
-                                         td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
-                                         ts.RootFolder
-                                           .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
-                                                                   agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
-                                           .Run();
-                                     }
-
-                                     t.Run.Started = DateTime.Now;
-                                     await _uow.CommitAsync();
-
-                                     Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
-                                     //wait for result
-                                     bool completed = false;
-                                     do
-                                     {
-                                         Thread.Sleep(5000);
-                                         using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-                                         {
-                                             var st = ts.GetTask(t.Name);
-                                             if (st.State != TS.TaskState.Running)
-                                             {
-                                                 st.TaskService.RootFolder.DeleteTask(t.Name);
-                                                 completed = true;
-                                             }
-                                         }
-                                     } while (!completed);
-
-                                     t.Run.Result = await driver.ParseResult(t);
-
-                                     t.Run.Completed = DateTime.Now;
-                                     await _uow.CommitAsync();
-                                     Trace.TraceInformation("Completed TestRunTask {0}", t);
-                                 }
-                             })).ToArray();
-
-            Task.WaitAll(consumers);
-
-            //runs
-            //int page = 1;
-            //while (true)
-            //{
-            //    var pagedRuns = session.Runs.ToPagedList(page++, agents.Count);
-
-            //    var tasks = pagedRuns.Select((t, i) => driver.CreateTask(t, agents[i])).ToList();
-
-            //    foreach (var t in tasks)
-            //    {
-            //        Trace.TraceInformation("Start TestRunTask {0}", t);
-            //        var agent = t.Agent;
-            //        using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-            //        {
-            //            var td = ts.NewTask();
-            //            td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
-            //            ts.RootFolder
-            //              .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
-            //                                      agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
-            //              .Run();
-            //        }
-
-            //        t.Run.Started = DateTime.Now;
-            //    }
-            //    await _uow.CommitAsync();
-
-            //    //wait for result
-            //    var waitings = (from t in tasks
-            //                    select Task.Run(async () =>
-            //                    {
-            //                        Trace.TraceInformation("Wait for Result of TestRunTask {0}", t);
-            //                        var agent = t.Agent;
-            //                        //wait for result
-            //                        bool completed = false;
-            //                        do
-            //                        {
-            //                            Thread.Sleep(5000);
-            //                            using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-            //                            {
-            //                                var st = ts.GetTask(t.Name);
-            //                                if (st.State != TS.TaskState.Running)
-            //                                {
-            //                                    st.TaskService.RootFolder.DeleteTask(t.Name);
-            //                                    completed = true;
-            //                                }
-            //                            }
-            //                        } while (!completed);
-
-            //                        t.Run.Result = await driver.ParseResult(t);
-
-            //                        t.Run.Completed = DateTime.Now;
-            //                        await _uow.CommitAsync();
-            //                    })).ToArray();
-
-            //    await Task.WhenAll(waitings);
-            //    Trace.TraceInformation("Completed {0} TestRun(s)", pagedRuns.Count);
-
-            //    if (!pagedRuns.HasNextPage) break;
-            //}
             session.Completed = DateTime.Now;
             await _uow.CommitAsync();
-            Trace.TraceInformation("Completed TestSession {0}", session);
+            Trace.TraceInformation("Completed TestSession {0} on Agent {1}", session, agent);
         }
     }
 }

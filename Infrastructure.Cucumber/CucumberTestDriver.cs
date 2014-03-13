@@ -21,7 +21,7 @@ namespace TestLab.Infrastructure.Cucumber
             RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private static readonly Regex RxSummary = new Regex(
-            @"(\d+ scenarios [^<]*)<br />(\d+ steps \([^\)]+\))",
+            @"(\d+ scenario[^<]*)<br />(\d+ step[^\)]+\))",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         #region Implementation of ITestDriver
