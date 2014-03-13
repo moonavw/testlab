@@ -43,7 +43,14 @@ namespace TestLab.Application
 
             Trace.TraceInformation("Instance {0} of {1} for project {2}", key, GetType().Name, projectId);
 
-            BuildProject(projectId).Wait();
+            try
+            {
+                BuildProject(projectId).Wait();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
+            }
         }
 
         #endregion

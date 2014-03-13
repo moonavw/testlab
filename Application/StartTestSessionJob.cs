@@ -39,7 +39,14 @@ namespace TestLab.Application
 
             Trace.TraceInformation("Instance {0} of {1} for test session {2} on Agent {3}", key, GetType().Name, sessionId, agentIndex);
 
-            StartSession(sessionId, agentIndex).Wait();
+            try
+            {
+                StartSession(sessionId, agentIndex).Wait();
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.ToString());
+            }
         }
 
         #endregion
@@ -72,9 +79,6 @@ namespace TestLab.Application
             TestRun run;
             while ((run = pendingRuns.FirstOrDefault()) != null)
             {
-                run.Started = DateTime.Now;
-                await _uow.CommitAsync();
-
                 var t = driver.CreateTask(run, agent);
                 Trace.TraceInformation("Start TestRunTask {0}", t);
 
@@ -87,6 +91,9 @@ namespace TestLab.Application
                                               agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
                       .Run();
                 }
+
+                run.Started = DateTime.Now;
+                await _uow.CommitAsync();
 
                 //wait for result
                 bool completed = false;
