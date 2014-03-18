@@ -35,6 +35,10 @@
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="NPatterns, Version=1.0.5189.41347, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,10 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\npatterns\NPatterns\NPatterns.csproj">
-      <Project>{9bdf56e3-6b17-438b-afee-11120410b9c8}</Project>
-      <Name>NPatterns</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Domain\TestLab.Domain.csproj">
       <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
       <Name>TestLab.Domain</Name>

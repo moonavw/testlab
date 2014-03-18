@@ -80,6 +80,10 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NPatterns, Version=1.0.5189.41347, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
+    </Reference>
     <Reference Include="RestfulRouting">
       <HintPath>..\packages\RestfulRouting.1.5.0\lib\RestfulRouting.dll</HintPath>
     </Reference>
@@ -256,10 +260,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\npatterns\NPatterns\NPatterns.csproj">
-      <Project>{9bdf56e3-6b17-438b-afee-11120410b9c8}</Project>
-      <Name>NPatterns</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Application\TestLab.Application.csproj">
       <Project>{29bc7c00-8b9b-42a0-94bc-6c0809f7f8d7}</Project>
       <Name>TestLab.Application</Name>
