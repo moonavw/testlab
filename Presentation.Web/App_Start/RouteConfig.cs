@@ -3,7 +3,7 @@ using System.Web.Routing;
 using RestfulRouting;
 using TestLab.Presentation.Web.Controllers;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(TestLab.Presentation.Web.RouteConfig), "Start")]
+[assembly: WebActivator.PostApplicationStartMethod(typeof(TestLab.Presentation.Web.RouteConfig), "Start")]
 
 namespace TestLab.Presentation.Web
 {
@@ -11,20 +11,20 @@ namespace TestLab.Presentation.Web
     {
         private static void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoutes<Routes>();
-
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            //routes.MapMvcAttributeRoutes();
+            //AreaRegistration.RegisterAllAreas();
             //routes.MapRoute(
             //    name: "Default",
             //    url: "{controller}/{action}/{id}",
             //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             //);
+
+            routes.MapRoutes<Routes>();
         }
 
         public static void Start()
         {
-            //AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);
         }
 
@@ -38,6 +38,12 @@ namespace TestLab.Presentation.Web
 #endif
 
                 map.Root<HomeController>(x => x.Index());
+
+                map.Resource<HomeController>(home =>
+                {
+                    home.Only();
+                    home.Member(x => x.Get("about"));
+                });
 
                 map.Resources<TestProjectsController>(projects =>
                 {

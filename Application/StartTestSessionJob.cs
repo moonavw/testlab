@@ -79,47 +79,65 @@ namespace TestLab.Application
             TestRun run;
             while ((run = pendingRuns.FirstOrDefault()) != null)
             {
-                var t = driver.CreateTask(run, agent);
-                Trace.TraceInformation("Start TestRunTask {0}", t);
-
-                using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                try
                 {
-                    var td = ts.NewTask();
-                    td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
-                    ts.RootFolder
-                      .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
-                                              agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
-                      .Run();
+                    var t = driver.CreateTask(run, agent);
+                    Trace.TraceInformation("Start TestRunTask {0}", t);
+
+                    StartTestRunTask(t);
+
+                    run.Started = DateTime.Now;
+                    await _uow.CommitAsync();
+
+                    WaitForTestRunTask(t);
+
+                    run.Result = await driver.ParseResult(t);
+                    run.Completed = DateTime.Now;
+
+                    await _uow.CommitAsync();
+                    Trace.TraceInformation("Completed TestRunTask {0}", t);
                 }
-
-                run.Started = DateTime.Now;
-                await _uow.CommitAsync();
-
-                //wait for result
-                bool completed = false;
-                do
+                catch (Exception ex)
                 {
-                    Thread.Sleep(5000);
-                    using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
-                    {
-                        var st = ts.GetTask(t.Name);
-                        if (st.State != TS.TaskState.Running)
-                        {
-                            st.TaskService.RootFolder.DeleteTask(t.Name);
-                            completed = true;
-                        }
-                    }
-                } while (!completed);
-
-                run.Result = await driver.ParseResult(t);
-                run.Completed = DateTime.Now;
-
-                await _uow.CommitAsync();
-                Trace.TraceInformation("Completed TestRunTask {0}", t);
+                    Trace.TraceError(ex.ToString());
+                }
             }
             session.Completed = DateTime.Now;
             await _uow.CommitAsync();
             Trace.TraceInformation("Completed TestSession {0} on Agent {1}", session, agent);
+        }
+
+        private static void WaitForTestRunTask(TestRunTask t)
+        {
+            var agent = t.Agent;
+            bool completed = false;
+            do
+            {
+                Thread.Sleep(5000);
+                using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+                {
+                    var st = ts.GetTask(t.Name);
+                    if (st.State != TS.TaskState.Running)
+                    {
+                        st.TaskService.RootFolder.DeleteTask(t.Name);
+                        completed = true;
+                    }
+                }
+            } while (!completed);
+        }
+
+        private static void StartTestRunTask(TestRunTask t)
+        {
+            var agent = t.Agent;
+            using (var ts = new TS.TaskService(agent.Server, agent.UserName, agent.Domain, agent.Password))
+            {
+                var td = ts.NewTask();
+                td.Actions.Add(new TS.ExecAction(t.StartProgram, t.StartProgramArgs));
+                ts.RootFolder
+                  .RegisterTaskDefinition(t.Name, td, TS.TaskCreation.CreateOrUpdate,
+                                          agent.DomainUser, agent.Password, TS.TaskLogonType.Password)
+                  .Run();
+            }
         }
     }
 }

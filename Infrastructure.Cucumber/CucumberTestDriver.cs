@@ -88,11 +88,15 @@ namespace TestLab.Infrastructure.Cucumber
         public async Task<TestResult> ParseResult(TestRunTask task)
         {
             var remoteResultFile = new FileInfo(task.OutputFile);
-            if (!remoteResultFile.Exists) return null;
+            if (!remoteResultFile.Exists)
+                throw new FileNotFoundException("result file not found", remoteResultFile.FullName);
 
             //parse result from output file
-            string text = await remoteResultFile.OpenText().ReadToEndAsync();
-
+            string text;
+            using (var sr = remoteResultFile.OpenText())
+            {
+                text = await sr.ReadToEndAsync();
+            }
             var summaryMatch = RxSummary.Match(text);
             var failMatch = RxFail.Match(text);
 

@@ -16,13 +16,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("TestLab", "Index", "Home", null, new { @class = "navbar-brand" })
+                @Html.ActionLink(TestLab.Infrastructure.Constants.AppName, "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                    <li @(Html.IsRouteMatch("About","Home")?"class=active":null)>@Html.ActionLink("About", "About", "Home")</li>
                     @RenderSection("nav", required: false)
                 </ul>
                 <p class="navbar-text navbar-right">Hello, @User.Identity.Name!</p>
@@ -33,7 +31,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - TestLab</p>
+            <p>&copy; @DateTime.Now.Year - @TestLab.Infrastructure.Constants.AppName</p>
         </footer>
     </div>
 
