@@ -12,8 +12,8 @@ namespace TestLab.Presentation.Web.Controllers
     {
         public ActionResult Index()
         {
-            //return View();
-            return RedirectToAction("Index", "TestProjects");
+            return View();
+            //return RedirectToAction("Index", "TestProjects");
         }
 
         public async Task<ActionResult> About()

@@ -5,12 +5,12 @@
 <div class="jumbotron">
     <h1>@TestLab.Infrastructure.Constants.AppName</h1>
     <p class="lead">
-
+        A smart self-service system for running automation test.
     </p>
-    <p><a href="#" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    <p><a href="@Url.Action("About")" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
 </div>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-4">
         <h2>Test Projects</h2>
         <p>
@@ -32,7 +32,7 @@
         </p>
         <p><a class="btn btn-default" href="#">Learn more &raquo;</a></p>
     </div>
-</div>
+</div>*@
 
 @section nav{
     <li>@Html.ActionLink("Projects", "Index", "TestProjects", null, null)</li>

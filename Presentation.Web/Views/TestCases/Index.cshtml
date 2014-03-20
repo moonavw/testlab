@@ -7,11 +7,12 @@
 
 <h2>Test Cases</h2>
 
-@Html.Grid(Model).Columns(c =>
+@Html.Grid(Model.OrderBy(z=>z.Name)).Columns(c =>
 {
     c.Add(o => o.Id);
     
-    c.Add(o => o.Name);
+    c.Add(o => o.Name)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
 
     c.Add(o => o.Location);
 

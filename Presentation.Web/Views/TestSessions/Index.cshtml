@@ -10,7 +10,7 @@
     @Html.ActionLink("Create New", "New", "TestSessions", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
 </p>
 
-@Html.Grid(Model).Columns(c =>
+@Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
     c.Add()
      .Encoded(false)
@@ -20,7 +20,8 @@
                         Html.ActionLink("Open", "Show", "TestSessions", new { id = d.Id, testprojectId = project.Id }, new { @class = "btn btn-default" })
         );
 
-    c.Add(o => o.Id);
+    c.Add(o => o.Id)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
     
     c.Add(o => o.Name);
 
@@ -28,8 +29,6 @@
     
     c.Add(o => o.Build);
    
-    c.Add(o => o.Summary);
-
     c.Add(o => o.Started)
      .SetWidth(110);
 
@@ -43,13 +42,13 @@
      .RenderValueAs(d =>
             @<div class="progress">
   <div class="progress-bar progress-bar-success" style="width: @(d.PassCount*100/d.Runs.Count)%">
-    <span class="sr-only">@d.PassCount passed</span>
+    @d.PassCount <span class="sr-only">passed</span>
   </div>
   <div class="progress-bar progress-bar-danger" style="width: @(d.FailCount*100/d.Runs.Count)%">
-    <span class="sr-only">@d.FailCount failed</span>
+    @d.FailCount <span class="sr-only">failed</span>
   </div>
   <div class="progress-bar progress-bar-info" style="width: @(d.Runs.Count(z => z.Started != null && z.Completed == null)*100/d.Runs.Count)%">
-    <span class="sr-only">@d.Runs.Count(z => z.Started != null && z.Completed == null) running</span>
+    @d.Runs.Count(z => z.Started != null && z.Completed == null) <span class="sr-only">running</span>
   </div>
 </div>);
 

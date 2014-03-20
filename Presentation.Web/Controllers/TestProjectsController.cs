@@ -14,13 +14,18 @@ namespace TestLab.Presentation.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IEnumerable<ITestDriver> _drivers;
+        private readonly IEnumerable<ISourcePuller> _pullers;
         private readonly IMessageBus _bus;
 
-        public TestProjectsController(IUnitOfWork uow, IEnumerable<ITestDriver> drivers, IMessageBus bus)
+        public TestProjectsController(IUnitOfWork uow,
+            IEnumerable<ITestDriver> drivers,
+            IEnumerable<ISourcePuller> pullers,
+            IMessageBus bus)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _drivers = drivers;
+            _pullers = pullers;
             _bus = bus;
         }
 
@@ -65,13 +70,18 @@ namespace TestLab.Presentation.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(TestProject model)
         {
+            if (!_pullers.Any(z => z.CanPull(model.RepoPathOrUrl)))
+            {
+                ModelState.AddModelError("RepoPathOrUrl", "no puller can pull this");
+            }
+
             if (ModelState.IsValid)
             {
                 _projRepo.Add(model);
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id });
             }
-
+            SetViewData();
             return View("new", model);
         }
 
@@ -90,12 +100,17 @@ namespace TestLab.Presentation.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Update(int id, TestProject model)
         {
+            if (!_pullers.Any(z => z.CanPull(model.RepoPathOrUrl)))
+            {
+                ModelState.AddModelError("RepoPathOrUrl", "no puller can pull this");
+            }
             if (ModelState.IsValid)
             {
                 _projRepo.Modify(model);
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id });
             }
+            SetViewData();
             return View("edit", model);
         }
 

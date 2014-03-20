@@ -10,7 +10,7 @@
     @Html.ActionLink("Create New", "New", "TestPlans", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
 </p>
 
-@Html.Grid(Model).Columns(c =>
+@Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
     c.Add()
      .Encoded(false)
@@ -20,7 +20,8 @@
                         Html.ActionLink("Open", "Show", "TestPlans", new {id = d.Id, testprojectId = project.Id}, new {@class = "btn btn-default"})
         );
     
-    c.Add(o => o.Id);
+    c.Add(o => o.Id)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
 
     c.Add(o => o.Name);
 
