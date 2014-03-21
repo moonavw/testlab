@@ -39,15 +39,16 @@
      .Encoded(false)
      .Sanitized(false)
      .Titled("Progress")
+     .SetWidth(200)
      .RenderValueAs(d =>
             @<div class="progress">
-  <div class="progress-bar progress-bar-success" style="width: @(d.PassCount*100/d.Runs.Count)%">
+  <div class="progress-bar progress-bar-success" style="width: @((double)d.PassCount*100/d.Runs.Count)%">
     @d.PassCount <span class="sr-only">passed</span>
   </div>
-  <div class="progress-bar progress-bar-danger" style="width: @(d.FailCount*100/d.Runs.Count)%">
+  <div class="progress-bar progress-bar-danger" style="width: @((double)d.FailCount*100/d.Runs.Count)%">
     @d.FailCount <span class="sr-only">failed</span>
   </div>
-  <div class="progress-bar progress-bar-info" style="width: @(d.Runs.Count(z => z.Started != null && z.Completed == null)*100/d.Runs.Count)%">
+  <div class="progress-bar progress-bar-info" style="width: @((double)d.Runs.Count(z => z.Started != null && z.Completed == null)*100/d.Runs.Count)%">
     @d.Runs.Count(z => z.Started != null && z.Completed == null) <span class="sr-only">running</span>
   </div>
 </div>);

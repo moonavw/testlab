@@ -17,6 +17,7 @@ namespace TestLab.Domain
 
         public int Id { get; set; }
 
+        [RegularExpression("[a-zA-Z0-9 ]+")]
         [Required]
         public string Name { get; set; }
 
