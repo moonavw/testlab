@@ -7,7 +7,7 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestAgent
+    public class TestAgent : ValueObject
     {
         [Required]
         public string Server { get; set; }
