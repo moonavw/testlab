@@ -173,6 +173,7 @@
     <Compile Include="Controllers\TestCasesController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />
     <Compile Include="Controllers\TestProjectsController.cs" />
+    <Compile Include="Filters\LogErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
