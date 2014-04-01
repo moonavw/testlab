@@ -40,24 +40,9 @@
      .Sanitized(false)
      .Titled("Progress")
      .SetWidth(200)
-     .RenderValueAs(d =>
-            @<div class="progress">
-  <div class="progress-bar progress-bar-success" style="width: @((double)d.PassCount*100/d.Runs.Count)%">
-    @d.PassCount <span class="sr-only">passed</span>
-  </div>
-  <div class="progress-bar progress-bar-danger" style="width: @((double)d.FailCount*100/d.Runs.Count)%">
-    @d.FailCount <span class="sr-only">failed</span>
-  </div>
-  <div class="progress-bar progress-bar-info" style="width: @((double)d.Runs.Count(z => z.Started != null && z.Completed == null)*100/d.Runs.Count)%">
-    @d.Runs.Count(z => z.Started != null && z.Completed == null) <span class="sr-only">running</span>
-  </div>
-</div>);
+     .RenderValueAs(d => Html.Partial("_ShowProgress", d));
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
-
-@section scripts{
-    @Scripts.Render("~/bundles/gridmvc")
-}
 
 @section nav{
     <li class="dropdown">

@@ -8,8 +8,8 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+    <header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -18,22 +18,23 @@
                 </button>
                 @Html.ActionLink(TestLab.Infrastructure.Constants.AppName, "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            <nav class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li @(Html.IsRouteMatch("About","Home")?"class=active":null)>@Html.ActionLink("About", "About", "Home")</li>
                     @RenderSection("nav", required: false)
                 </ul>
                 <p class="navbar-text navbar-right">Hello, @User.Identity.Name!</p>
-            </div>
+            </nav>
         </div>
-    </nav>
-    <div class="container-fluid body-content">
+    </header>
+    <section class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - @TestLab.Infrastructure.Constants.AppName</p>
-        </footer>
-    </div>
+    </section>
+    <footer>
+        <div class="container">
+            <p class="text-muted">&copy; @DateTime.Now.Year - @TestLab.Infrastructure.Constants.AppName</p>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

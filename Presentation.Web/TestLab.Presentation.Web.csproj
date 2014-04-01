@@ -265,6 +265,7 @@
     <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
     <Content Include="Views\TestProjects\_ShowBuild.cshtml" />
     <Content Include="Views\TestSessions\_ShowAgent.cshtml" />
+    <Content Include="Views\TestSessions\_ShowProgress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

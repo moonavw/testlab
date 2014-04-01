@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -92,10 +93,21 @@ namespace TestLab.Infrastructure.Cucumber
                 throw new FileNotFoundException("result file not found", remoteResultFile.FullName);
 
             //parse result from output file
-            string text;
-            using (var sr = remoteResultFile.OpenText())
+            string text = null;
+            int attempts = 0;
+            while (text == null && attempts++ < 5)
             {
-                text = await sr.ReadToEndAsync();
+                try
+                {
+                    using (var sr = remoteResultFile.OpenText())
+                    {
+                        text = await sr.ReadToEndAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("error when parsing result file, retry: {0}, error: {1}", attempts, ex.ToString());
+                }
             }
             var summaryMatch = RxSummary.Match(text);
             var failMatch = RxFail.Match(text);

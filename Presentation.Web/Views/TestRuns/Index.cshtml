@@ -2,11 +2,13 @@
 
 @{
     ViewBag.Title = "Test Runs";
-    TestLab.Domain.TestSession session = ViewBag.Session;
-    TestLab.Domain.TestProject project = ViewBag.Project;
+    TestLab.Domain.TestSession session = ViewBag.Session ?? Model.First().Session;
+    TestLab.Domain.TestProject project = ViewBag.Project ?? session.Project;
 }
 
 <h2>Test Runs</h2>
+
+@Html.Partial("../TestSessions/_ShowProgress", session)
 
 @Html.Grid(Model).Columns(c =>
 {
@@ -18,6 +20,8 @@
     c.Add(o => o.Completed)
      .SetWidth(110);
 
+    c.Add(o => o.Result.PassOrFail);
+    
     c.Add(o => o.Result.Summary)
      .Encoded(false)
      .Sanitized(false)
@@ -49,9 +53,6 @@
     }
 })
 
-@section scripts{
-    @Scripts.Render("~/bundles/gridmvc")
-}
 
 @section nav{
     <li class="dropdown">

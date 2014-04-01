@@ -32,11 +32,25 @@ namespace TestLab.Application
         {
             var repo = _uow.Repository<TestSession>();
             var session = await repo.FindAsync(message.TestSessionId);
+            //get incomplete runs
+            var runs = (from r in session.Runs
+                        where r.Completed == null
+                        select r).ToList();
+            if (runs.Count == 0)
+            {//get failed runs if all complete
+                runs = (from r in session.Runs
+                        where r.Result.PassOrFail == false
+                        select r).ToList();
+            }
+
+            if (runs.Count == 0)
+                return;//no available runs for this session
+
             //reset session
             session.Started = DateTime.Now;
             session.Completed = null;
-            //reset runs
-            foreach (var run in session.Runs)
+            //reset runs          
+            foreach (var run in runs)
             {
                 run.Started = null;
                 run.Completed = null;
