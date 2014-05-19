@@ -18,7 +18,7 @@
         <div class="form-group@(Html.ValidationError("TestCases", " has-error"))">
             @Html.Label("TestCases", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ListBox("TestCases", new MultiSelectList(Model.Project.Cases.OrderBy(z=>z.Name), "Id", "Name", Model.Cases.Select(z => z.Id)), new { @class = "form-control listbox" })
+                @Html.ListBox("TestCases", new MultiSelectList(Model.Project.Cases.Where(z=>z.Published!=null).OrderBy(z=>z.Name), "Id", "Name", Model.Cases.Select(z => z.Id)), new { @class = "form-control listbox" })
                 @Html.ValidationMessage("TestCases", null, new { @class = "help-block" })
             </div>
         </div>
