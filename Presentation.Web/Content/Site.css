@@ -66,3 +66,8 @@ footer {
 .container .text-muted {
     margin: 20px 0;
 }
+
+
+.bootstrap-duallistbox-container select {
+    height: 300px !important;
+}

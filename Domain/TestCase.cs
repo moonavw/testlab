@@ -21,6 +21,8 @@ namespace TestLab.Domain
         [Required]
         public string Location { get; set; }
 
+        public string Keyword { get; set; }
+
         public string FullName
         {
             get { return Location + "." + Name; }

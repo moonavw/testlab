@@ -11,7 +11,8 @@ namespace TestLab.Infrastructure.Cucumber
 {
     public class CucumberTestDriver : ITestDriver
     {
-        private static readonly Regex RxTag = new Regex(@"@Name_(\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex RxTagName = new Regex(@"@Name_([\w\-_\.]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex RxTagKeyword = new Regex(@"@Keyword_([\w\-_,#]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly Regex RxFail = new Regex(
             "<td class=\"failed\" colspan=\"\\d+\">(.+)</td>",
@@ -42,14 +43,31 @@ namespace TestLab.Infrastructure.Cucumber
             foreach (var f in files)
             {
                 string text = await f.OpenText().ReadToEndAsync();
-                var matches = RxTag.Matches(text);
-                tests.AddRange(from Match m in matches
-                               select new TestCase
-                               {
-                                   Published = DateTime.Now,
-                                   Name = m.Groups[1].Value,
-                                   Location = f.FullName.Remove(0, srcPath.Length + 1)
-                               });
+                var matches = RxTagName.Matches(text);
+                foreach (Match m in matches)
+                {
+                    int start = m.Index < 100 ? 0 : m.Index - 100;
+                    int end = m.Index + 100 > text.Length - 1 ? m.Index + 100 : text.Length - 1;
+                    var t = new TestCase
+                    {
+                        Published = DateTime.Now,
+                        Name = m.Groups[1].Value,
+                        Location = f.FullName.Remove(0, srcPath.Length + 1)
+                    };
+                    var km = RxTagKeyword.Match(text.Substring(start, end - start));
+                    if (km.Success)
+                    {
+                        t.Keyword = km.Groups[1].Value;
+                    }
+                    tests.Add(t);
+                }
+                //tests.AddRange(from Match m in matches
+                //               select new TestCase
+                //               {
+                //                   Published = DateTime.Now,
+                //                   Name = m.Groups[1].Value,
+                //                   Location = f.FullName.Remove(0, srcPath.Length + 1)
+                //               });
             }
 
             return tests;

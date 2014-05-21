@@ -87,6 +87,16 @@ namespace TestLab.Application
             var toDel = project.Cases.ExceptBy(tests, z => z.FullName).ToList();
             var toAdd = tests.ExceptBy(project.Cases, z => z.FullName).ToList();
 
+            var toUpdate = (from le in project.Cases
+                            join re in tests
+                            on le.FullName equals re.FullName
+                            select new { le, re }).ToList();
+            toUpdate.ForEach(z =>
+            {
+                z.le.Keyword = z.re.Keyword;
+                z.le.Published = z.re.Published;
+            });
+
             toDel.ForEach(z =>
             {
                 z.Plans.Clear();

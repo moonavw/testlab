@@ -14,6 +14,8 @@
     c.Add(o => o.Name)
      .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
 
+    c.Add(o => o.Keyword);
+    
     c.Add(o => o.Location);
 
     c.Add(o => o.Plans.Count);
