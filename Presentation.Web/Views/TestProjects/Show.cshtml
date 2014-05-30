@@ -53,13 +53,7 @@
         </dd>
     </dl>
 </div>
-@Html.Partial("_ShowBuild", Model.Build)
-@if(Model.Build.Started==null || Model.Build.Completed!=null)
-{
-<p>
-    @Html.ActionLink("Start New Build", "Build", "TestProjects", new { id = Model.Id }, new { @class = "btn btn-success ajax-post" })
-</p>
-}
+
 @section nav{
     <li class="dropdown active">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
@@ -70,5 +64,6 @@
     </li>
     <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
     <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
+    <li>@Html.ActionLink("Builds", "Index", "TestBuilds", new { testprojectId = Model.Id }, null)</li>
     <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>
 }

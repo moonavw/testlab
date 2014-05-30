@@ -16,7 +16,6 @@ namespace TestLab.Domain
             Plans = new HashSet<TestPlan>();
             Sessions = new HashSet<TestSession>();
             Builds = new HashSet<TestBuild>();
-            Jobs = new HashSet<TestJob>();
         }
 
         public int Id { get; set; }
@@ -45,8 +44,6 @@ namespace TestLab.Domain
         public virtual ICollection<TestCase> Cases { get; set; }
 
         public virtual ICollection<TestSession> Sessions { get; set; }
-
-        public virtual ICollection<TestJob> Jobs { get; set; }
 
         #region Implementation of IAuditable
 

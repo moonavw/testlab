@@ -1,11 +1,11 @@
-﻿@model TestLab.Domain.TestSession
+﻿@model TestLab.Domain.TestBuild
 
 @{
-    ViewBag.Title = "Test Session";
+    ViewBag.Title = "Test Build";
 }
 
 <div>
-    <h2>Test Session</h2>
+    <h2>Test Build</h2>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
     @Html.Partial("_ShowAudit", Model)
     <hr />
@@ -19,25 +19,23 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Summary)
+            @Html.DisplayNameFor(model => model.Agent)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Summary)
+            @Html.DisplayFor(model => model.Agent)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Build)
+            @Html.DisplayNameFor(model => model.SharedPath)
         </dt>
 
         <dd>
-            @Model.Build
+            @Html.DisplayFor(model => model.SharedPath)
         </dd>
     </dl>
+    @Html.Partial("_ShowStartInfo", Model)
 </div>
-
-
-@Html.Partial("../TestRuns/Index", Model.Runs)
 
 @section nav{
     <li class="dropdown">
@@ -49,11 +47,6 @@
     </li>
     <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
     <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sessions <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
-            <li class="active">@Html.ActionLink(Model.Name, "Show", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
-        </ul>
-    </li>
+    <li class="active">@Html.ActionLink("Builds", "Index", "TestBuilds", new { testprojectId = Model.Project.Id }, null)</li>
+    <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
 }

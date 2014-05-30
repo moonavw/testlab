@@ -14,12 +14,12 @@ namespace TestLab.Presentation.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly IEnumerable<ISourcePuller> _pullers;
+        private readonly IEnumerable<IPuller> _pullers;
         private readonly IMessageBus _bus;
 
         public TestProjectsController(IUnitOfWork uow,
             IEnumerable<ITestDriver> drivers,
-            IEnumerable<ISourcePuller> pullers,
+            IEnumerable<IPuller> pullers,
             IMessageBus bus)
         {
             _uow = uow;
@@ -27,17 +27,6 @@ namespace TestLab.Presentation.Web.Controllers
             _drivers = drivers;
             _pullers = pullers;
             _bus = bus;
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> Build(int id)
-        {
-            //TODO: create build job
-            return RespondTo(formats =>
-            {
-                formats.Default = RedirectToAction("Show", new { id });
-                formats["text"] = () => Content("Started");
-            });
         }
 
         public async Task<ActionResult> Index()

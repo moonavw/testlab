@@ -14,10 +14,10 @@ namespace TestLab.Application
         private readonly IBuilder _builder;
         private readonly IArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly IEnumerable<ISourcePuller> _pullers;
+        private readonly IEnumerable<IPuller> _pullers;
 
         public TestBuildJobHandler(IUnitOfWork uow,
-                                   IEnumerable<ISourcePuller> pullers,
+                                   IEnumerable<IPuller> pullers,
                                    IBuilder builder,
                                    IArchiver archiver,
                                    IEnumerable<ITestDriver> drivers)

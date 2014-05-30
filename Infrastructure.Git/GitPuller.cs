@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace TestLab.Infrastructure.Git
 {
-    public class GitSourcePuller : ISourcePuller
+    public class GitPuller : IPuller
     {
         private static readonly Regex RxUrl = new Regex(@"http(s)?://.+/\w+\.git", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

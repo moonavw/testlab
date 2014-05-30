@@ -1,0 +1,29 @@
+﻿@model TestLab.Domain.TestBuild
+
+@{
+    IEnumerable<TestLab.Domain.TestAgent> agents = ViewBag.Agents;
+}
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="form-horizontal">
+    <fieldset>
+        <legend>Test Build</legend>
+
+        <div class="form-group@(Html.ValidationError("TestAgentId", " has-error"))">
+            @Html.Label("TestAgentId", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("TestAgentId", new SelectList(agents, "Id", "Name", Model.Agent.Id), new { @class = "form-control" })
+                @Html.ValidationMessage("TestCases", null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="reset" value="Reset" class="btn btn-default" />
+        </div>
+    </div>
+</div>

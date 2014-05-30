@@ -51,7 +51,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GitModule.cs" />
-    <Compile Include="GitSourcePuller.cs" />
+    <Compile Include="GitPuller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

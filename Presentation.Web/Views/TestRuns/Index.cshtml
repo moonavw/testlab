@@ -31,11 +31,11 @@
                         @<div>
                              @if (d.Completed != null)
                              {
-                                 <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#result-@d.TestCaseId">
+                                 <button type="button" class="btn btn-default" data-toggle="collapse" data-target="#result-@d.Case.Id">
                                      @d.Result.Summary
                                  </button>
 
-                                 <div id="result-@d.TestCaseId" class="collapse">
+                                 <div id="result-@d.Case.Id" class="collapse">
                                      <pre>@d.Result.ErrorDetails
                                          @d.Result.Output</pre>
                                  </div>

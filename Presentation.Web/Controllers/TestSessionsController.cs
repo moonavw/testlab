@@ -14,6 +14,7 @@ namespace TestLab.Presentation.Web.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IRepository<TestSession> _sessionRepo;
+        private readonly IRepository<TestAgent> _agentRepo;
         private readonly IMessageBus _bus;
 
         public TestSessionsController(IUnitOfWork uow, IMessageBus bus)
@@ -21,12 +22,13 @@ namespace TestLab.Presentation.Web.Controllers
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _sessionRepo = uow.Repository<TestSession>();
+            _agentRepo = uow.Repository<TestAgent>();
             _bus = bus;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Start(int id, int testprojectId)
-        {
+        //[HttpPost]
+        //public async Task<ActionResult> Start(int id, int testprojectId)
+        //{
             //var repo = _uow.Repository<TestSession>();
             //var session = await repo.FindAsync(message.TestSessionId);
             ////get incomplete runs
@@ -54,12 +56,13 @@ namespace TestLab.Presentation.Web.Controllers
             //    run.Result = new TestResult();
             //}
             //await _uow.CommitAsync();
-            //TODO: create queue job
-            return RespondTo(formats =>
-            {
-                formats.Default = RedirectToAction("Show", new { id, testprojectId });
-                formats["text"] = () => Content("Started");
-            });
+        //}
+
+        private void SetViewData()
+        {
+            ViewBag.Agents = from e in _agentRepo.Query().AsEnumerable()
+                             where e.IsOnline
+                             select e;
         }
 
         public async Task<ActionResult> Index(int testprojectId)
@@ -90,16 +93,17 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
-            //TODO: dropdown list of builds for picking up build
-            //model.Build = model.Project.Build;
+            SetViewData();
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplanId)
+        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplanId, int testbuildId, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuildId);
             var plan = project.Plans.FirstOrDefault(z => z.Id == testplanId);
             if (plan == null)
             {
@@ -117,6 +121,13 @@ namespace TestLab.Presentation.Web.Controllers
                     model.Runs = new HashSet<TestRun>(tests.Select(z => new TestRun { Case = z }));
                 }
             }
+            if (testagents != null)
+            {
+                var queues = (from e in _agentRepo.Query()
+                              where testagents.Contains(e.Id)
+                              select new TestQueue { Agent = e, Project = project }).ToList();
+                model.Queues = new HashSet<TestQueue>(queues);
+            }
             if (model.Build.Completed == null)
             {
                 ModelState.AddModelError("Build.Name", "no completed build for this test session");
@@ -128,26 +139,41 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
-
+            SetViewData();
             return View("new", model);
         }
 
         public Task<ActionResult> Edit(int id, int testprojectId)
         {
+            SetViewData();
             return Show(id, testprojectId);
         }
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model)
+        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int testbuildId, int[] testagents)
         {
+            var project = model.Project = await _projRepo.FindAsync(testprojectId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuildId);
             if (ModelState.IsValid)
             {
-                _sessionRepo.Modify(model);
+                var entity = project.Sessions.First(z => z.Id == id);
+                _sessionRepo.Merge(entity, model);
+                entity.Queues.Clear();
+                if (testagents != null)
+                {
+                    var queues = (from e in _agentRepo.Query()
+                                  where testagents.Contains(e.Id)
+                                  select new TestQueue { Agent = e, Project = project }).ToList();
+
+                    entity.Queues = new HashSet<TestQueue>(queues);
+                }
+
                 await _uow.CommitAsync();
 
                 return RedirectToAction("Show", new { id, testprojectId });
             }
+            SetViewData();
             return View("edit", model);
         }
 

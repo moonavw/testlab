@@ -53,7 +53,7 @@
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="IArchiver.cs" />
-    <Compile Include="ISourcePuller.cs" />
+    <Compile Include="IPuller.cs" />
     <Compile Include="IStartable.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IRepository.cs" />

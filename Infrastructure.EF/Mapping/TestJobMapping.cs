@@ -10,7 +10,7 @@ namespace TestLab.Infrastructure.EF.Mapping
             HasKey(z => z.Id);
 
             HasRequired(z => z.Project)
-               .WithMany(f => f.Jobs)
+               .WithMany()
                .Map(m => m.MapKey("TestProjectId"));
 
             HasOptional(z => z.Agent)

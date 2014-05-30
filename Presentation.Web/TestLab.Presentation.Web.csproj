@@ -168,6 +168,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestAgentsController.cs" />
+    <Compile Include="Controllers\TestBuildsController.cs" />
     <Compile Include="Controllers\TestRunsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
     <Compile Include="Controllers\TestCasesController.cs" />
@@ -263,9 +265,14 @@
     <Content Include="Views\TestSessions\_form.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
     <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
-    <Content Include="Views\TestProjects\_ShowBuild.cshtml" />
     <Content Include="Views\TestSessions\_ShowAgent.cshtml" />
     <Content Include="Views\TestSessions\_ShowProgress.cshtml" />
+    <Content Include="Views\TestBuilds\Index.cshtml" />
+    <Content Include="Views\TestBuilds\Show.cshtml" />
+    <Content Include="Views\TestBuilds\New.cshtml" />
+    <Content Include="Views\TestBuilds\Edit.cshtml" />
+    <Content Include="Views\TestBuilds\_form.cshtml" />
+    <Content Include="Views\TestAgents\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

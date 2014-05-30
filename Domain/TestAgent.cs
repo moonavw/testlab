@@ -8,7 +8,7 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestAgent : Entity, IArchivable
+    public class TestAgent : AggregateRoot, IArchivable
     {
         public TestAgent()
         {
@@ -33,6 +33,36 @@ namespace TestLab.Domain
                 return LastTalk.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
             }
         }
+
+        #region info
+
+        public int CompletedCount
+        {
+            get { return Jobs.Count(z => z.Completed != null); }
+        }
+
+        public int RunningCount
+        {
+            get { return Jobs.Count(z => z.Started != null && z.Completed == null); }
+        }
+
+        public int NotStartedCount
+        {
+            get { return Jobs.Count(z => z.Started == null); }
+        }
+
+        public string Summary
+        {
+            get
+            {
+                return string.Format("{0} completed, {1} running, {2} not started",
+                    CompletedCount,
+                    RunningCount,
+                    NotStartedCount);
+            }
+        }
+
+        #endregion
 
         #region IArchivable Members
 

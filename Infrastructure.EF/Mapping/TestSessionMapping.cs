@@ -12,6 +12,10 @@ namespace TestLab.Infrastructure.EF.Mapping
             HasRequired(z => z.Project)
                 .WithMany(f => f.Sessions)
                 .Map(m => m.MapKey("TestProjectId"));
+
+            HasRequired(z => z.Build)
+                .WithMany()
+                .Map(m => m.MapKey("TestBuildId"));
         }
     }
 }

@@ -48,7 +48,11 @@ namespace TestLab.Presentation.Web
                 map.Resources<TestProjectsController>(projects =>
                 {
                     projects.As("projects");
-                    projects.Member(x => x.Post("build"));
+
+                    projects.Resources<TestBuildsController>(builds =>
+                    {
+                        builds.As("builds");
+                    });
 
                     projects.Resources<TestPlansController>(plans =>
                     {
@@ -64,7 +68,6 @@ namespace TestLab.Presentation.Web
                     projects.Resources<TestSessionsController>(sessions =>
                     {
                         sessions.As("sessions");
-                        sessions.Member(x => x.Post("start"));
 
                         sessions.Resources<TestRunsController>(runs =>
                         {
