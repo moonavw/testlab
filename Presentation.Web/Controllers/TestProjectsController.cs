@@ -32,7 +32,7 @@ namespace TestLab.Presentation.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Build(int id)
         {
-            await _bus.PublishAsync(new BuildProjectCommand(id));
+            //TODO: create build job
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id });

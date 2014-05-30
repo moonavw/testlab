@@ -12,10 +12,11 @@ namespace TestLab.Domain
     {
         public TestProject()
         {
-            Build = new TestBuild();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
             Sessions = new HashSet<TestSession>();
+            Builds = new HashSet<TestBuild>();
+            Jobs = new HashSet<TestJob>();
         }
 
         public int Id { get; set; }
@@ -37,23 +38,15 @@ namespace TestLab.Domain
         [Display(Name = "Build Script")]
         public string BuildScript { get; set; }
 
-        public string WorkDir
-        {
-            get { return Path.Combine(Constants.PROJ_ROOT, ToString()); }
-        }
-
-        public string BuildOutputDir
-        {
-            get { return Path.Combine(WorkDir, BuildOutputPath ?? ""); }
-        }
-
-        public TestBuild Build { get; set; }
+        public virtual ICollection<TestBuild> Builds { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
 
         public virtual ICollection<TestCase> Cases { get; set; }
 
         public virtual ICollection<TestSession> Sessions { get; set; }
+
+        public virtual ICollection<TestJob> Jobs { get; set; }
 
         #region Implementation of IAuditable
 
@@ -63,6 +56,26 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        public string LocalPath
+        {
+            get { return Path.Combine(Constants.LOCAL_ROOT, ToString()); }
+        }
+
+        public string SrcDir
+        {
+            get { return Path.Combine(LocalPath, Constants.SRC_DIR_NAME); }
+        }
+
+        public string BuildOutputDir
+        {
+            get { return Path.Combine(SrcDir, BuildOutputPath ?? ""); }
+        }
+
+        public string GetPathOnAgent(TestAgent agent)
+        {
+            return Path.Combine(string.Format(Constants.AGENT_ROOT_FORMAT, agent.Name), ToString());
+        }
 
         public override string ToString()
         {

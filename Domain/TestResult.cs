@@ -2,8 +2,10 @@
 
 namespace TestLab.Domain
 {
-    public class TestResult : ValueObject
+    public class TestResult : Entity
     {
+        public int TestRunId { get; set; }
+
         public bool? PassOrFail { get; set; }
 
         public string Output { get; set; }
@@ -11,5 +13,7 @@ namespace TestLab.Domain
         public string Summary { get; set; }
 
         public string ErrorDetails { get; set; }
+
+        public virtual TestRun Run { get; set; }
     }
 }

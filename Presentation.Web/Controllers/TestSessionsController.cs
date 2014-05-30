@@ -27,7 +27,34 @@ namespace TestLab.Presentation.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Start(int id, int testprojectId)
         {
-            await _bus.PublishAsync(new StartTestSessionCommand(id));
+            //var repo = _uow.Repository<TestSession>();
+            //var session = await repo.FindAsync(message.TestSessionId);
+            ////get incomplete runs
+            //var runs = (from r in session.Runs
+            //            where r.Completed == null
+            //            select r).ToList();
+            //if (runs.Count == 0)
+            //{//get failed runs if all complete
+            //    runs = (from r in session.Runs
+            //            where r.Result.PassOrFail == false
+            //            select r).ToList();
+            //}
+
+            //if (runs.Count == 0)
+            //    return;//no available runs for this session
+
+            ////reset session
+            //session.Started = DateTime.Now;
+            //session.Completed = null;
+            ////reset runs          
+            //foreach (var run in runs)
+            //{
+            //    run.Started = null;
+            //    run.Completed = null;
+            //    run.Result = new TestResult();
+            //}
+            //await _uow.CommitAsync();
+            //TODO: create queue job
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id, testprojectId });
@@ -63,7 +90,8 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
-            model.Build = model.Project.Build;
+            //TODO: dropdown list of builds for picking up build
+            //model.Build = model.Project.Build;
             return View(model);
         }
 

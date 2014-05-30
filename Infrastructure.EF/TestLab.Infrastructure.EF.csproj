@@ -7,8 +7,8 @@
     <ProjectGuid>{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestLab.Infrastructure.EntityFramework</RootNamespace>
-    <AssemblyName>TestLab.Infrastructure.EntityFramework</AssemblyName>
+    <RootNamespace>TestLab.Infrastructure.EF</RootNamespace>
+    <AssemblyName>TestLab.Infrastructure.EF</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -69,6 +69,8 @@
     <Compile Include="EfModule.cs" />
     <Compile Include="Mapping\TestAgentMapping.cs" />
     <Compile Include="Mapping\TestBuildMapping.cs" />
+    <Compile Include="Mapping\TestJobMapping.cs" />
+    <Compile Include="Mapping\TestQueueMapping.cs" />
     <Compile Include="Mapping\TestResultMapping.cs" />
     <Compile Include="Mapping\TestSessionMapping.cs" />
     <Compile Include="Mapping\TestCaseMapping.cs" />

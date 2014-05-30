@@ -279,6 +279,10 @@
       <Project>{1b46d9a0-aff4-4eba-8bad-811e0453d45d}</Project>
       <Name>TestLab.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Builder\TestLab.Infrastructure.Builder.csproj">
+      <Project>{07bd013c-7718-4146-9092-225594648dfc}</Project>
+      <Name>TestLab.Infrastructure.Builder</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Cucumber\TestLab.Infrastructure.Cucumber.csproj">
       <Project>{a08ca30e-2b38-4731-8ebc-cd0ab3333e32}</Project>
       <Name>TestLab.Infrastructure.Cucumber</Name>

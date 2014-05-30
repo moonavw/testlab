@@ -3,7 +3,11 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.EF.Mapping
 {
-    public class TestBuildMapping : ComplexTypeConfiguration<TestBuild>
-    {        
+    internal class TestBuildMapping : EntityTypeConfiguration<TestBuild>
+    {
+        public TestBuildMapping()
+        {
+            Map(m => m.Requires("Type").HasValue(TestJobType.TestBuild));
+        }
     }
 }

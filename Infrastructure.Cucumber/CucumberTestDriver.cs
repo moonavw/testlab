@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RunProcessAsTask;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -33,9 +34,10 @@ namespace TestLab.Infrastructure.Cucumber
             get { return "Cucumber"; }
         }
 
-        public async Task<IEnumerable<TestCase>> Publish(TestProject project)
+        public async Task<IEnumerable<TestCase>> Publish(TestBuild build)
         {
-            string srcPath = project.WorkDir;
+            var project = build.Project;
+            string srcPath = project.SrcDir;
             //looking for test files, publish them to db
             var dir = new DirectoryInfo(srcPath);
             var files = dir.GetFiles("*.feature", SearchOption.AllDirectories);
@@ -73,42 +75,32 @@ namespace TestLab.Infrastructure.Cucumber
             return tests;
         }
 
-        public TestRunTask CreateTask(TestRun run, TestAgent agent)
+        public async Task<TestResult> Run(TestRun run, TestAgent agent)
         {
             var test = run.Case;
             var session = run.Session;
             var build = session.Build;
 
             //get test's feature file
-            string workFile = Path.Combine(build.Location, test.Location);
+            string workFile = Path.Combine(build.LocalPath, test.Location);
             string outputFileName = Path.ChangeExtension(test.Name, ".html");
+            var outputFile = new FileInfo(Path.Combine(session.LocalPath, outputFileName));
+            if (!outputFile.Directory.Exists)
+                outputFile.Directory.Create();
 
             //find ruby folder for startProgram
             //const string startProgram = @"c:\ruby200-x64\bin\cucumber.bat";
-            var rubyDir = new DirectoryInfo(string.Format(@"\\{0}\c$", agent.Server)).GetDirectories("ruby*", SearchOption.TopDirectoryOnly).FirstOrDefault();
-            if (rubyDir == null) throw new DirectoryNotFoundException("ruby installation not found on " + agent.Server);
+            var rubyDir = new DirectoryInfo(string.Format(@"\\{0}\c$", agent.Name)).GetDirectories("ruby*", SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (rubyDir == null) throw new DirectoryNotFoundException("ruby installation not found on " + agent.Name);
             string startProgram = string.Format(@"c:\{0}\bin\cucumber.bat", rubyDir.Name);
+            string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, outputFile.FullName);
 
-            string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, Path.Combine(session.OutputDir, outputFileName));
-            var remoteResultFile = new FileInfo(Path.Combine(agent.GetOutputDir(session), outputFileName));
-            if (!remoteResultFile.Directory.Exists)
-                remoteResultFile.Directory.Create();
+            var pi = new ProcessStartInfo(startProgram, startProgramArgs);
+            await ProcessEx.RunAsync(pi);
 
-            return new TestRunTask
-            {
-                Run = run,
-                Agent = agent,
-                StartProgram = startProgram,
-                StartProgramArgs = startProgramArgs,
-                OutputFile = remoteResultFile.FullName
-            };
-        }
-
-        public async Task<TestResult> ParseResult(TestRunTask task)
-        {
-            var remoteResultFile = new FileInfo(task.OutputFile);
-            if (!remoteResultFile.Exists)
-                throw new FileNotFoundException("result file not found", remoteResultFile.FullName);
+            outputFile.Refresh();
+            if (!outputFile.Exists)
+                throw new FileNotFoundException("result file not found", outputFile.FullName);
 
             //parse result from output file
             string text = null;
@@ -117,7 +109,7 @@ namespace TestLab.Infrastructure.Cucumber
             {
                 try
                 {
-                    using (var sr = remoteResultFile.OpenText())
+                    using (var sr = outputFile.OpenText())
                     {
                         text = await sr.ReadToEndAsync();
                     }
@@ -132,7 +124,7 @@ namespace TestLab.Infrastructure.Cucumber
 
             var result = new TestResult
             {
-                Output = remoteResultFile.FullName,
+                Output = Path.Combine(session.GetPathOnAgent(agent), outputFileName),
                 Summary = summaryMatch.Groups[1].Value + " " + summaryMatch.Groups[2].Value,
                 PassOrFail = !failMatch.Success
             };

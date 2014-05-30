@@ -8,7 +8,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TestLab.AgentCli")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("257559f5-f410-465c-8fe6-bd22d00d05a9")]
-

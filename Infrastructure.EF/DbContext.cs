@@ -21,6 +21,8 @@ namespace TestLab.Infrastructure.EF
             modelBuilder.Configurations.Add(new TestPlanMapping());
             modelBuilder.Configurations.Add(new TestCaseMapping());
             modelBuilder.Configurations.Add(new TestRunMapping());
+            modelBuilder.Configurations.Add(new TestJobMapping());
+            modelBuilder.Configurations.Add(new TestQueueMapping());
         }
     }
 }

@@ -8,13 +8,12 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSession : Entity, IAuditable, IStartable
+    public class TestSession : Entity, IAuditable
     {
         public TestSession()
         {
-            Build = new TestBuild();
             Runs = new HashSet<TestRun>();
-            Agent = new TestAgent();
+            Queues = new HashSet<TestQueue>();
         }
 
         public int Id { get; set; }
@@ -23,18 +22,15 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public TestBuild Build { get; set; }
-
-        public TestAgent Agent { get; set; }
-
-        public string OutputDir
-        {
-            get { return Path.Combine(Constants.RESULT_ROOT, ToString()); }
-        }
+        public virtual TestBuild Build { get; set; }
 
         public virtual TestProject Project { get; set; }
 
+        public virtual ICollection<TestQueue> Queues { get; set; }
+
         public virtual ICollection<TestRun> Runs { get; set; }
+
+        #region info
 
         public int PassCount
         {
@@ -62,6 +58,8 @@ namespace TestLab.Domain
             }
         }
 
+        #endregion
+
         #region Implementation of IAuditable
 
         public DateTime? Created { get; set; }
@@ -71,29 +69,19 @@ namespace TestLab.Domain
 
         #endregion
 
-        #region Implementation of IStartable
+        public string LocalPath
+        {
+            get { return Path.Combine(Project.LocalPath, Constants.RESULT_DIR_NAME, ToString()); }
+        }
 
-        public DateTime? Started { get; set; }
-        public DateTime? Completed { get; set; }
-
-        #endregion
+        public string GetPathOnAgent(TestAgent agent)
+        {
+            return Path.Combine(Project.GetPathOnAgent(agent), Constants.RESULT_DIR_NAME, ToString());
+        }
 
         public override string ToString()
         {
-            return string.Format("{0}_{1}", Project, Name.Replace(" ", ""));
-        }
-
-
-        public IEnumerable<TestAgent> GetAgents()
-        {
-            return from s in Agent.Server.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                   select new TestAgent
-                   {
-                       Server = s.Trim(),
-                       Domain = Agent.Domain,
-                       Password = Agent.Password,
-                       UserName = Agent.UserName
-                   };
+            return Name.Replace(" ", "");
         }
     }
 }

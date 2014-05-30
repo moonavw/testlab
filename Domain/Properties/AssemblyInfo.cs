@@ -7,6 +7,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TestLab.Domain")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("761835fe-9506-4826-a561-639e8bb4ea7c")]

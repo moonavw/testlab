@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPatterns.ObjectRelational;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -7,47 +8,42 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestAgent : ValueObject
+    public class TestAgent : Entity, IArchivable
     {
-        [Required]
-        public string Server { get; set; }
-
-        [Required]
-        public string Domain { get; set; }
-
-        [Required]
-        public string UserName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        public string EncryptedPassword
+        public TestAgent()
         {
-            get { return PasswordProtector.Encrypt(Password, Constants.EncryptionKey); }
-            set { Password = PasswordProtector.Decrypt(value, Constants.EncryptionKey); }
+            Jobs = new HashSet<TestJob>();
         }
 
-        public string DomainUser
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public DateTime? LastTalk { get; set; }
+
+        public virtual ICollection<TestJob> Jobs { get; set; }
+
+        public bool IsOnline
         {
-            get { return string.Format(@"{0}\{1}", Domain, UserName); }
+            get
+            {
+                if (LastTalk == null)
+                    return false;
+                return LastTalk.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
+            }
         }
 
-        public string GetOutputDir(TestSession session)
-        {
-            string resultRoot = string.Format(Constants.AGENT_RESULT_ROOT_FORMAT, Server);
-            return Path.Combine(resultRoot, session.ToString());
-        }
+        #region IArchivable Members
 
-        public string GetBuildDir(TestBuild build)
-        {
-            string buildRoot = string.Format(Constants.AGENT_BUILD_ROOT_FORMAT, Server);
-            return Path.Combine(buildRoot, build.Name);
-        }
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
+
+        #endregion
 
         public override string ToString()
         {
-            return string.Format("{0}@{1}", DomainUser, Server);
+            return Name;
         }
     }
 }

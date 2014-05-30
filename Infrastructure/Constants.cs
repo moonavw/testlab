@@ -4,15 +4,17 @@ namespace TestLab.Infrastructure
 {
     public static class Constants
     {
-        public static readonly string AppName = "TestLab";
+        public static readonly string APP_NAME = "TestLab";
+        public static readonly string BUILD_DIR_NAME = "builds";
+        public static readonly string SRC_DIR_NAME = "src";
+        public static readonly string RESULT_DIR_NAME = "results";
 
-        public static readonly string EncryptionKey = AppName.ToLowerInvariant();
+        //format: d:\testlab\
+        public static readonly string LOCAL_ROOT = Path.Combine(@"d:\", APP_NAME);
 
-        public static readonly string BUILD_ROOT = Path.Combine(@"d:\", AppName, "builds");
-        public static readonly string PROJ_ROOT = Path.Combine(@"d:\", AppName, "projects");
-        public static readonly string RESULT_ROOT = Path.Combine(@"d:\", AppName, "results");
+        //format: \\{machine}\testlab\
+        public static readonly string AGENT_ROOT_FORMAT = Path.Combine(@"\\{0}\", APP_NAME);
 
-        public static readonly string AGENT_BUILD_ROOT_FORMAT = Path.Combine(@"\\{0}\d$\", AppName, "builds");
-        public static readonly string AGENT_RESULT_ROOT_FORMAT = Path.Combine(@"\\{0}\d$\", AppName, "results");
+        public static readonly int AGENT_KEEPALIVE = 60;//sec
     }
 }

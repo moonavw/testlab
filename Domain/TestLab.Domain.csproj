@@ -50,19 +50,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BuildProjectCommand.cs" />
-    <Compile Include="ITestBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ITestDriver.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StartTestSessionCommand.cs" />
     <Compile Include="TestAgent.cs" />
     <Compile Include="TestBuild.cs" />
+    <Compile Include="TestJob.cs" />
+    <Compile Include="TestQueue.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="TestRun.cs" />
-    <Compile Include="TestRunTask.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="TestPlan.cs" />

@@ -7,6 +7,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TestLab.Infrastructure.Git")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c93c8f1b-6eb8-4364-928c-368761bca0ba")]

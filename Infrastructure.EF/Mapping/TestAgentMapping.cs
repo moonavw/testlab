@@ -3,12 +3,11 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.EF.Mapping
 {
-    public class TestAgentMapping : ComplexTypeConfiguration<TestAgent>
+    internal class TestAgentMapping : EntityTypeConfiguration<TestAgent>
     {
         public TestAgentMapping()
         {
-            Ignore(z => z.Password);
-            Property(z => z.EncryptedPassword).HasColumnName("Password");
+            HasKey(z => z.Id);
         }
     }
 }
