@@ -37,19 +37,19 @@ namespace TestLab.Application
             var puller = _pullers.FirstOrDefault(z => z.CanPull(project.RepoPathOrUrl));
             if (puller == null) throw new NotSupportedException("no puller for this project");
 
-            Debug.WriteLine("Start Test Build {0} on agent {1}", build, job.Agent);
+            Trace.TraceInformation("Start TestBuild {0} on agent {1}", build, job.Agent);
 
             //pull
+            Trace.TraceInformation("Pull Source Code for {0} from {1}", project, project.RepoPathOrUrl);
             await puller.Pull(project.RepoPathOrUrl, project.SrcDir);
-            Trace.TraceInformation("Pulled Source Code for {0} from {1}", project, project.RepoPathOrUrl);
 
             //build
+            Trace.TraceInformation("Build Source Code for {0} to output {1}", project, project.BuildOutputPath);
             await _builder.Build(project.BuildScript, project.SrcDir);
-            Trace.TraceInformation("Built Source Code for {0} to output {1}", project, project.BuildOutputPath);
 
             //archive
+            Trace.TraceInformation("Archive Build for {0} to {1}", project, build.LocalPath);
             await _archiver.Archive(project.BuildOutputDir, build.LocalPath);
-            Trace.TraceInformation("Archived Build for {0} to {1}", project, build.LocalPath);
 
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this project");
@@ -79,6 +79,8 @@ namespace TestLab.Application
             Trace.TraceInformation("Published {1} Tests for {0}", build, toAdd.Count);
 
             await Uow.CommitAsync();
+
+            Trace.TraceInformation("Complete TestBuild {0} on agent {1}", build, job.Agent);
         }
     }
 }

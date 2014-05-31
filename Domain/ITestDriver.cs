@@ -10,6 +10,6 @@ namespace TestLab.Domain
 
         Task<IEnumerable<TestCase>> Publish(TestBuild build);
 
-        Task<TestResult> Run(TestRun run, TestAgent agent);
+        Task<TestResult> Run(TestRun run);
     }
 }

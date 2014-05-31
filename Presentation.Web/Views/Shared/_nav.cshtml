@@ -1,37 +1,29 @@
-﻿@{
-    string controllerName = ViewContext.RouteData.Values["controller"] as string;
-    string actionName = ViewContext.RouteData.Values["action"] as string;
+﻿@model IEnumerable<NavItem>
+
+@foreach (var item in Model)
+{
+    if (item.Children.Count > 0)
+    {
+        <li class="dropdown @(Html.IsRouteMatch(item.ControllerName)?"active":null)">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">@item.Text <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
+                    @Html.ActionLink(item.ActionName, item.ActionName, item.ControllerName, item.RouteValues, null)
+                </li>
+                @foreach (var child in item.Children)
+                {
+                    <li @(Html.IsRouteMatch(child.ControllerName, child.ActionName) ? "class=active" : null)>
+                        @Html.ActionLink(child.Text, child.ActionName, child.ControllerName, child.RouteValues, null)
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
+            @Html.ActionLink(item.Text, item.ActionName, item.ControllerName, item.RouteValues, null)
+        </li>
+    }
 }
-<li class="active">@Html.ActionLink("Projects", "Index", "TestProjects", null, null)</li>
 
-<li class="dropdown active">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-        <li class="active">@Html.ActionLink("Create New", "New", "TestProjects")</li>
-    </ul>
-</li>
-
-<li class="dropdown active">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-        <li class="active">@Html.ActionLink("Edit", "Edit", "TestProjects", new { id = Model.Id }, null)</li>
-    </ul>
-</li>
-<li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
-<li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
-<li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>
-
-
-<li class="dropdown active">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-        <li class="active">@Html.ActionLink(Model.Name, "Show", "TestProjects", new { id = Model.Id }, null)</li>
-    </ul>
-</li>
-<li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
-<li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
-<li>@Html.ActionLink("Builds", "Index", "TestBuilds", new { testprojectId = Model.Id }, null)</li>
-<li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>

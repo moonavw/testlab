@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -24,6 +25,16 @@ namespace TestLab.Presentation.Web.Controllers
             _agentRepo = uow.Repository<TestAgent>();
         }
 
+        private void SetNav(TestBuild build)
+        {
+            ViewBag.Nav = new TestBuildNav(build);
+        }
+
+        private void SetNav(TestProject proj)
+        {
+            ViewBag.Nav = new TestBuildNav(proj);
+        }
+
         private void SetViewData()
         {
             ViewBag.Agents = from e in _agentRepo.Query().AsEnumerable()
@@ -38,6 +49,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(project);
             ViewBag.Project = project;
             return View(project.Builds);
         }
@@ -49,18 +61,20 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public async Task<ActionResult> New(int testprojectId)
         {
-            var model = new TestBuild { Project = await _projRepo.FindAsync(testprojectId) };
-            if (model.Project == null)
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
             {
                 return HttpNotFound();
             }
+            SetNav(project);
             SetViewData();
-            return View(model);
+            return View(new TestBuild { Project = project });
         }
 
         [HttpPost]
@@ -78,7 +92,7 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
-
+            SetNav(model);
             SetViewData();
             return View("new", model);
         }
@@ -106,7 +120,7 @@ namespace TestLab.Presentation.Web.Controllers
 
                 return RedirectToAction("Show", new { id, testprojectId });
             }
-
+            SetNav(model);
             SetViewData();
             return View("edit", model);
         }

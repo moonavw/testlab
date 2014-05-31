@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -26,37 +27,15 @@ namespace TestLab.Presentation.Web.Controllers
             _bus = bus;
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Start(int id, int testprojectId)
-        //{
-        //var repo = _uow.Repository<TestSession>();
-        //var session = await repo.FindAsync(message.TestSessionId);
-        ////get incomplete runs
-        //var runs = (from r in session.Runs
-        //            where r.Completed == null
-        //            select r).ToList();
-        //if (runs.Count == 0)
-        //{//get failed runs if all complete
-        //    runs = (from r in session.Runs
-        //            where r.Result.PassOrFail == false
-        //            select r).ToList();
-        //}
+        private void SetNav(TestSession session)
+        {
+            ViewBag.Nav = new TestSessionNav(session);
+        }
 
-        //if (runs.Count == 0)
-        //    return;//no available runs for this session
-
-        ////reset session
-        //session.Started = DateTime.Now;
-        //session.Completed = null;
-        ////reset runs          
-        //foreach (var run in runs)
-        //{
-        //    run.Started = null;
-        //    run.Completed = null;
-        //    run.Result = new TestResult();
-        //}
-        //await _uow.CommitAsync();
-        //}
+        private void SetNav(TestProject proj)
+        {
+            ViewBag.Nav = new TestSessionNav(proj);
+        }
 
         private void SetViewData()
         {
@@ -72,6 +51,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(project);
             ViewBag.Project = project;
             return View(project.Sessions);
         }
@@ -83,19 +63,20 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public async Task<ActionResult> New(int testprojectId)
         {
-            var model = new TestSession { Project = await _projRepo.FindAsync(testprojectId) };
-            if (model.Project == null)
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
             {
                 return HttpNotFound();
             }
+            SetNav(project);
             SetViewData();
-
-            return View(model);
+            return View(new TestSession { Project = project });
         }
 
         [HttpPost]
@@ -106,19 +87,18 @@ namespace TestLab.Presentation.Web.Controllers
             model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuildId);
             if (model.Build == null)
             {
-                ModelState.AddModelError("BuildId", "no completed build for this test session");
+                ModelState.AddModelError("testbuildId", "no completed build for this test session");
             }
-            var plan = project.Plans.FirstOrDefault(z => z.Id == testplanId);
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplanId);
             if (plan == null)
             {
                 ModelState.AddModelError("testplanId", "no test plan found for this test session");
             }
             else
             {
-                model.SetPlan(plan);
-                if (model.Runs.Count == 0)
+                if (plan.Cases.Count == 0)
                 {
-                    ModelState.AddModelError("testplanId", "no published tests in this test plan for this test session");
+                    ModelState.AddModelError("testplanId", "empty test plan for this test session");
                 }
             }
             if (testagents != null)
@@ -135,6 +115,7 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
+            SetNav(model);
             SetViewData();
             return View("new", model);
         }
@@ -168,6 +149,7 @@ namespace TestLab.Presentation.Web.Controllers
 
                 return RedirectToAction("Show", new { id, testprojectId });
             }
+            SetNav(model);
             SetViewData();
             return View("edit", model);
         }

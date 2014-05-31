@@ -8,17 +8,14 @@ namespace TestLab.Domain
 {
     public class TestQueue : TestJob
     {
+        public TestQueue()
+        {
+            Runs = new HashSet<TestRun>();
+        }
+
         public virtual TestSession Session { get; set; }
 
-        public IEnumerable<TestRun> Runs
-        {
-            get
-            {
-                return from e in Session.Runs
-                       where e.Agent.Id == Agent.Id
-                       select e;
-            }
-        }
+        public virtual ICollection<TestRun> Runs { get; set; }
 
         #region info
 

@@ -12,23 +12,28 @@ namespace TestLab.Domain
     {
         public TestSession()
         {
-            Runs = new HashSet<TestRun>();
             Queues = new HashSet<TestQueue>();
         }
 
         public int Id { get; set; }
 
-        [RegularExpression("[a-zA-Z0-9 ]+")]
-        [Required]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return string.Format("{1} {0:yyyyMMddhhmm}", Created, Plan.Name); }
+        }
 
         public virtual TestBuild Build { get; set; }
 
         public virtual TestProject Project { get; set; }
 
+        public virtual TestPlan Plan { get; set; }
+
         public virtual ICollection<TestQueue> Queues { get; set; }
 
-        public virtual ICollection<TestRun> Runs { get; set; }
+        public IEnumerable<TestRun> Runs
+        {
+            get { return Queues.SelectMany(z => z.Runs).ToList(); }
+        }
 
         #region info
 
@@ -89,18 +94,17 @@ namespace TestLab.Domain
             return Path.Combine(Project.GetPathOnAgent(agent), Constants.RESULT_DIR_NAME, ToString());
         }
 
-        public void SetPlan(TestPlan plan)
-        {
-            Name = string.Format("{1} {0:yyyyMMddhhmm}", DateTime.Now, plan.Name);
-            var tests = plan.Cases.Where(z => z.Published != null).ToList();
-            Runs.Clear();
-            Runs = new HashSet<TestRun>(tests.Select(z => new TestRun { Case = z }));
-        }
-
         public void SetAgents(IEnumerable<TestAgent> agents)
         {
             Queues.Clear();
             Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z, Project = this.Project }));
+
+            var tests = Plan.Cases.Where(z => z.Published != null).ToList();
+            int pageSize = (int)Math.Ceiling((double)tests.Count / Queues.Count);
+            for (int i = 0; i < Queues.Count; i++)
+            {
+                Queues.ElementAt(i).Runs = new HashSet<TestRun>(tests.Skip(i * pageSize).Take(pageSize).Select(z => new TestRun { Case = z }));
+            }
         }
 
         public override string ToString()

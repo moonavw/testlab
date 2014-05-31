@@ -7,7 +7,7 @@ namespace TestLab.Infrastructure.EF.Mapping
     {
         public TestQueueMapping()
         {
-            Map(m => m.Requires("Type").HasValue(TestJobType.TestQueue));
+            Map(m => m.Requires("Type").HasValue((byte)TestJobType.TestQueue));
 
             HasRequired(z => z.Session)
                 .WithMany(f => f.Queues)

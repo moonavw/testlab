@@ -48,7 +48,6 @@ namespace TestLab.Application
 
             StartJobs<TestBuild>(jobQuery, cancellationToken);
             StartJobs<TestQueue>(jobQuery, cancellationToken);
-            StartJobs<TestRun>(jobQuery, cancellationToken);
 
             return Task.Run(async () =>
             {

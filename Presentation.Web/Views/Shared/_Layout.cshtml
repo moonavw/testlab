@@ -20,8 +20,7 @@
             </div>
             <nav class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li @(Html.IsRouteMatch("About","Home")?"class=active":null)>@Html.ActionLink("About", "About", "Home")</li>
-                    @RenderSection("nav", required: false)
+                    @Html.Partial("_nav", (IEnumerable<NavItem>)ViewBag.Nav)
                 </ul>
                 <p class="navbar-text navbar-right">Hello, @User.Identity.Name!</p>
             </nav>

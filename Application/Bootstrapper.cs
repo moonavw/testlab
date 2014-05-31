@@ -13,7 +13,6 @@ namespace TestLab.Application
 
             kernel.Bind<IHandler<TestBuild>>().To<TestBuildJobHandler>();
             kernel.Bind<IHandler<TestQueue>>().To<TestQueueJobHandler>();
-            kernel.Bind<IHandler<TestRun>>().To<TestRunJobHandler>();
 
             kernel.Bind<IMessageBus>()
                   .ToConstructor(ctorArg => new MessageBus(type => ctorArg.Context.Kernel.GetAll(type)))

@@ -75,10 +75,11 @@ namespace TestLab.Infrastructure.Cucumber
             return tests;
         }
 
-        public async Task<TestResult> Run(TestRun run, TestAgent agent)
+        public async Task<TestResult> Run(TestRun run)
         {
             var test = run.Case;
-            var session = run.Session;
+            var agent = run.Queue.Agent;
+            var session = run.Queue.Session;
             var build = session.Build;
 
             //get test's feature file

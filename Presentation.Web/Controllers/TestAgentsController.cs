@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -20,8 +21,14 @@ namespace TestLab.Presentation.Web.Controllers
             _agentRepo = uow.Repository<TestAgent>();
         }
 
+        private void SetNav(TestAgent agent = null)
+        {
+            ViewBag.Nav = agent == null ? new TestAgentNav() : new TestAgentNav(agent);
+        }
+
         public async Task<ActionResult> Index()
         {
+            SetNav();
             return View(await _agentRepo.Query().ToListAsync());
         }
 
@@ -32,6 +39,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
     }

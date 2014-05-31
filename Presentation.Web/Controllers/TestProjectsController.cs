@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -29,14 +30,20 @@ namespace TestLab.Presentation.Web.Controllers
             _bus = bus;
         }
 
-        public async Task<ActionResult> Index()
+        private void SetNav(TestProject proj = null)
         {
-            return View(await _projRepo.Query().ToListAsync());
+            ViewBag.Nav = proj == null ? new TestProjectNav() : new TestProjectNav(proj);
         }
 
         private void SetViewData()
         {
             ViewBag.DriverNames = _drivers.Select(z => z.Name);
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            SetNav();
+            return View(await _projRepo.Query().ToListAsync());
         }
 
         public async Task<ActionResult> Show(int id)
@@ -46,11 +53,13 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public ActionResult New()
         {
+            SetNav();
             SetViewData();
             return View(new TestProject());
         }
@@ -70,19 +79,15 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id });
             }
+            SetNav(model);
             SetViewData();
             return View("new", model);
         }
 
-        public async Task<ActionResult> Edit(int id)
+        public Task<ActionResult> Edit(int id)
         {
-            var entity = await _projRepo.FindAsync(id);
-            if (entity == null)
-            {
-                return HttpNotFound();
-            }
             SetViewData();
-            return View(entity);
+            return Show(id);
         }
 
         [HttpPut]
@@ -99,6 +104,7 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id });
             }
+            SetNav(model);
             SetViewData();
             return View("edit", model);
         }

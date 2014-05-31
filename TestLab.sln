@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C28408EF-D027-4B4A-8789-D2E20784D9CE}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -28,6 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Infrastructure.EF",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{65E99A31-A690-463E-A075-E2549EAC0549}"
 	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
@@ -150,8 +153,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{77D4DB02-AC82-416B-92D4-295F93BE04CB} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}
 		{A08CA30E-2B38-4731-8EBC-CD0AB3333E32} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}
+		{77D4DB02-AC82-416B-92D4-295F93BE04CB} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}
 		{75CBED2F-CFD3-4158-AECC-ACB5444913E2} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}
 		{81FDF2C5-D875-4B50-B0C1-9FE6B509E9D9} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}
 		{07BD013C-7718-4146-9092-225594648DFC} = {7508DA99-0A6F-4733-9538-EC44DFA832FC}

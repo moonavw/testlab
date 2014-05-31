@@ -7,7 +7,7 @@ namespace TestLab.Infrastructure.EF.Mapping
     {
         public TestBuildMapping()
         {
-            Map(m => m.Requires("Type").HasValue(TestJobType.TestBuild));
+            Map(m => m.Requires("Type").HasValue((byte)TestJobType.TestBuild));
         }
     }
 }

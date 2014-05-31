@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
@@ -16,6 +17,11 @@ namespace TestLab.Presentation.Web.Controllers
             _projRepo = uow.Repository<TestProject>();
         }
 
+        private void SetNav(TestProject proj)
+        {
+            ViewBag.Nav = new TestCaseNav(proj);
+        }
+
         public async Task<ActionResult> Index(int testprojectId)
         {
             var project = await _projRepo.FindAsync(testprojectId);
@@ -23,6 +29,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(project);
             ViewBag.Project = project;
             return View(project.Cases);
         }

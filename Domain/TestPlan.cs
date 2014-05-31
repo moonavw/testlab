@@ -32,5 +32,11 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        public void SetCases(IEnumerable<TestCase> cases)
+        {
+            Cases.Clear();
+            Cases = new HashSet<TestCase>(cases.Where(z => z.Published != null));
+        }
     }
 }

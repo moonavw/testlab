@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration;
 using TestLab.Domain;
 
 namespace TestLab.Infrastructure.EF.Mapping
@@ -7,16 +8,21 @@ namespace TestLab.Infrastructure.EF.Mapping
     {
         public TestRunMapping()
         {
-            Map(m => m.Requires("Type").HasValue(TestJobType.TestRun));
+            HasKey(z => new { z.TestCaseId, z.TestQueueId });
 
-            HasRequired(z => z.Session)
-                .WithMany(f => f.Runs)
-                .Map(m => m.MapKey("TestSessionId"));
+            Property(z => z.TestCaseId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            Property(z => z.TestQueueId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             HasRequired(z => z.Case)
                 .WithMany()
-                .Map(m => m.MapKey("TestCaseId"))
+                .HasForeignKey(z => z.TestCaseId)
                 .WillCascadeOnDelete(false);
+
+            HasRequired(z => z.Queue)
+                .WithMany(f => f.Runs)
+                .HasForeignKey(z => z.TestQueueId);
         }
     }
 }

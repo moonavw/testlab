@@ -42,7 +42,7 @@ namespace TestLab.Presentation.Web
                 map.Resource<HomeController>(home =>
                 {
                     home.Only();
-                    home.Member(x => x.Get("about"));
+                    //home.Member(x => x.Get("about"));
                 });
 
                 map.Resources<TestAgentsController>(agents =>

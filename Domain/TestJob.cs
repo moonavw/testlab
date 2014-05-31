@@ -33,7 +33,6 @@ namespace TestLab.Domain
     public enum TestJobType
     {
         TestBuild,
-        TestQueue,
-        TestRun
+        TestQueue
     }
 }
