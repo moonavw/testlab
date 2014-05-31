@@ -69,6 +69,16 @@ namespace TestLab.Domain
 
         #endregion
 
+        public DateTime? Started
+        {
+            get { return Queues.OrderBy(z => z.Started).Select(z => z.Started).FirstOrDefault(); }
+        }
+
+        public DateTime? Completed
+        {
+            get { return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault(); }
+        }
+
         public string LocalPath
         {
             get { return Path.Combine(Project.LocalPath, Constants.RESULT_DIR_NAME, ToString()); }
@@ -77,6 +87,20 @@ namespace TestLab.Domain
         public string GetPathOnAgent(TestAgent agent)
         {
             return Path.Combine(Project.GetPathOnAgent(agent), Constants.RESULT_DIR_NAME, ToString());
+        }
+
+        public void SetPlan(TestPlan plan)
+        {
+            Name = string.Format("{1} {0:yyyyMMddhhmm}", DateTime.Now, plan.Name);
+            var tests = plan.Cases.Where(z => z.Published != null).ToList();
+            Runs.Clear();
+            Runs = new HashSet<TestRun>(tests.Select(z => new TestRun { Case = z }));
+        }
+
+        public void SetAgents(IEnumerable<TestAgent> agents)
+        {
+            Queues.Clear();
+            Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z, Project = this.Project }));
         }
 
         public override string ToString()

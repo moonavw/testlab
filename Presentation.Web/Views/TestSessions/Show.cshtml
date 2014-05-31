@@ -36,8 +36,11 @@
     </dl>
 </div>
 
-
-@Html.Partial("../TestRuns/Index", Model.Runs)
+<div>
+    <h2>Test Runs</h2>
+    @Html.Partial("_ShowProgress", Model)
+    @Html.Partial("_TestRuns", Model.Runs)
+</div>
 
 @section nav{
     <li class="dropdown">

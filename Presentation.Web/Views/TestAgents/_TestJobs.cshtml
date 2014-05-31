@@ -1,0 +1,20 @@
+﻿@model IEnumerable<TestLab.Domain.TestJob>
+
+@Html.Grid(Model.OrderByDescending(z => z.Id)).Columns(c =>
+{
+    c.Add(o => o.Id)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
+    
+    c.Add(o => o.Project.Name);
+
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add()
+     .Titled("Type")
+     .RenderValueAs(d => d.GetType().Name);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20);

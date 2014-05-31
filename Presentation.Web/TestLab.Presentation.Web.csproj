@@ -156,7 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -170,7 +169,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TestAgentsController.cs" />
     <Compile Include="Controllers\TestBuildsController.cs" />
-    <Compile Include="Controllers\TestRunsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
     <Compile Include="Controllers\TestCasesController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />
@@ -180,6 +178,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HtmlHelperEx.cs" />
+    <Compile Include="Models\NavModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\Validation.cs" />
   </ItemGroup>
@@ -255,7 +254,7 @@
     <Content Include="Views\TestSessions\Index.cshtml" />
     <Content Include="Views\TestPlans\Index.cshtml" />
     <Content Include="Views\TestCases\Index.cshtml" />
-    <Content Include="Views\TestRuns\Index.cshtml" />
+    <Content Include="Views\TestSessions\_TestRuns.cshtml" />
     <Content Include="Views\TestPlans\New.cshtml" />
     <Content Include="Views\TestPlans\_form.cshtml" />
     <Content Include="Views\TestPlans\Edit.cshtml" />
@@ -265,7 +264,6 @@
     <Content Include="Views\TestSessions\_form.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
     <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
-    <Content Include="Views\TestSessions\_ShowAgent.cshtml" />
     <Content Include="Views\TestSessions\_ShowProgress.cshtml" />
     <Content Include="Views\TestBuilds\Index.cshtml" />
     <Content Include="Views\TestBuilds\Show.cshtml" />
@@ -273,6 +271,10 @@
     <Content Include="Views\TestBuilds\Edit.cshtml" />
     <Content Include="Views\TestBuilds\_form.cshtml" />
     <Content Include="Views\TestAgents\Index.cshtml" />
+    <Content Include="Views\TestSessions\_TestQueues.cshtml" />
+    <Content Include="Views\TestAgents\Show.cshtml" />
+    <Content Include="Views\TestAgents\_TestJobs.cshtml" />
+    <Content Include="Views\Shared\_nav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

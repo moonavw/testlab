@@ -25,7 +25,9 @@
     
     c.Add(o => o.Name);
 
-    c.Add(o => o.Agent);
+    c.Add()
+     .Titled("Agents")
+     .RenderValueAs(d => string.Join(",", d.Queues.Select(z => z.Agent.Name)));
     
     c.Add(o => o.Build);
    

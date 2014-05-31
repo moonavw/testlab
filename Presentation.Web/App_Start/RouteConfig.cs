@@ -45,6 +45,12 @@ namespace TestLab.Presentation.Web
                     home.Member(x => x.Get("about"));
                 });
 
+                map.Resources<TestAgentsController>(agents =>
+                {
+                    agents.As("agents");
+                    agents.Only("index", "show");
+                });
+
                 map.Resources<TestProjectsController>(projects =>
                 {
                     projects.As("projects");
@@ -68,12 +74,6 @@ namespace TestLab.Presentation.Web
                     projects.Resources<TestSessionsController>(sessions =>
                     {
                         sessions.As("sessions");
-
-                        sessions.Resources<TestRunsController>(runs =>
-                        {
-                            runs.As("runs");
-                            runs.Only("index");
-                        });
                     });
                 });
             }

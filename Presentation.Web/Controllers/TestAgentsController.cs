@@ -24,5 +24,15 @@ namespace TestLab.Presentation.Web.Controllers
         {
             return View(await _agentRepo.Query().ToListAsync());
         }
+
+        public async Task<ActionResult> Show(int id)
+        {
+            var entity = await _agentRepo.FindAsync(id);
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
+            return View(entity);
+        }
     }
 }

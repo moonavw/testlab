@@ -1,0 +1,15 @@
+﻿@model IEnumerable<TestLab.Domain.TestQueue>
+
+
+@Html.Grid(Model).Columns(c =>
+{
+    c.Add(o => o.Agent.Name);
+
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add(o => o.Summary);
+})

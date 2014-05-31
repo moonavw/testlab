@@ -1,0 +1,55 @@
+﻿@model TestLab.Domain.TestAgent
+
+@{
+    ViewBag.Title = "Test Agent";
+}
+
+<div>
+    <h2>Test Agent</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.LastTalk)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastTalk)
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Summary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Summary)
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h2>Test Jobs</h2>
+    @Html.Partial("_TestJobs", Model.Jobs)
+</div>
+
+@section nav{
+    <li class="dropdown active">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
+            <li class="active">@Html.ActionLink(Model.Name, "Show", "TestProjects", new { id = Model.Id }, null)</li>
+        </ul>
+    </li>
+    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
+    <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
+    <li>@Html.ActionLink("Builds", "Index", "TestBuilds", new { testprojectId = Model.Id }, null)</li>
+    <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>
+}

@@ -94,7 +94,7 @@ namespace TestLab.Presentation.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     var entity = project.Plans.First(z => z.Id == id);
-                    _planRepo.Merge(entity, model);
+                    _planRepo.Merge(entity, model);//UNDONE:try modify then clear instead of merge
 
                     entity.Cases.Clear();
                     entity.Cases = new HashSet<TestCase>(project.Cases.Where(z => testcases.Contains(z.Id)));
