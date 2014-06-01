@@ -30,9 +30,9 @@ namespace TestLab.Domain
 
         public virtual ICollection<TestQueue> Queues { get; set; }
 
-        public IEnumerable<TestRun> Runs
+        public IReadOnlyCollection<TestRun> Runs
         {
-            get { return Queues.SelectMany(z => z.Runs).ToList(); }
+            get { return Queues.SelectMany(z => z.Runs).ToList().AsReadOnly(); }
         }
 
         #region info
