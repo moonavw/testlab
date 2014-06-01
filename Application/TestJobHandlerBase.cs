@@ -22,7 +22,7 @@ namespace TestLab.Application
 
         public void Handle(T message)
         {
-            throw new NotImplementedException();
+            HandleAsync(message).Wait();
         }
 
         public async Task HandleAsync(T message)

@@ -41,16 +41,12 @@ namespace TestLab.Application
         {
             Trace.TraceInformation("start Test Agent: {0}", _agent.Name);
 
-            var jobRepo = _uow.Repository<TestJob>();
-            var jobQuery = from e in jobRepo.Query()
-                           where e.Agent.Id == _agent.Id && e.Started == null
-                           select e;
-
-            StartJobs<TestBuild>(jobQuery, cancellationToken);
-            StartJobs<TestQueue>(jobQuery, cancellationToken);
+            StartJobs<TestBuild>(cancellationToken);
+            StartJobs<TestQueue>(cancellationToken);
 
             return Task.Run(async () =>
             {
+
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //KeepAlive
@@ -62,22 +58,24 @@ namespace TestLab.Application
             }, cancellationToken);
         }
 
-        private Task StartJobs<T>(IQueryable<TestJob> jobQuery, CancellationToken cancellationToken) where T : TestJob
+        private Task StartJobs<T>(CancellationToken cancellationToken) where T : TestJob
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //get NotStarted jobs assigned to current agent
-                    var jobs = (from T e in jobQuery
+                    var jobs = (from e in _agent.Jobs.OfType<T>().Actives()
+                                where e.Started == null || e.Completed == null
                                 select e).ToList();
 
-                    Trace.TraceInformation("get {0} {2} for agent {1}", jobs.Count, _agent, typeof(T).Name);
+                    Trace.TraceInformation("get {0} {2} job for agent {1}", jobs.Count, _agent, typeof(T).Name);
 
                     foreach (var job in jobs)
                     {
-                        await _bus.PublishAsync(job);
+                        _bus.Publish(job);
                     }
+                    Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
                 }
 
             }, cancellationToken);

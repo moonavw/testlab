@@ -21,10 +21,12 @@ namespace TestLab.AgentCli
             var source = new CancellationTokenSource();
             service.Start(source.Token);
 
-            while (Console.ReadKey().Key != ConsoleKey.Q)
+            do
             {
                 Console.WriteLine("press Q to quit");
             }
+            while (Console.ReadKey().Key != ConsoleKey.Q);
+
             source.Cancel();
         }
     }
