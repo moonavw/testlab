@@ -20,7 +20,7 @@ namespace TestLab.Domain
         [Required]
         public string Name { get; set; }
 
-        public DateTime? LastTalk { get; set; }
+        public DateTime? LastTalked { get; set; }
 
         public virtual ICollection<TestJob> Jobs { get; set; }
 
@@ -28,9 +28,9 @@ namespace TestLab.Domain
         {
             get
             {
-                if (LastTalk == null)
+                if (LastTalked == null)
                     return false;
-                return LastTalk.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
+                return LastTalked.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
             }
         }
 

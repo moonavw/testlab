@@ -50,7 +50,7 @@ namespace TestLab.Application
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //KeepAlive
-                    _agent.LastTalk = DateTime.Now;
+                    _agent.LastTalked = DateTime.Now;
                     await _uow.CommitAsync();
                     Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
                 }
