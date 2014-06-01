@@ -8,7 +8,11 @@ namespace TestLab.Infrastructure.EF
     {
         static TestLabDbContext()
         {
+#if DEBUG
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<TestLabDbContext>());
+#else
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<TestLabDbContext, Configuration>());
+#endif
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
