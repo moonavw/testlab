@@ -67,7 +67,7 @@ namespace TestLab.Application
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //get NotStarted jobs assigned to current agent
-                    var jobs = (from e in _jobRepo.Query().OfType<T>().Actives()
+                    var jobs = (from e in _jobRepo.Query().OfType<T>()
                                 where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
                                 select e).ToList();
 

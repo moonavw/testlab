@@ -34,14 +34,14 @@
         <div class="form-group@(Html.ValidationError("TestBuild", " has-error"))">
             @Html.Label("TestBuild", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("TestBuild", new SelectList(Model.Project.Builds.Actives().Where(z => z.Completed != null).OrderByDescending(z => z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.DropDownList("TestBuild", new SelectList(Model.Project.Builds.Where(z => z.Completed != null).OrderByDescending(z => z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
                 @Html.ValidationMessage("TestBuild", null, new { @class = "help-block" })
             </div>
         </div>
         <div class="form-group@(Html.ValidationError("TestAgents", " has-error"))">
             @Html.Label("TestAgents", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ListBox("TestAgents", new MultiSelectList(agents, "Id", "Name", Model.Queues.Actives().Select(z => z.Agent.Id)), new { @class = "form-control listbox" })
+                @Html.ListBox("TestAgents", new MultiSelectList(agents, "Id", "Name", Model.Queues.Select(z => z.Agent.Id)), new { @class = "form-control listbox" })
                 @Html.ValidationMessage("TestAgents", null, new { @class = "help-block" })
             </div>
         </div>

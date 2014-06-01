@@ -32,7 +32,7 @@ namespace TestLab.Domain
 
         public IEnumerable<TestRun> Runs
         {
-            get { return Queues.Actives().SelectMany(z => z.Runs).ToList(); }
+            get { return Queues.SelectMany(z => z.Runs).ToList(); }
         }
 
         #region info
@@ -103,10 +103,6 @@ namespace TestLab.Domain
 
         public void SetAgents(IEnumerable<TestAgent> agents)
         {
-            foreach (var item in Queues)
-            {
-                item.Runs.Clear();
-            }
             Queues.Clear();
             Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z }));
 

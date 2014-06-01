@@ -50,7 +50,7 @@ namespace TestLab.Presentation.Web.Controllers
                 return HttpNotFound();
             }
             SetNav(project);
-            return View(project.Builds.Actives());
+            return View(project.Builds);
         }
 
         public async Task<ActionResult> New(int testprojectId)
