@@ -34,7 +34,7 @@
         <div class="form-group@(Html.ValidationError("BuildId", " has-error"))">
             @Html.Label("BuildId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("BuildId", new SelectList(Model.Project.Builds.Actives().Where(z=>z.Completed!=null).OrderByDescending(z=>z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.DropDownList("BuildId", new SelectList(Model.Project.Builds.Actives().Where(z => z.Completed != null).OrderByDescending(z => z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
                 @Html.ValidationMessage("BuildId", null, new { @class = "help-block" })
             </div>
         </div>

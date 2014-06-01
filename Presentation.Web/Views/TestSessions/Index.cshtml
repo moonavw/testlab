@@ -29,7 +29,7 @@
      .Titled("Agents")
      .RenderValueAs(d => string.Join(",", d.Queues.Select(z => z.Agent.Name)));
     
-    c.Add(o => o.Build);
+    c.Add(o => o.Build.Name);
    
     c.Add(o => o.Started)
      .SetWidth(110);

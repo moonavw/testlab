@@ -14,7 +14,7 @@
         <div class="form-group@(Html.ValidationError("TestAgentId", " has-error"))">
             @Html.Label("TestAgentId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("TestAgentId", new SelectList(agents, "Id", "Name", Model.Agent.Id), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.DropDownList("TestAgentId", new SelectList(agents, "Id", "Name", (Model.Agent == null ? 0 : Model.Agent.Id)), new { @class = "form-control selectpicker", data_live_search = "true" })
                 @Html.ValidationMessage("TestAgentId", null, new { @class = "help-block" })
             </div>
         </div>

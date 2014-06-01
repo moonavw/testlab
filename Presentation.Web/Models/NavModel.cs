@@ -89,8 +89,8 @@ namespace TestLab.Presentation.Web.Models
                 RouteValues = new { id = proj.Id }
             });
 
-            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
             Add(new NavItem { Text = "Builds", ControllerName = "TestBuilds", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
+            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
             Add(new NavItem { Text = "Sessions", ControllerName = "TestSessions", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
         }
     }
