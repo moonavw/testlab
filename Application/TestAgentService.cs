@@ -75,8 +75,10 @@ namespace TestLab.Application
                     if (jobs.Count > 0)
                     {
                         Trace.TraceInformation("get {0} jobs for agent {1}", jobs.Count, _agent);
-                        StartJobs(jobs.OfType<TestBuild>(), cancellationToken);
-                        StartJobs(jobs.OfType<TestQueue>(), cancellationToken);
+                        Task.WaitAll(
+                            StartJobs(jobs.OfType<TestBuild>(), cancellationToken),
+                            StartJobs(jobs.OfType<TestQueue>(), cancellationToken)
+                        );
                     }
                     else
                     {//just has a rest
