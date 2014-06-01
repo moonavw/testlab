@@ -1,5 +1,6 @@
 ﻿using NPatterns.Messaging;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -26,10 +27,11 @@ namespace TestLab.Application
 
         public void Initialize(string agentName)
         {
-            Debug.WriteLine("init Test Agent: {0}", agentName);
             //find current agent in repository
             var agentRepo = _uow.Repository<TestAgent>();
             _agent = agentRepo.Query().FirstOrDefault(z => z.Name == agentName);
+
+            Debug.WriteLine("init Test Agent: {0} as {1}", agentName, _agent == null ? "Created" : "Updated");
 
             //create or update agent in repository
             if (_agent == null)
@@ -44,8 +46,7 @@ namespace TestLab.Application
         {
             Trace.TraceInformation("start Test Agent: {0}", _agent.Name);
 
-            StartJobs<TestBuild>(cancellationToken);
-            StartJobs<TestQueue>(cancellationToken);
+            StartJobs(cancellationToken);
 
             return Task.Run(async () =>
             {
@@ -60,24 +61,22 @@ namespace TestLab.Application
             }, cancellationToken);
         }
 
-        private Task StartJobs<T>(CancellationToken cancellationToken) where T : TestJob
+        private Task StartJobs(CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //get NotStarted jobs assigned to current agent
-                    var jobs = (from e in _jobRepo.Query().OfType<T>()
+                    var jobs = (from e in _jobRepo.Query()
                                 where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
                                 select e).ToList();
 
                     if (jobs.Count > 0)
                     {
-                        Trace.TraceInformation("get {0} {2} job for agent {1}", jobs.Count, _agent, typeof(T).Name);
-                        foreach (var job in jobs)
-                        {
-                            _bus.Publish(job);
-                        }
+                        Trace.TraceInformation("get {0} jobs for agent {1}", jobs.Count, _agent);
+                        StartJobs(jobs.OfType<TestBuild>(), cancellationToken);
+                        StartJobs(jobs.OfType<TestQueue>(), cancellationToken);
                     }
                     else
                     {//just has a rest
@@ -85,6 +84,20 @@ namespace TestLab.Application
                     }
                 }
 
+            }, cancellationToken);
+        }
+
+        private Task StartJobs<T>(IEnumerable<T> jobs, CancellationToken cancellationToken) where T : TestJob
+        {
+            return Task.Run(() =>
+            {
+                foreach (var job in jobs)
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        break;
+
+                    _bus.Publish(job);
+                }
             }, cancellationToken);
         }
     }

@@ -78,7 +78,7 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 _buildRepo.Add(model);
                 await _uow.CommitAsync();
-                return RedirectToAction("Show", new { id = model.Id, testprojectId });
+                return RedirectToAction("Index", new { testprojectId });
             }
             SetNav(model);
             SetViewData();
