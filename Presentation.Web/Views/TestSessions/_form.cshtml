@@ -1,7 +1,7 @@
-﻿@model TestLab.Domain.TestSession
+﻿@model TestSession
 
 @{
-    IEnumerable<TestLab.Domain.TestAgent> agents = ViewBag.Agents;
+    IEnumerable<TestAgent> agents = ViewBag.Agents;
 }
 
 @Html.AntiForgeryToken()
@@ -16,7 +16,7 @@
             <div class="form-group@(Html.ValidationError("TestPlanId", " has-error"))">
                 @Html.Label("TestPlanId", new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.DropDownList("TestPlanId", new SelectList(Model.Project.Plans, "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
+                    @Html.DropDownList("TestPlanId", new SelectList(Model.Project.Plans.Actives(), "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
                     @Html.ValidationMessage("TestPlanId", null, new {@class = "help-block"})
                 </div>
             </div>
@@ -34,14 +34,14 @@
         <div class="form-group@(Html.ValidationError("BuildId", " has-error"))">
             @Html.Label("BuildId", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("BuildId", new SelectList(Model.Project.Builds.Where(z=>z.Completed!=null).OrderByDescending(z=>z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.DropDownList("BuildId", new SelectList(Model.Project.Builds.Actives().Where(z=>z.Completed!=null).OrderByDescending(z=>z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
                 @Html.ValidationMessage("BuildId", null, new { @class = "help-block" })
             </div>
         </div>
         <div class="form-group@(Html.ValidationError("TestAgents", " has-error"))">
             @Html.Label("TestAgents", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ListBox("TestAgents", new MultiSelectList(agents, "Id", "Name", Model.Queues.Select(z => z.Agent.Id)), new { @class = "form-control listbox" })
+                @Html.ListBox("TestAgents", new MultiSelectList(agents, "Id", "Name", Model.Queues.Actives().Select(z => z.Agent.Id)), new { @class = "form-control listbox" })
                 @Html.ValidationMessage("TestAgents", null, new { @class = "help-block" })
             </div>
         </div>

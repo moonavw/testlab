@@ -20,7 +20,7 @@ namespace TestLab.Domain
 
         public virtual TestQueue Queue { get; set; }
 
-        #region Implementation of IStartable
+        #region IStartable Members
 
         public DateTime? Started { get; set; }
         public DateTime? Completed { get; set; }

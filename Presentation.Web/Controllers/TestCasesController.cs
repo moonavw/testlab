@@ -31,7 +31,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             SetNav(project);
             ViewBag.Project = project;
-            return View(project.Cases);
+            return View(project.Cases.Actives());
         }
     }
 }

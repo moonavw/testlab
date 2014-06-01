@@ -52,7 +52,6 @@ namespace TestLab.Infrastructure.Cucumber
                     int end = m.Index + 100 > text.Length - 1 ? m.Index + 100 : text.Length - 1;
                     var t = new TestCase
                     {
-                        Published = DateTime.Now,
                         Name = m.Groups[1].Value,
                         Location = f.FullName.Remove(0, srcPath.Length + 1)
                     };
@@ -63,13 +62,6 @@ namespace TestLab.Infrastructure.Cucumber
                     }
                     tests.Add(t);
                 }
-                //tests.AddRange(from Match m in matches
-                //               select new TestCase
-                //               {
-                //                   Published = DateTime.Now,
-                //                   Name = m.Groups[1].Value,
-                //                   Location = f.FullName.Remove(0, srcPath.Length + 1)
-                //               });
             }
 
             return tests;

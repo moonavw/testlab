@@ -1,4 +1,4 @@
-﻿@model TestLab.Domain.TestAgent
+﻿@model TestAgent
 
 @{
     ViewBag.Title = "Test Agent";
@@ -37,5 +37,5 @@
 
 <div>
     <h2>Test Jobs</h2>
-    @Html.Partial("_TestJobs", Model.Jobs)
+    @Html.Partial("_TestJobs", Model.Jobs.Actives())
 </div>

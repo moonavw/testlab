@@ -29,7 +29,8 @@ namespace TestLab.Presentation.Web.Controllers
         public async Task<ActionResult> Index()
         {
             SetNav();
-            return View(await _agentRepo.Query().ToListAsync());
+            var list = await _agentRepo.Query().ToListAsync();
+            return View(list.Actives());
         }
 
         public async Task<ActionResult> Show(int id)

@@ -43,7 +43,8 @@ namespace TestLab.Presentation.Web.Controllers
         public async Task<ActionResult> Index()
         {
             SetNav();
-            return View(await _projRepo.Query().ToListAsync());
+            var list = await _projRepo.Query().ToListAsync();
+            return View(list.Actives());
         }
 
         public async Task<ActionResult> Show(int id)
@@ -114,13 +115,10 @@ namespace TestLab.Presentation.Web.Controllers
         public async Task<ActionResult> Destroy(int id)
         {
             var entity = await _projRepo.FindAsync(id);
-
-            var sessionRepo = _uow.Repository<TestSession>();
-            entity.Sessions.ToList().ForEach(z => sessionRepo.Remove(z));
-
-            var planRepo = _uow.Repository<TestPlan>();
-            entity.Plans.ToList().ForEach(z => planRepo.Remove(z));
-
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
             _projRepo.Remove(entity);
             await _uow.CommitAsync();
             return RedirectToAction("Index");

@@ -11,8 +11,7 @@ namespace TestLab.Infrastructure.EF.Mapping
 
             HasRequired(z => z.Session)
                 .WithMany(f => f.Queues)
-                .Map(m => m.MapKey("TestSessionId"))
-                .WillCascadeOnDelete();
+                .Map(m => m.MapKey("TestSessionId"));
         }
     }
 }

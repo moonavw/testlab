@@ -1,4 +1,4 @@
-﻿@model TestLab.Domain.TestSession
+﻿@model TestSession
 
 @{
     ViewBag.Title = "Test Session";
@@ -35,7 +35,10 @@
         </dd>
     </dl>
 </div>
-
+<div>
+    <h2>Test Queues</h2>
+    @Html.Partial("_TestQueues", Model.Queues.Actives())
+</div>
 <div>
     <h2>Test Runs</h2>
     @Html.Partial("_ShowProgress", Model)

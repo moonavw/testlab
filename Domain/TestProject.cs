@@ -8,7 +8,7 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestProject : AggregateRoot, IAuditable
+    public class TestProject : AggregateRoot, IAuditable, IArchivable
     {
         public TestProject()
         {
@@ -45,12 +45,19 @@ namespace TestLab.Domain
 
         public virtual ICollection<TestSession> Sessions { get; set; }
 
-        #region Implementation of IAuditable
+        #region IAuditable Members
 
         public DateTime? Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
         public string UpdatedBy { get; set; }
+
+        #endregion
+
+        #region IArchivable Members
+
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
 
         #endregion
 

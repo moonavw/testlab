@@ -66,14 +66,12 @@ namespace TestLab.Application
             toUpdate.ForEach(z =>
             {
                 z.le.Keyword = z.re.Keyword;
-                z.le.Published = z.re.Published;
             });
 
             toDel.ForEach(z =>
             {
                 z.Plans.Clear();
-                z.Published = null;
-                //project.Cases.Remove(z);
+                project.Cases.Remove(z);
             });
             toAdd.ForEach(z => project.Cases.Add(z));
             Trace.TraceInformation("Published {1} Tests for {0}", build, toAdd.Count);

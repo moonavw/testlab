@@ -41,7 +41,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             SetNav(project);
             ViewBag.Project = project;
-            return View(project.Plans);
+            return View(project.Plans.Actives());
         }
 
         public async Task<ActionResult> Show(int id, int testprojectId)

@@ -1,4 +1,4 @@
-﻿@model TestLab.Domain.TestPlan
+﻿@model TestPlan
 
 @{
     ViewBag.Title = "Test Plan";
@@ -20,4 +20,4 @@
     </dl>
 </div>
 
-@Html.Partial("../TestCases/Index", Model.Cases)
+@Html.Partial("../TestCases/Index", Model.Cases.Actives())

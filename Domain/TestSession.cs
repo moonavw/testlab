@@ -8,7 +8,7 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSession : Entity, IAuditable
+    public class TestSession : Entity, IAuditable, IArchivable
     {
         public TestSession()
         {
@@ -32,7 +32,7 @@ namespace TestLab.Domain
 
         public IEnumerable<TestRun> Runs
         {
-            get { return Queues.SelectMany(z => z.Runs).ToList(); }
+            get { return Queues.Actives().SelectMany(z => z.Runs).ToList(); }
         }
 
         #region info
@@ -65,12 +65,19 @@ namespace TestLab.Domain
 
         #endregion
 
-        #region Implementation of IAuditable
+        #region IAuditable Members
 
         public DateTime? Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Updated { get; set; }
         public string UpdatedBy { get; set; }
+
+        #endregion
+
+        #region IArchivable Members
+
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
 
         #endregion
 
@@ -96,10 +103,14 @@ namespace TestLab.Domain
 
         public void SetAgents(IEnumerable<TestAgent> agents)
         {
+            foreach (var item in Queues)
+            {
+                item.Runs.Clear();
+            }
             Queues.Clear();
             Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z, Project = this.Project }));
 
-            var tests = Plan.Cases.Where(z => z.Published != null).ToList();
+            var tests = Plan.Cases.Actives().ToList();
             int pageSize = (int)Math.Ceiling((double)tests.Count / Queues.Count);
             for (int i = 0; i < Queues.Count; i++)
             {

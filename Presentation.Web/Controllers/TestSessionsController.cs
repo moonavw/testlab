@@ -39,7 +39,7 @@ namespace TestLab.Presentation.Web.Controllers
 
         private void SetViewData()
         {
-            ViewBag.Agents = from e in _agentRepo.Query().AsEnumerable()
+            ViewBag.Agents = from e in _agentRepo.Query().Actives()
                              where e.IsOnline
                              select e;
         }
@@ -53,7 +53,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             SetNav(project);
             ViewBag.Project = project;
-            return View(project.Sessions);
+            return View(project.Sessions.Actives());
         }
 
         public async Task<ActionResult> Show(int id, int testprojectId)
