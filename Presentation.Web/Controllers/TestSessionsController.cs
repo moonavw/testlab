@@ -80,36 +80,36 @@ namespace TestLab.Presentation.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplanId, int testbuildId, int[] testagents)
+        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
-            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuildId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
             if (model.Build == null)
             {
-                ModelState.AddModelError("testbuildId", "no completed build for this test session");
+                ModelState.AddModelError("testbuild", "no completed build for this test session");
             }
-            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplanId);
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
             if (plan == null)
             {
-                ModelState.AddModelError("testplanId", "no test plan found for this test session");
+                ModelState.AddModelError("testplan", "no test plan found for this test session");
             }
             else
             {
                 if (plan.Cases.Count == 0)
                 {
-                    ModelState.AddModelError("testplanId", "empty test plan for this test session");
+                    ModelState.AddModelError("testplan", "empty test plan for this test session");
                 }
-            }
-            if (testagents != null)
-            {
-                var agents = (from e in _agentRepo.Query()
-                              where testagents.Contains(e.Id)
-                              select e).ToList();
-                model.SetAgents(agents);
             }
 
             if (ModelState.IsValid)
             {
+                if (testagents != null)
+                {
+                    var agents = (from e in _agentRepo.Query()
+                                  where testagents.Contains(e.Id)
+                                  select e).ToList();
+                    model.SetAgents(agents);
+                }
                 project.Sessions.Add(model);
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
@@ -127,10 +127,26 @@ namespace TestLab.Presentation.Web.Controllers
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int testbuildId, int[] testagents)
+        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
-            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuildId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
+            if (model.Build == null)
+            {
+                ModelState.AddModelError("testbuild", "no completed build for this test session");
+            }
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
+            if (plan == null)
+            {
+                ModelState.AddModelError("testplan", "no test plan found for this test session");
+            }
+            else
+            {
+                if (plan.Cases.Count == 0)
+                {
+                    ModelState.AddModelError("testplan", "empty test plan for this test session");
+                }
+            }
             if (ModelState.IsValid)
             {
                 var entity = project.Sessions.First(z => z.Id == id);

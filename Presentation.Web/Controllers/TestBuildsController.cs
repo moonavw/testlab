@@ -53,17 +53,6 @@ namespace TestLab.Presentation.Web.Controllers
             return View(project.Builds.Actives());
         }
 
-        public async Task<ActionResult> Show(int id, int testprojectId)
-        {
-            var entity = await _buildRepo.FindAsync(id);
-            if (entity == null || entity.Project.Id != testprojectId)
-            {
-                return HttpNotFound();
-            }
-            SetNav(entity);
-            return View(entity);
-        }
-
         public async Task<ActionResult> New(int testprojectId)
         {
             var project = await _projRepo.FindAsync(testprojectId);
@@ -78,12 +67,12 @@ namespace TestLab.Presentation.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int testprojectId, TestBuild model, int? testagentId)
+        public async Task<ActionResult> Create(int testprojectId, TestBuild model, int? testagent)
         {
             model.Project = await _projRepo.FindAsync(testprojectId);
-            if (testagentId.HasValue)
+            if (testagent.HasValue)
             {
-                model.Agent = await _agentRepo.FindAsync(testagentId);
+                model.Agent = await _agentRepo.FindAsync(testagent);
             }
             if (ModelState.IsValid)
             {
@@ -94,48 +83,6 @@ namespace TestLab.Presentation.Web.Controllers
             SetNav(model);
             SetViewData();
             return View("new", model);
-        }
-
-        public Task<ActionResult> Edit(int id, int testprojectId)
-        {
-            SetViewData();
-            return Show(id, testprojectId);
-        }
-
-        [HttpPut]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(int id, int testprojectId, TestBuild model, int? testagentId)
-        {
-            model.Project = await _projRepo.FindAsync(testprojectId);
-            if (testagentId.HasValue)
-            {
-                model.Agent = await _agentRepo.FindAsync(testagentId);
-            }
-
-            if (ModelState.IsValid)
-            {
-                _buildRepo.Modify(model);
-                await _uow.CommitAsync();
-
-                return RedirectToAction("Show", new { id, testprojectId });
-            }
-            SetNav(model);
-            SetViewData();
-            return View("edit", model);
-        }
-
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Destroy(int id, int testprojectId)
-        {
-            var entity = await _buildRepo.FindAsync(id);
-            if (entity == null || entity.Project.Id != testprojectId)
-            {
-                return HttpNotFound();
-            }
-            _buildRepo.Remove(entity);
-            await _uow.CommitAsync();
-            return RedirectToAction("Index", new { testprojectId });
         }
     }
 }

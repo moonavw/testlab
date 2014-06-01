@@ -259,9 +259,7 @@
     <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
     <Content Include="Views\TestSessions\_ShowProgress.cshtml" />
     <Content Include="Views\TestBuilds\Index.cshtml" />
-    <Content Include="Views\TestBuilds\Show.cshtml" />
     <Content Include="Views\TestBuilds\New.cshtml" />
-    <Content Include="Views\TestBuilds\Edit.cshtml" />
     <Content Include="Views\TestBuilds\_form.cshtml" />
     <Content Include="Views\TestAgents\Index.cshtml" />
     <Content Include="Views\TestSessions\_TestQueues.cshtml" />

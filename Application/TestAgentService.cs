@@ -13,17 +13,20 @@ namespace TestLab.Application
     {
         private readonly IMessageBus _bus;
         private readonly IUnitOfWork _uow;
+        private readonly IRepository<TestJob> _jobRepo;
+
         private TestAgent _agent;
 
         public TestAgentService(IUnitOfWork uow, IMessageBus bus)
         {
             _uow = uow;
+            _jobRepo = uow.Repository<TestJob>();
             _bus = bus;
         }
 
         public void Initialize(string agentName)
         {
-            Trace.TraceInformation("init Test Agent: {0}", agentName);
+            Debug.WriteLine("init Test Agent: {0}", agentName);
             //find current agent in repository
             var agentRepo = _uow.Repository<TestAgent>();
             _agent = agentRepo.Query().FirstOrDefault(z => z.Name == agentName);
@@ -46,7 +49,6 @@ namespace TestLab.Application
 
             return Task.Run(async () =>
             {
-
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //KeepAlive
@@ -65,17 +67,22 @@ namespace TestLab.Application
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //get NotStarted jobs assigned to current agent
-                    var jobs = (from e in _agent.Jobs.OfType<T>().Actives()
-                                where e.Started == null || e.Completed == null
+                    var jobs = (from e in _jobRepo.Query().OfType<T>().Actives()
+                                where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
                                 select e).ToList();
 
-                    Trace.TraceInformation("get {0} {2} job for agent {1}", jobs.Count, _agent, typeof(T).Name);
-
-                    foreach (var job in jobs)
+                    if (jobs.Count > 0)
                     {
-                        _bus.Publish(job);
+                        Trace.TraceInformation("get {0} {2} job for agent {1}", jobs.Count, _agent, typeof(T).Name);
+                        foreach (var job in jobs)
+                        {
+                            _bus.Publish(job);
+                        }
                     }
-                    Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
+                    else
+                    {//just has a rest
+                        Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
+                    }
                 }
 
             }, cancellationToken);

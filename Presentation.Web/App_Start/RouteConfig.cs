@@ -58,6 +58,7 @@ namespace TestLab.Presentation.Web
                     projects.Resources<TestBuildsController>(builds =>
                     {
                         builds.As("builds");
+                        builds.Only("index", "new", "create");
                     });
 
                     projects.Resources<TestPlansController>(plans =>
