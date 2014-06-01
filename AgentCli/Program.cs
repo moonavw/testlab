@@ -13,6 +13,7 @@ namespace TestLab.AgentCli
             //init
             var kernel = new StandardKernel();
             Bootstrapper.Initialize(kernel);
+            kernel.Rebind<TestLab.Infrastructure.IUnitOfWork>().To<TestLab.Infrastructure.EF.UnitOfWork>().InSingletonScope();
 
             //start agent service
             var service = kernel.Get<TestAgentService>();

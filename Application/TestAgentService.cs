@@ -82,7 +82,7 @@ namespace TestLab.Application
                     }
                     else
                     {//just has a rest
-                        Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
+                        Thread.Sleep(5000);
                     }
                 }
 

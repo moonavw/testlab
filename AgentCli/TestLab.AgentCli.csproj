@@ -59,6 +59,10 @@
     <Reference Include="NPatterns">
       <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
     </Reference>
+    <Reference Include="NPatterns.ObjectRelational.EF, Version=1.0.5189.41349, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.ObjectRelational.EF.1.0.5189\lib\net451\NPatterns.ObjectRelational.EF.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
