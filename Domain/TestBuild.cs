@@ -5,6 +5,8 @@ namespace TestLab.Domain
 {
     public class TestBuild : TestJob
     {
+        public virtual TestProject Project { get; set; }
+
         public string Name
         {
             get { return string.Format("{0:yyyyMMddhhmm}", Created); }

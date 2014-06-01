@@ -2,13 +2,9 @@
 
 @{
     ViewBag.Title = "Test Sessions";
-    TestProject project = ViewBag.Project;
 }
 
 <h2>Test Sessions</h2>
-<p>
-    @Html.ActionLink("Create New", "New", "TestSessions", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
-</p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -17,7 +13,7 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", "TestSessions", new { id = d.Id, testprojectId = project.Id }, new { @class = "btn btn-default" })
+                        Html.ActionLink("Open", "Show", "TestSessions", new { id = d.Id, testprojectId = d.Project.Id }, new { @class = "btn btn-default" })
         );
 
     c.Add(o => o.Id)

@@ -40,7 +40,6 @@ namespace TestLab.Presentation.Web.Controllers
                 return HttpNotFound();
             }
             SetNav(project);
-            ViewBag.Project = project;
             return View(project.Plans.Actives());
         }
 

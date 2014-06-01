@@ -5,9 +5,6 @@
 }
 
 <h2>Test Projects</h2>
-<p>
-    @Html.ActionLink("Create New", "New", "TestProjects", null, new { @class = "btn btn-default" })
-</p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {

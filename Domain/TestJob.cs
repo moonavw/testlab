@@ -9,8 +9,6 @@ namespace TestLab.Domain
     {
         public int Id { get; set; }
 
-        public virtual TestProject Project { get; set; }
-
         public virtual TestAgent Agent { get; set; }
 
         #region IStartable Members

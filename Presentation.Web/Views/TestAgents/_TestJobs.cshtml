@@ -15,6 +15,6 @@
 
     c.Add()
      .Titled("Type")
-     .RenderValueAs(d => d.GetType().Name);
+     .RenderValueAs(d => d.GetType().BaseType.Name);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

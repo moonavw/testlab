@@ -8,6 +8,11 @@ namespace TestLab.Infrastructure.EF.Mapping
         public TestBuildMapping()
         {
             Map(m => m.Requires("Type").HasValue((byte)TestJobType.TestBuild));
+
+
+            HasRequired(z => z.Project)
+                .WithMany(f => f.Builds)
+                .Map(m => m.MapKey("TestProjectId"));
         }
     }
 }

@@ -108,7 +108,7 @@ namespace TestLab.Domain
                 item.Runs.Clear();
             }
             Queues.Clear();
-            Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z, Project = this.Project }));
+            Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z }));
 
             var tests = Plan.Cases.Actives().ToList();
             int pageSize = (int)Math.Ceiling((double)tests.Count / Queues.Count);
