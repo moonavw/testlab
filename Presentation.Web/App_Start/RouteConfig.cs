@@ -65,12 +65,6 @@ namespace TestLab.Presentation.Web
                         plans.As("plans");
                     });
 
-                    projects.Resources<TestCasesController>(cases =>
-                    {
-                        cases.As("cases");
-                        cases.Only("index");
-                    });
-
                     projects.Resources<TestSessionsController>(sessions =>
                     {
                         sessions.As("sessions");

@@ -167,7 +167,6 @@
     <Compile Include="Controllers\TestAgentsController.cs" />
     <Compile Include="Controllers\TestBuildsController.cs" />
     <Compile Include="Controllers\TestSessionsController.cs" />
-    <Compile Include="Controllers\TestCasesController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />
     <Compile Include="Controllers\TestProjectsController.cs" />
     <Compile Include="Filters\LogErrorAttribute.cs" />
@@ -247,7 +246,7 @@
     <Content Include="Views\Shared\_ShowAudit.cshtml" />
     <Content Include="Views\TestSessions\Index.cshtml" />
     <Content Include="Views\TestPlans\Index.cshtml" />
-    <Content Include="Views\TestCases\Index.cshtml" />
+    <Content Include="Views\TestProjects\_TestCases.cshtml" />
     <Content Include="Views\TestSessions\_TestRuns.cshtml" />
     <Content Include="Views\TestPlans\New.cshtml" />
     <Content Include="Views\TestPlans\_form.cshtml" />

@@ -20,4 +20,7 @@
     </dl>
 </div>
 
-@Html.Partial("../TestCases/Index", Model.Cases.Actives())
+<div>
+    <h3>Test Cases</h3>
+    @Html.Partial("../TestProjects/_TestCases", Model.Cases.Actives())
+</div>

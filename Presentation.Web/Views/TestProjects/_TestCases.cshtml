@@ -1,11 +1,5 @@
 ﻿@model IEnumerable<TestCase>
 
-@{
-    ViewBag.Title = "Test Cases";
-    TestProject project = ViewBag.Project;
-}
-
-<h2>Test Cases</h2>
 
 @Html.Grid(Model.OrderBy(z=>z.Name)).Columns(c =>
 {
@@ -20,7 +14,7 @@
 
     c.Add(o => o.Plans.Count);
 
-    c.Add(o => o.Published)
+    c.Add(o => o.Updated)
      .SetWidth(110);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
