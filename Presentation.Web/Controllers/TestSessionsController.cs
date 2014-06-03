@@ -44,6 +44,35 @@ namespace TestLab.Presentation.Web.Controllers
                              select e;
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Restart(int id, int testprojectId)
+        {
+            var entity = await _sessionRepo.FindAsync(id);
+            if (entity == null || entity.Project.Id != testprojectId)
+            {
+                return HttpNotFound();
+            }
+
+            //set queues incomplete to restart
+            foreach (var queue in entity.Queues)
+            {
+                queue.Completed = null;
+                //set failed runs incomplete to restart
+                foreach (var run in queue.Runs.Where(z => z.Result.PassOrFail == false))
+                {
+                    run.Completed = null;
+                }
+            }
+
+            await _uow.CommitAsync();
+
+            return RespondTo(formats =>
+            {
+                formats.Default = RedirectToAction("Show", new { id, testprojectId });
+                formats["text"] = () => Content("Started");
+            });
+        }
+
         public async Task<ActionResult> Index(int testprojectId)
         {
             var project = await _projRepo.FindAsync(testprojectId);

@@ -69,6 +69,7 @@ namespace TestLab.Presentation.Web
                     projects.Resources<TestSessionsController>(sessions =>
                     {
                         sessions.As("sessions");
+                        sessions.Member(z => z.Post("restart"));
                     });
                 });
             }

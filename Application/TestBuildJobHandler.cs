@@ -37,7 +37,7 @@ namespace TestLab.Application
             var puller = _pullers.FirstOrDefault(z => z.CanPull(project.RepoPathOrUrl));
             if (puller == null) throw new NotSupportedException("no puller for this project");
 
-            Trace.TraceInformation("Start TestBuild {0} on agent {1}", build, job.Agent);
+            Trace.TraceInformation("Start TestBuild {0}", build);
 
             //pull
             Trace.TraceInformation("Pull Source Code for {0} from {1}", project, project.RepoPathOrUrl);
@@ -74,11 +74,10 @@ namespace TestLab.Application
                 project.Cases.Remove(z);
             });
             toAdd.ForEach(z => project.Cases.Add(z));
-            Trace.TraceInformation("Published {1} Tests for {0}", build, toAdd.Count);
 
             await Uow.CommitAsync();
 
-            Trace.TraceInformation("Complete TestBuild {0} on agent {1}", build, job.Agent);
+            Trace.TraceInformation("Complete TestBuild {0} with {1} TestCases published", build, toAdd.Count);
         }
     }
 }

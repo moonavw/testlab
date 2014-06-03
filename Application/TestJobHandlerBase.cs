@@ -31,7 +31,7 @@ namespace TestLab.Application
             {
                 var job = message;
 
-                Debug.WriteLine("Started {0}-{1} on agent {2}", typeof(T).Name, job.Id, job.Agent);
+                Debug.WriteLine("Started job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
 
                 job.Started = DateTime.Now;
                 await Uow.CommitAsync();
@@ -41,7 +41,7 @@ namespace TestLab.Application
                 job.Completed = DateTime.Now;
                 await Uow.CommitAsync();
 
-                Debug.WriteLine("Completed {0}-{1} on agent {2}", typeof(T).Name, job.Id, job.Agent);
+                Debug.WriteLine("Completed job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
             }
             catch (Exception ex)
             {

@@ -46,5 +46,10 @@ namespace TestLab.Domain
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("{0} on {1}", Session, Agent);
+        }
     }
 }

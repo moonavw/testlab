@@ -26,5 +26,10 @@ namespace TestLab.Domain
         public DateTime? Completed { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("{0} in {1}", Case.Name, Queue);
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace TestLab.Application
             var agentRepo = _uow.Repository<TestAgent>();
             _agent = agentRepo.Query().FirstOrDefault(z => z.Name == agentName);
 
-            Debug.WriteLine("init Test Agent: {0} as {1}", agentName, _agent == null ? "Created" : "Updated");
+            Debug.WriteLine("{1} TestAgent: {0}", agentName, _agent == null ? "Create" : "Update");
 
             //create or update agent in repository
             if (_agent == null)
@@ -44,29 +44,19 @@ namespace TestLab.Application
 
         public Task Start(CancellationToken cancellationToken)
         {
-            Trace.TraceInformation("start Test Agent: {0}", _agent.Name);
-
-            StartJobs(cancellationToken);
+            Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
 
             return Task.Run(async () =>
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     //KeepAlive
-                    _agent.LastTalked = DateTime.Now;
-                    await _uow.CommitAsync();
-                    Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
-                }
-                Trace.TraceInformation("stop Test Agent: {0}", _agent.Name);
-            }, cancellationToken);
-        }
+                    if (!_agent.IsOnline)
+                    {
+                        _agent.LastTalked = DateTime.Now;
+                        await _uow.CommitAsync();
+                    }
 
-        private Task StartJobs(CancellationToken cancellationToken)
-        {
-            return Task.Run(() =>
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
                     //get NotStarted jobs assigned to current agent
                     var jobs = (from e in _jobRepo.Query()
                                 where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
@@ -81,11 +71,11 @@ namespace TestLab.Application
                         );
                     }
                     else
-                    {//just has a rest
+                    {//just have a rest
                         Thread.Sleep(5000);
                     }
                 }
-
+                Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             }, cancellationToken);
         }
 

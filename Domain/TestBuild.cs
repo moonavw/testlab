@@ -25,5 +25,10 @@ namespace TestLab.Domain
                 return Path.Combine(Project.GetPathOnAgent(Agent), Constants.BUILD_DIR_NAME, Name);
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0} on {1}", Name, Agent);
+        }
     }
 }

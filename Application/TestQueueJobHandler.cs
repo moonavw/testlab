@@ -23,16 +23,15 @@ namespace TestLab.Application
 
         protected override async Task Run(TestQueue job)
         {
-            var session = job.Session;
-            var project = session.Project;
-            var build = session.Build;
+            var project = job.Session.Project;
+            var build = job.Session.Build;
             var agent = job.Agent;
 
             var driver = _drivers.FirstOrDefault(z => z.Name.Equals(project.DriverName, StringComparison.OrdinalIgnoreCase));
             if (driver == null) throw new NotSupportedException("no driver for this test");
 
             //extract
-            Trace.TraceInformation("Extract TestBuild to agent {0}", agent.Name);
+            Trace.TraceInformation("Extract TestBuild to agent {0}", agent);
             await _archiver.Extract(build.SharedPath, build.LocalPath);
 
             //get runs NotStarted/NotCompleted
@@ -50,10 +49,10 @@ namespace TestLab.Application
             await Uow.CommitAsync();
 
             //start
-            Trace.TraceInformation("Start TestSession {0} with {2} NotStarted/NotCompleted TestRuns on Agent {1}", session, agent, pendingRuns.Count);
+            Trace.TraceInformation("Start TestQueue {0} with {2} TestRuns", job, pendingRuns.Count);
             foreach (var run in pendingRuns)
             {
-                Trace.TraceInformation("Start TestRun {0} on Agent {1}", run, agent);
+                Trace.TraceInformation("Start TestRun {0}", run);
 
                 run.Started = DateTime.Now;
                 await Uow.CommitAsync();
@@ -63,10 +62,10 @@ namespace TestLab.Application
                 run.Completed = DateTime.Now;
                 await Uow.CommitAsync();
 
-                Trace.TraceInformation("Complete TestRun {0} on Agent {1}", run, agent);
+                Trace.TraceInformation("Complete TestRun {0}", run);
             }
 
-            Trace.TraceInformation("Complete TestSession {0} with {2} TestRuns on Agent {1}", session, agent, pendingRuns.Count);
+            Trace.TraceInformation("Complete TestQueue {0} with {2} TestRuns", job, pendingRuns.Count);
         }
     }
 }
