@@ -14,9 +14,7 @@
 
     c.Add(o => o.Plans.Count);
 
-    c.Add()
-        .Titled("Published")
-        .RenderValueAs(d => (d.Updated ?? d.Created).ToString())
-        .SetWidth(110);
+    c.Add(o => o.Published)
+     .SetWidth(110);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

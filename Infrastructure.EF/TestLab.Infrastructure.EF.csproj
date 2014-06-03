@@ -41,16 +41,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="NPatterns, Version=1.0.5189.41347, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns.ObjectRelational.EF, Version=1.0.5189.41349, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NPatterns, Version=1.0.5267.4008, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.ObjectRelational.EF.1.0.5189\lib\net451\NPatterns.ObjectRelational.EF.dll</HintPath>
+      <HintPath>..\packages\NPatterns.1.0.5267\lib\net451\NPatterns.dll</HintPath>
+    </Reference>
+    <Reference Include="NPatterns.ObjectRelational.EF, Version=1.0.5267.4432, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.ObjectRelational.EF.1.0.5267\lib\net451\NPatterns.ObjectRelational.EF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -65,7 +66,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DbContext.cs" />
+    <Compile Include="TestLabDbContext.cs" />
     <Compile Include="EfModule.cs" />
     <Compile Include="Mapping\TestAgentMapping.cs" />
     <Compile Include="Mapping\TestBuildMapping.cs" />
@@ -79,8 +80,7 @@
     <Compile Include="Mapping\TestRunMapping.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
-    <Compile Include="UnitOfWork.cs" />
+    <Compile Include="TestLabUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

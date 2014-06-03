@@ -14,7 +14,7 @@ namespace TestLab.Application
         private readonly IArchiver _archiver;
         private readonly IEnumerable<ITestDriver> _drivers;
 
-        public TestQueueJobHandler(IUnitOfWork uow, IArchiver archiver, IEnumerable<ITestDriver> drivers)
+        public TestQueueJobHandler(ITestLabUnitOfWork uow, IArchiver archiver, IEnumerable<ITestDriver> drivers)
             : base(uow)
         {
             _archiver = archiver;

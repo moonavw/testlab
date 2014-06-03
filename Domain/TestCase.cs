@@ -29,6 +29,11 @@ namespace TestLab.Domain
             get { return Location + "." + Name; }
         }
 
+        public DateTime? Published
+        {
+            get { return Updated ?? Created; }
+        }
+
         public virtual TestProject Project { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }

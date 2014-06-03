@@ -1,4 +1,5 @@
 ﻿using NPatterns.Messaging;
+using NPatterns.ObjectRelational;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -12,13 +13,13 @@ namespace TestLab.Presentation.Web.Controllers
 {
     public class TestProjectsController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IEnumerable<ITestDriver> _drivers;
         private readonly IEnumerable<IPuller> _pullers;
         private readonly IMessageBus _bus;
 
-        public TestProjectsController(IUnitOfWork uow,
+        public TestProjectsController(ITestLabUnitOfWork uow,
             IEnumerable<ITestDriver> drivers,
             IEnumerable<IPuller> pullers,
             IMessageBus bus)

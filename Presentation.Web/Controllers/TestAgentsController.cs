@@ -1,4 +1,5 @@
 ﻿using NPatterns.Messaging;
+using NPatterns.ObjectRelational;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace TestLab.Presentation.Web.Controllers
 {
     public class TestAgentsController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestAgent> _agentRepo;
 
-        public TestAgentsController(IUnitOfWork uow)
+        public TestAgentsController(ITestLabUnitOfWork uow)
         {
             _uow = uow;
             _agentRepo = uow.Repository<TestAgent>();

@@ -1,4 +1,5 @@
 ﻿using NPatterns.Messaging;
+using NPatterns.ObjectRelational;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,12 +14,12 @@ namespace TestLab.Application
     public class TestAgentService
     {
         private readonly IMessageBus _bus;
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestJob> _jobRepo;
 
         private TestAgent _agent;
 
-        public TestAgentService(IUnitOfWork uow, IMessageBus bus)
+        public TestAgentService(ITestLabUnitOfWork uow, IMessageBus bus)
         {
             _uow = uow;
             _jobRepo = uow.Repository<TestJob>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPatterns.ObjectRelational;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +13,12 @@ namespace TestLab.Presentation.Web.Controllers
 {
     public class TestBuildsController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IRepository<TestBuild> _buildRepo;
         private readonly IRepository<TestAgent> _agentRepo;
 
-        public TestBuildsController(IUnitOfWork uow)
+        public TestBuildsController(ITestLabUnitOfWork uow)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();

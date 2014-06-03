@@ -33,9 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NPatterns, Version=1.0.5189.41347, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NPatterns, Version=1.0.5267.4008, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
+      <HintPath>..\packages\NPatterns.1.0.5267\lib\net451\NPatterns.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

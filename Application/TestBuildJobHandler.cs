@@ -16,7 +16,7 @@ namespace TestLab.Application
         private readonly IEnumerable<ITestDriver> _drivers;
         private readonly IEnumerable<IPuller> _pullers;
 
-        public TestBuildJobHandler(IUnitOfWork uow,
+        public TestBuildJobHandler(ITestLabUnitOfWork uow,
                                    IEnumerable<IPuller> pullers,
                                    IBuilder builder,
                                    IArchiver archiver,

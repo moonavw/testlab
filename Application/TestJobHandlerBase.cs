@@ -9,9 +9,9 @@ namespace TestLab.Application
 {
     public abstract class TestJobHandlerBase<T> : IHandler<T> where T : TestJob
     {
-        protected readonly IUnitOfWork Uow;
+        protected readonly ITestLabUnitOfWork Uow;
 
-        protected TestJobHandlerBase(IUnitOfWork uow)
+        protected TestJobHandlerBase(ITestLabUnitOfWork uow)
         {
             Uow = uow;
         }
