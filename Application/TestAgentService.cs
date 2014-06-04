@@ -16,7 +16,7 @@ namespace TestLab.Application
         private readonly IMessageBus _bus;
         private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestJob> _jobRepo;
-        private readonly List<Task> _runningTasks;
+        private Task _runningTask;
 
         private CancellationTokenSource _source;
         private TestAgent _agent;
@@ -26,7 +26,6 @@ namespace TestLab.Application
             _uow = uow;
             _jobRepo = uow.Repository<TestJob>();
             _bus = bus;
-            _runningTasks = new List<Task>();
         }
 
         private void Initialize()
@@ -61,45 +60,33 @@ namespace TestLab.Application
         {
             Initialize();
             Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
-            _runningTasks.Clear();
-            _runningTasks.Add(StartKeepAlive());
-
-            _runningTasks.Add(Task.Run(() =>
+            _runningTask = Task.Run(() =>
             {
                 while (!_source.Token.IsCancellationRequested)
                 {
+                    KeepAlive();
                     if (StartJobs() == 0)
                     {//just have a rest
                         Thread.Sleep(5000);
                     }
                 }
-            }, _source.Token));
+            }, _source.Token);
         }
 
         public void Stop()
         {
             Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             _source.Cancel();
-            Task.WaitAll(_runningTasks.ToArray());
-            _runningTasks.Clear();
-        }
-
-        private Task StartKeepAlive()
-        {
-            return Task.Run(() =>
-            {
-                while (!_source.Token.IsCancellationRequested)
-                {
-                    KeepAlive();
-                    Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
-                }
-            }, _source.Token);
+            Task.WaitAll(_runningTask);
         }
 
         private void KeepAlive()
         {
-            _agent.LastTalked = DateTime.Now;
-            _uow.Commit();
+            if (!_agent.IsOnline)
+            {
+                _agent.LastTalked = DateTime.Now;
+                _uow.Commit();
+            }
         }
 
         private int StartJobs()

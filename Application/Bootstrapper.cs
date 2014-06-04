@@ -11,12 +11,14 @@ namespace TestLab.Application
         {
             kernel.Load("TestLab.Infrastructure.*.dll");
 
+            kernel.Bind<TestAgentService>().ToSelf().InSingletonScope();
+
             kernel.Bind<IHandler<TestBuild>>().To<TestBuildJobHandler>();
             kernel.Bind<IHandler<TestQueue>>().To<TestQueueJobHandler>();
 
             kernel.Bind<IMessageBus>()
                   .ToConstructor(ctorArg => new MessageBus(type => ctorArg.Context.Kernel.GetAll(type)))
                   .InSingletonScope();
-        }        
+        }
     }
 }
