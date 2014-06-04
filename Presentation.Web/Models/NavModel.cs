@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using TestLab.Domain;
-using System.Linq;
 
 namespace TestLab.Presentation.Web.Models
 {

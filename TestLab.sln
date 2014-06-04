@@ -30,6 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Infrastructure.EF",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{65E99A31-A690-463E-A075-E2549EAC0549}"
 	ProjectSection(SolutionItems) = preProject
+		NLog.config = NLog.config
 		README.md = README.md
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
@@ -37,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.AgentCli", "AgentCli\TestLab.AgentCli.csproj", "{79D4747F-CD60-4E4F-A082-05D62CE09F7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.Infrastructure.Builder", "Infrastructure.Builder\TestLab.Infrastructure.Builder.csproj", "{07BD013C-7718-4146-9092-225594648DFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLab.AgentService", "AgentService\TestLab.AgentService.csproj", "{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +151,16 @@ Global
 		{07BD013C-7718-4146-9092-225594648DFC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{07BD013C-7718-4146-9092-225594648DFC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{07BD013C-7718-4146-9092-225594648DFC}.Release|x86.ActiveCfg = Release|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
