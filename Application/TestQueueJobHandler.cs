@@ -49,7 +49,7 @@ namespace TestLab.Application
             await Uow.CommitAsync();
 
             //start
-            Trace.TraceInformation("Start TestQueue {0} with {2} TestRuns", job, pendingRuns.Count);
+            Trace.TraceInformation("Start TestQueue {0} with {1} TestRuns", job, pendingRuns.Count);
             foreach (var run in pendingRuns)
             {
                 Trace.TraceInformation("Start TestRun {0}", run);
@@ -65,7 +65,7 @@ namespace TestLab.Application
                 Trace.TraceInformation("Complete TestRun {0}", run);
             }
 
-            Trace.TraceInformation("Complete TestQueue {0} with {2} TestRuns", job, pendingRuns.Count);
+            Trace.TraceInformation("Complete TestQueue {0} with {1} TestRuns", job, pendingRuns.Count);
         }
     }
 }

@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="TestAgent.cs" />
     <Compile Include="TestBuild.cs" />
+    <Compile Include="TestConfig.cs" />
     <Compile Include="TestJob.cs" />
     <Compile Include="TestQueue.cs" />
     <Compile Include="TestProject.cs" />

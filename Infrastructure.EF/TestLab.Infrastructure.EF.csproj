@@ -66,6 +66,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Mapping\TestConfigMapping.cs" />
     <Compile Include="TestLabDbContext.cs" />
     <Compile Include="EfModule.cs" />
     <Compile Include="Mapping\TestAgentMapping.cs" />

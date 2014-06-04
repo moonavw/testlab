@@ -20,6 +20,7 @@ namespace TestLab.Infrastructure.EF
             modelBuilder.Configurations.Add(new TestAgentMapping());
             modelBuilder.Configurations.Add(new TestBuildMapping());
             modelBuilder.Configurations.Add(new TestResultMapping());
+            modelBuilder.Configurations.Add(new TestConfigMapping());
             modelBuilder.Configurations.Add(new TestProjectMapping());
             modelBuilder.Configurations.Add(new TestSessionMapping());
             modelBuilder.Configurations.Add(new TestPlanMapping());

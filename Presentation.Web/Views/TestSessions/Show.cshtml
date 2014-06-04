@@ -5,10 +5,10 @@
 }
 
 <div>
-    <h2>Test Session</h2>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.Partial("_ShowAudit", Model)
-    <hr />
+    
+    @Html.Partial("_Audit", Model)
+    
+    
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Name)
@@ -41,12 +41,26 @@
     @Html.ActionLink("Restart Failed Cases", "Restart", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
 </p>
 }
-<div>
-    <h3>Test Queues</h3>
-    @Html.Partial("_TestQueues", Model.Queues)
+
+@Html.Partial("_Progress", Model)
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li><a href="#testconfig" data-toggle="tab">Test Config</a></li>
+  <li><a href="#testqueues" data-toggle="tab">Test Queues</a></li>
+  <li class="active"><a href="#testruns" data-toggle="tab">Test Runs</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane" id="testconfig"><br />
+      @Html.Partial("_TestConfig", Model.Config)
+  </div>
+  <div class="tab-pane" id="testqueues"><br />
+      @Html.Partial("_TestQueues", Model.Queues)
+  </div>
+  <div class="tab-pane active" id="testruns"><br />
+      @Html.Partial("_TestRuns", Model.Runs)
+  </div>
 </div>
-<div>
-    <h3>Test Runs</h3>
-    @Html.Partial("_ShowProgress", Model)
-    @Html.Partial("_TestRuns", Model.Runs)
-</div>
+

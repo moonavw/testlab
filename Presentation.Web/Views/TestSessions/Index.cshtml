@@ -4,7 +4,7 @@
     ViewBag.Title = "Test Sessions";
 }
 
-<h2>Test Sessions</h2>
+
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -38,6 +38,6 @@
      .Sanitized(false)
      .Titled("Progress")
      .SetWidth(200)
-     .RenderValueAs(d => Html.Partial("_ShowProgress", d));
+     .RenderValueAs(d => Html.Partial("_Progress", d));
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

@@ -89,6 +89,7 @@ namespace TestLab.Infrastructure.Cucumber
             string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, outputFile.FullName);
 
             var pi = new ProcessStartInfo(startProgram, startProgramArgs);
+            pi.EnvironmentVariables.Add(session.Config.Key, session.Config.Value);
             await ProcessEx.RunAsync(pi);
 
             outputFile.Refresh();

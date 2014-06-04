@@ -4,10 +4,7 @@
     ViewBag.Title = "Edit Test Session";
 }
 
-<h2>Edit</h2>
-<p>
-    @Html.ActionLink("Cancel", "Show", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-default" })
-</p>
+
 @using (Html.BeginForm("Update", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }))
 {
     @Html.HttpMethodOverride(HttpVerbs.Put)

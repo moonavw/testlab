@@ -13,6 +13,7 @@ namespace TestLab.Domain
         public TestSession()
         {
             Queues = new HashSet<TestQueue>();
+            Config = new TestConfig();
         }
 
         public int Id { get; set; }
@@ -21,6 +22,8 @@ namespace TestLab.Domain
         {
             get { return string.Format("{1} {0:yyyyMMddhhmm}", Created, Plan.Name); }
         }
+
+        public TestConfig Config { get; set; }
 
         public virtual TestBuild Build { get; set; }
 

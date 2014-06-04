@@ -11,26 +11,13 @@
     <fieldset>
         <legend>Test Session</legend>
 
-        @if (Model.Id == 0)
-        {
-            <div class="form-group@(Html.ValidationError("TestPlan", " has-error"))">
-                @Html.Label("TestPlan", new {@class = "control-label col-md-2"})
-                <div class="col-md-10">
-                    @Html.DropDownList("TestPlan", new SelectList(Model.Project.Plans.Actives(), "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
-                    @Html.ValidationMessage("TestPlan", null, new {@class = "help-block"})
-                </div>
+        <div class="form-group@(Html.ValidationError("TestPlan", " has-error"))">
+            @Html.Label("TestPlan", new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownList("TestPlan", new SelectList(Model.Project.Plans.Actives(), "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
+                @Html.ValidationMessage("TestPlan", null, new {@class = "help-block"})
             </div>
-        }
-        else
-        {
-            <div class="form-group@(Html.ValidationErrorFor(m => m.Name, " has-error"))">
-                @Html.LabelFor(m => m.Name, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.Name, null, new { @class = "help-block" })
-                </div>
-            </div>
-        }
+        </div>
         <div class="form-group@(Html.ValidationError("TestBuild", " has-error"))">
             @Html.Label("TestBuild", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -43,6 +30,24 @@
             <div class="col-md-10">
                 @Html.ListBox("TestAgents", new MultiSelectList(agents, "Id", "Name", Model.Queues.Select(z => z.Agent.Id)), new { @class = "form-control listbox" })
                 @Html.ValidationMessage("TestAgents", null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Test Config</legend>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.Type, " has-error"))">
+            @Html.LabelFor(m => m.Config.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(m => m.Config.Type, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.Type, null, new { @class = "help-block" })
+            </div>
+        </div>
+        <div class="form-group@(Html.ValidationErrorFor(m => m.Config.Value, " has-error"))">
+            @Html.LabelFor(m => m.Config.Value, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Config.Value, 5, 80, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Config.Value, null, new { @class = "help-block" })
             </div>
         </div>
     </fieldset>

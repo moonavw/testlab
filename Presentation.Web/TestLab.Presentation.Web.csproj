@@ -241,7 +241,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
@@ -250,7 +249,7 @@
     <Content Include="Views\TestProjects\Edit.cshtml" />
     <Content Include="Views\TestProjects\Index.cshtml" />
     <Content Include="Views\TestProjects\_form.cshtml" />
-    <Content Include="Views\Shared\_ShowAudit.cshtml" />
+    <Content Include="Views\Shared\_Audit.cshtml" />
     <Content Include="Views\TestSessions\Index.cshtml" />
     <Content Include="Views\TestPlans\Index.cshtml" />
     <Content Include="Views\TestProjects\_TestCases.cshtml" />
@@ -263,8 +262,7 @@
     <Content Include="Views\TestSessions\Show.cshtml" />
     <Content Include="Views\TestSessions\_form.cshtml" />
     <Content Include="Views\TestSessions\Edit.cshtml" />
-    <Content Include="Views\Shared\_ShowStartInfo.cshtml" />
-    <Content Include="Views\TestSessions\_ShowProgress.cshtml" />
+    <Content Include="Views\TestSessions\_progress.cshtml" />
     <Content Include="Views\TestBuilds\Index.cshtml" />
     <Content Include="Views\TestBuilds\New.cshtml" />
     <Content Include="Views\TestBuilds\_form.cshtml" />
@@ -272,6 +270,8 @@
     <Content Include="Views\TestSessions\_TestQueues.cshtml" />
     <Content Include="Views\TestAgents\Show.cshtml" />
     <Content Include="Views\TestAgents\_TestJobs.cshtml" />
+    <Content Include="Views\Shared\_nav_sidebar.cshtml" />
+    <Content Include="Views\TestSessions\_TestConfig.cshtml" />
     <Content Include="Views\Shared\_nav.cshtml" />
   </ItemGroup>
   <ItemGroup>

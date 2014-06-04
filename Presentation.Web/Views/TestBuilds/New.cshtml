@@ -4,10 +4,6 @@
     ViewBag.Title = "New Test Build";
 }
 
-<h2>Create New</h2>
-<p>
-    @Html.ActionLink("Cancel", "Index", "TestBuilds", new { testprojectId = Model.Project.Id }, new { @class = "btn btn-default" })
-</p>
 @using (Html.BeginForm("Create", "TestBuilds", new { testprojectId = Model.Project.Id }))
 {
     @Html.Partial("_form", Model)

@@ -9,7 +9,7 @@
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -19,21 +19,22 @@
                 @Html.ActionLink(TestLab.Infrastructure.Constants.APP_NAME, "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <nav class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @Html.Partial("_nav", (IEnumerable<NavItem>)ViewBag.Nav)
+                <ul class="nav navbar-nav navbar-right">
+                    @Html.Partial("_nav")
                 </ul>
-                <p class="navbar-text navbar-right">Hello, @User.Identity.Name!</p>
+                <p class="navbar-text navbar-left">Hello, @User.Identity.Name!</p>
             </nav>
         </div>
     </header>
-    <section class="container body-content">
-        @RenderBody()
-    </section>
-    <footer>
-        <div class="container">
-            <p class="text-muted">&copy; @DateTime.Now.Year - @TestLab.Infrastructure.Constants.APP_NAME</p>
+    <section class="container-fluid body-content">
+        <div class="col-sm-3 col-md-2 sidebar">            
+            @Html.Partial("_nav_sidebar", (IEnumerable<NavItem>)ViewBag.Nav)
         </div>
-    </footer>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">@ViewBag.Title</h1>
+            @RenderBody()
+        </div>
+    </section>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

@@ -1,0 +1,16 @@
+﻿@model IEnumerable<NavItem>
+
+@foreach (var item in Model)
+{
+    <ul class="nav nav-sidebar">
+        <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
+            <a href="@Url.Action(item.ActionName, item.ControllerName, item.RouteValues)">@item.Text</a>
+        </li>
+        @foreach (var child in item.Children)
+        {
+        <li @(Html.IsRouteMatch(child.ControllerName, child.ActionName) ? "class=active" : null)>
+            <a href="@Url.Action(child.ActionName, child.ControllerName, child.RouteValues)">&raquo; @child.Text</a>
+        </li>
+        }           
+    </ul>
+}

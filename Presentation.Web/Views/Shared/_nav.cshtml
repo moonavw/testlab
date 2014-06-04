@@ -1,29 +1,10 @@
-﻿@model IEnumerable<NavItem>
-
-@foreach (var item in Model)
-{
-    if (item.Children.Count > 0)
-    {
-        <li class="dropdown @(Html.IsRouteMatch(item.ControllerName)?"active":null)">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">@item.Text <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
-                    @Html.ActionLink(item.ActionName, item.ActionName, item.ControllerName, item.RouteValues, null)
-                </li>
-                @foreach (var child in item.Children)
-                {
-                    <li @(Html.IsRouteMatch(child.ControllerName, child.ActionName) ? "class=active" : null)>
-                        @Html.ActionLink(child.Text, child.ActionName, child.ControllerName, child.RouteValues, null)
-                    </li>
-                }
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
-            @Html.ActionLink(item.Text, item.ActionName, item.ControllerName, item.RouteValues, null)
-        </li>
-    }
-}
-
+﻿
+<li @(Html.IsRouteMatch("home", "index") ? "class=active" : null)>
+    @Html.ActionLink("Dashboard", "index", "home", null, null)
+</li>
+<li @(Html.IsRouteMatch("testprojects", "index") ? "class=active" : null)>
+    @Html.ActionLink("Projects", "index", "testprojects", null, null)
+</li>
+<li @(Html.IsRouteMatch("testagents", "index") ? "class=active" : null)>
+    @Html.ActionLink("Agents", "index", "testagents", null, null)
+</li>
