@@ -2,9 +2,6 @@
 <li @(Html.IsRouteMatch("home", "index") ? "class=active" : null)>
     @Html.ActionLink("Dashboard", "index", "home", null, null)
 </li>
-<li @(Html.IsRouteMatch("testprojects", "index") ? "class=active" : null)>
-    @Html.ActionLink("Projects", "index", "testprojects", null, null)
-</li>
-<li @(Html.IsRouteMatch("testagents", "index") ? "class=active" : null)>
-    @Html.ActionLink("Agents", "index", "testagents", null, null)
+<li>
+    <a href="#" target="_blank">Help</a>
 </li>
