@@ -29,8 +29,9 @@ namespace TestLab.Application
             _runningTasks = new List<Task>();
         }
 
-        public void Initialize(string agentName)
+        private void Initialize()
         {
+            string agentName = Environment.MachineName;
             //find current agent in repository
             var agentRepo = _uow.Repository<TestAgent>();
             _agent = agentRepo.Query().FirstOrDefault(z => z.Name == agentName);
@@ -48,8 +49,17 @@ namespace TestLab.Application
             _source = new CancellationTokenSource();
         }
 
+        public void Run()
+        {
+            Initialize();
+            Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
+            KeepAlive();
+            StartJobs();
+        }
+
         public void Start()
         {
+            Initialize();
             Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
             _runningTasks.Clear();
             _runningTasks.Add(StartKeepAlive());
@@ -58,30 +68,17 @@ namespace TestLab.Application
             {
                 while (!_source.Token.IsCancellationRequested)
                 {
-                    //get NotStarted jobs assigned to current agent
-                    var jobs = (from e in _jobRepo.Query()
-                                where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
-                                select e).ToList();
-
-                    if (jobs.Count > 0)
-                    {
-                        Trace.TraceInformation("get {0} jobs for agent {1}", jobs.Count, _agent);
-                        Task.WaitAll(
-                            StartJobs(jobs.OfType<TestBuild>()),
-                            StartJobs(jobs.OfType<TestQueue>())
-                        );
-                    }
-                    else
+                    if (StartJobs() == 0)
                     {//just have a rest
                         Thread.Sleep(5000);
                     }
                 }
-                Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             }, _source.Token));
         }
 
         public void Stop()
         {
+            Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             _source.Cancel();
             Task.WaitAll(_runningTasks.ToArray());
             _runningTasks.Clear();
@@ -89,15 +86,40 @@ namespace TestLab.Application
 
         private Task StartKeepAlive()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 while (!_source.Token.IsCancellationRequested)
                 {
-                    _agent.LastTalked = DateTime.Now;
-                    await _uow.CommitAsync();
+                    KeepAlive();
                     Thread.Sleep(Constants.AGENT_KEEPALIVE * 1000);
                 }
             }, _source.Token);
+        }
+
+        private void KeepAlive()
+        {
+            _agent.LastTalked = DateTime.Now;
+            _uow.Commit();
+        }
+
+        private int StartJobs()
+        {
+            //get NotStarted jobs assigned to current agent
+            var jobs = (from e in _jobRepo.Query()
+                        where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
+                        select e).ToList();
+
+            if (jobs.Count > 0)
+            {
+                Trace.TraceInformation("get {0} jobs for agent {1}", jobs.Count, _agent);
+                Task.WaitAll(
+                    StartJobs(jobs.OfType<TestBuild>()),
+                    StartJobs(jobs.OfType<TestQueue>())
+                );
+                Trace.TraceInformation("complete {0} jobs by agent {1}", jobs.Count, _agent);
+            }
+
+            return jobs.Count;
         }
 
         private Task StartJobs<T>(IEnumerable<T> jobs) where T : TestJob

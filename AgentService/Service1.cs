@@ -31,14 +31,6 @@ namespace TestLab.AgentService
 
         protected override void OnStart(string[] args)
         {
-            //var kernel = new StandardKernel();
-            //Bootstrapper.Initialize(kernel);
-            //kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
-
-            //start agent service
-            //var service = kernel.Get<TestAgentService>();
-
-            service.Initialize(Environment.MachineName);
             service.Start();
         }
 
