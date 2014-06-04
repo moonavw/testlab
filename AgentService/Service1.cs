@@ -15,31 +15,36 @@ namespace TestLab.AgentService
 {
     public partial class Service1 : ServiceBase
     {
-        private CancellationTokenSource _source;
+        private readonly IKernel kernel;
+        private readonly TestAgentService service;
 
         public Service1()
         {
             InitializeComponent();
+
+            kernel = new StandardKernel();
+            Bootstrapper.Initialize(kernel);
+            kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
+
+            service = kernel.Get<TestAgentService>();
         }
 
         protected override void OnStart(string[] args)
         {
-            //init
-            var kernel = new StandardKernel();
-            Bootstrapper.Initialize(kernel);
-            kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
+            //var kernel = new StandardKernel();
+            //Bootstrapper.Initialize(kernel);
+            //kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
 
             //start agent service
-            var service = kernel.Get<TestAgentService>();
-            service.Initialize(Environment.MachineName);
+            //var service = kernel.Get<TestAgentService>();
 
-            _source = new CancellationTokenSource();
-            service.Start(_source.Token);
+            service.Initialize(Environment.MachineName);
+            service.Start();
         }
 
         protected override void OnStop()
         {
-            _source.Cancel();
+            service.Stop();
         }
     }
 }

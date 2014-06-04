@@ -19,8 +19,7 @@ namespace TestLab.AgentCli
             var service = kernel.Get<TestAgentService>();
             service.Initialize(Environment.MachineName);
 
-            var source = new CancellationTokenSource();
-            service.Start(source.Token);
+            service.Start();
 
             do
             {
@@ -28,7 +27,7 @@ namespace TestLab.AgentCli
             }
             while (Console.ReadKey().Key != ConsoleKey.Q);
 
-            source.Cancel();
+            service.Stop();
         }
     }
 }
