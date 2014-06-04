@@ -1,14 +1,8 @@
 ﻿@model IAuditable
 
 
-<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#show-audit">
-    Audit
-</button>
-
-
-<div id="show-audit" class="collapse">
     
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal well well-sm pull-right">
         <dt>
             @Html.DisplayNameFor(model => model.Created)
         </dt>
@@ -45,4 +39,3 @@
             &nbsp;
         </dd>
     </dl>
-</div>
