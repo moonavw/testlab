@@ -46,12 +46,12 @@ namespace TestLab.Application
             }
 
             _source = new CancellationTokenSource();
+            Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
         }
 
         public void Run()
         {
             Initialize();
-            Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
             KeepAlive();
             StartJobs();
         }
@@ -59,7 +59,6 @@ namespace TestLab.Application
         public void Start()
         {
             Initialize();
-            Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
             _runningTask = Task.Run(() =>
             {
                 while (!_source.Token.IsCancellationRequested)
