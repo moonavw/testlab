@@ -179,15 +179,20 @@ namespace TestLab.Presentation.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                var entity = project.Sessions.First(z => z.Id == id);
-                _sessionRepo.Merge(entity, model);
-
+                _sessionRepo.Modify(model);
                 if (testagents != null)
                 {
                     var agents = (from e in _agentRepo.Query()
                                   where testagents.Contains(e.Id)
                                   select e).ToList();
-                    entity.SetAgents(agents);
+
+                    var queueRepo = _uow.Repository<TestQueue>();
+                    var q = await (from e in queueRepo.Query()
+                                   where e.Session.Id == model.Id
+                                   select e).ToListAsync();
+                    q.ForEach(z => queueRepo.Remove(z));
+
+                    model.SetAgents(agents);
                 }
 
                 await _uow.CommitAsync();

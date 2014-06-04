@@ -109,6 +109,8 @@ namespace TestLab.Presentation.Web.Controllers
                 {
                     var entity = project.Plans.First(z => z.Id == id);
                     _planRepo.Merge(entity, model);
+
+                    entity.Cases.Clear();
                     entity.SetCases(project.Cases.Where(z => testcases.Contains(z.Id)));
 
                     await _uow.CommitAsync();

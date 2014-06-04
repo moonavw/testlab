@@ -106,7 +106,6 @@ namespace TestLab.Domain
 
         public void SetAgents(IEnumerable<TestAgent> agents)
         {
-            Queues.Clear();
             Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z }));
 
             var tests = Plan.Cases.Actives().ToList();

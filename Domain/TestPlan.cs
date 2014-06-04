@@ -42,7 +42,6 @@ namespace TestLab.Domain
 
         public void SetCases(IEnumerable<TestCase> cases)
         {
-            Cases.Clear();
             Cases = new HashSet<TestCase>(cases.Actives());
         }
     }
