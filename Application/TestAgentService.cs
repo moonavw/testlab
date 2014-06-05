@@ -66,7 +66,7 @@ namespace TestLab.Application
                     }
                     catch (Exception ex)
                     {
-                        Trace.TraceError(ex.ToString());
+                        OnError(ex);
                     }
                 }
             }, _source.Token);
@@ -77,6 +77,13 @@ namespace TestLab.Application
             Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             _source.Cancel();
             Task.WaitAll(_runningTask);
+        }
+
+        private void OnError(Exception ex)
+        {
+            Trace.TraceError(ex.ToString());
+            _source.Cancel();
+            Trace.TraceWarning("Test Agent: {0} has to be stopped since got error", _agent.Name);
         }
 
         private void KeepAlive()
@@ -120,7 +127,7 @@ namespace TestLab.Application
                     }
                     catch (Exception ex)
                     {
-                        Trace.TraceError(ex.ToString());
+                        OnError(ex);
                     }
                 }
             }, _source.Token);
