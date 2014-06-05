@@ -61,7 +61,7 @@ namespace TestLab.Application
                         KeepAlive();
                         if (StartJobs() == 0)
                         {//just have a rest
-                            Thread.Sleep(10 * 1000);
+                            Thread.Sleep(Constants.POLLING_INTERVAL * 1000);
                         }
                     }
                     catch (Exception ex)
