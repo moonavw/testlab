@@ -1,13 +1,8 @@
 ﻿using Ninject;
 using System;
-using System.Collections.Generic;
 using System.Configuration.Install;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using TestLab.Application;
 
 namespace TestLab.AgentService
@@ -37,12 +32,6 @@ namespace TestLab.AgentService
                         break;
 
                     default:
-                        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-                        {
-                            Trace.TraceError(e.ExceptionObject.ToString());
-                            agent.Stop();
-                        };
-
                         agent.Start();
 
                         do
@@ -59,15 +48,7 @@ namespace TestLab.AgentService
             }
             else
             {
-                var service = new TestLabAgentService(agent);
-
-                AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-                {
-                    Trace.TraceError(e.ExceptionObject.ToString());
-                    service.Stop();
-                };
-
-                ServiceBase.Run(service);
+                ServiceBase.Run(new TestLabAgentService(agent));
             }
         }
     }
