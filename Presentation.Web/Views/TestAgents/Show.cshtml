@@ -1,17 +1,17 @@
 ﻿@model TestAgent
 
 @{
-    ViewBag.Title = "Test Agent";
+    ViewBag.Title = "Test Agent: " + Model.Name;
 }
 
 <div>
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.IsOnline)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.IsOnline)
         </dd>
         
         <dt>

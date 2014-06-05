@@ -1,0 +1,15 @@
+﻿@model IEnumerable<NavItem>
+
+@foreach (var item in Model)
+{
+    <li @(Html.IsRouteMatch(item.ControllerName, item.ActionName) ? "class=active" : null)>
+        <a href="@Url.Action(item.ActionName, item.ControllerName, item.RouteValues)">@item.Text</a>
+    </li>
+    
+    if (item.Children.Count > 0)
+    {
+        <ul class="nav">
+            @Html.Partial("_NavItems", item.Children)
+        </ul>
+    }
+}

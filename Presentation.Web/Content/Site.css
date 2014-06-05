@@ -85,11 +85,15 @@ body {
         padding-left: 20px;
     }
 
+    .nav-sidebar .nav > .active > a,
     .nav-sidebar > .active > a {
         color: #fff;
         background-color: #428bca;
     }
 
+    .nav-sidebar .nav {
+        margin-left: 20px;
+    }
 
 /*
  * Main content

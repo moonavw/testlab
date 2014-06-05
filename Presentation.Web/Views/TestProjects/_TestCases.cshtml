@@ -2,9 +2,7 @@
 
 
 @Html.Grid(Model.OrderBy(z=>z.Name)).Columns(c =>
-{
-    c.Add(o => o.Id);
-    
+{   
     c.Add(o => o.Name)
      .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
 

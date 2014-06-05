@@ -21,7 +21,11 @@ namespace TestLab.Presentation.Web.Controllers
             SetNav();
             return View();
         }
-
+        public ActionResult About()
+        {
+            SetNav();
+            return View();
+        }
         //        public async Task<ActionResult> About()
         //        {
         //            var md = new MarkdownDeep.Markdown();
@@ -44,12 +48,5 @@ namespace TestLab.Presentation.Web.Controllers
         //            }
         //            return View();
         //        }
-
-        //public ActionResult Contact()
-        //{
-        //    ViewBag.Message = "Your contact page.";
-
-        //    return View();
-        //}
     }
 }

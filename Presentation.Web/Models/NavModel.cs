@@ -23,35 +23,41 @@ namespace TestLab.Presentation.Web.Models
         public List<NavItem> Children { get; set; }
     }
 
-    public class HomeNav : List<NavItem>
+    public abstract class NavBase : List<NavItem>
+    {
+        protected NavBase() { }
+    }
+
+    public class Nav : NavBase
+    {
+        public Nav()
+            : base()
+        {
+            Add(new NavItem { Text = "Dashboard", ControllerName = "Home", ActionName = "Index" });
+            Add(new NavItem { Text = "Help", ControllerName = "Home", ActionName = "About" });
+        }
+    }
+
+    public class HomeNav : NavBase
     {
         public HomeNav()
+            : base()
         {
             Add(new NavItem { Text = "Agents", ControllerName = "TestAgents", ActionName = "Index" });
-            Add(new NavItem { Text = "Projects", ControllerName = "TestProjects", ActionName = "Index", Children = new List<NavItem> { new NavItem { Text = "Create New", ControllerName = "TestProjects", ActionName = "new" } } });
+            Add(new NavItem { Text = "Projects", ControllerName = "TestProjects", ActionName = "Index" });
         }
     }
 
     public class TestAgentNav : HomeNav
     {
-        private readonly NavItem itemGroup;
-
-        public TestAgentNav()
-            : base()
-        {
-            itemGroup = Find(z => z.ControllerName.Equals("TestAgents", StringComparison.OrdinalIgnoreCase));
-        }
+        public TestAgentNav() : base() { }
 
         public TestAgentNav(TestAgent agent)
             : this()
         {
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Show {0}", agent.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "show",
-                RouteValues = new { id = agent.Id }
-            });
+            var itemGroup = Find(z => z.ControllerName.Equals("TestAgents", StringComparison.OrdinalIgnoreCase));
+            itemGroup.Children.
+            Add(new NavItem { Text = agent.Name, ControllerName = "TestAgents", ActionName = "show", RouteValues = new { id = agent.Id } });
         }
     }
 
@@ -63,25 +69,12 @@ namespace TestLab.Presentation.Web.Models
             : this()
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestProjects", StringComparison.OrdinalIgnoreCase));
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Show {0}", proj.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "show",
-                RouteValues = new { id = proj.Id }
-            });
+            itemGroup.Children.
+            Add(new NavItem { Text = proj.Name, ControllerName = "TestProjects", ActionName = "show", RouteValues = new { id = proj.Id } });
 
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Edit {0}", proj.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "edit",
-                RouteValues = new { id = proj.Id }
-            });
-
-            Add(new NavItem { Text = "Builds", ControllerName = "TestBuilds", ActionName = "Index", RouteValues = new { testprojectId = proj.Id }, Children = new List<NavItem> { new NavItem { Text = "Create New", ControllerName = "TestBuilds", ActionName = "new", RouteValues = new { testprojectId = proj.Id } } } });
-            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new { testprojectId = proj.Id }, Children = new List<NavItem> { new NavItem { Text = "Create New", ControllerName = "TestPlans", ActionName = "new", RouteValues = new { testprojectId = proj.Id } } } });
-            Add(new NavItem { Text = "Sessions", ControllerName = "TestSessions", ActionName = "Index", RouteValues = new { testprojectId = proj.Id }, Children = new List<NavItem> { new NavItem { Text = "Create New", ControllerName = "TestSessions", ActionName = "new", RouteValues = new { testprojectId = proj.Id } } } });
+            Add(new NavItem { Text = "Builds", ControllerName = "TestBuilds", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
+            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
+            Add(new NavItem { Text = "Sessions", ControllerName = "TestSessions", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
         }
     }
 
@@ -93,21 +86,8 @@ namespace TestLab.Presentation.Web.Models
             : this(plan.Project)
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestPlans", StringComparison.OrdinalIgnoreCase));
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Show {0}", plan.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "show",
-                RouteValues = new { id = plan.Id, testprojectId = plan.Project.Id }
-            });
-
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Edit {0}", plan.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "edit",
-                RouteValues = new { id = plan.Id, testprojectId = plan.Project.Id }
-            });
+            itemGroup.Children.
+            Add(new NavItem { Text = plan.Name, ControllerName = "TestPlans", ActionName = "show", RouteValues = new { id = plan.Id, testprojectId = plan.Project.Id } });
         }
     }
 
@@ -115,26 +95,7 @@ namespace TestLab.Presentation.Web.Models
     {
         public TestBuildNav(TestProject proj) : base(proj) { }
 
-        public TestBuildNav(TestBuild build)
-            : this(build.Project)
-        {
-            var itemGroup = Find(z => z.ControllerName.Equals("TestBuilds", StringComparison.OrdinalIgnoreCase));
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Show {0}", build.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "show",
-                RouteValues = new { id = build.Id, testprojectId = build.Project.Id }
-            });
-
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Edit {0}", build.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "edit",
-                RouteValues = new { id = build.Id, testprojectId = build.Project.Id }
-            });
-        }
+        public TestBuildNav(TestBuild build) : this(build.Project) { }
     }
 
     public class TestSessionNav : TestProjectNav
@@ -145,21 +106,8 @@ namespace TestLab.Presentation.Web.Models
             : this(session.Project)
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestSessions", StringComparison.OrdinalIgnoreCase));
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Show {0}", session.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "show",
-                RouteValues = new { id = session.Id, testprojectId = session.Project.Id }
-            });
-
-            itemGroup.Children.Add(new NavItem
-            {
-                Text = string.Format("Edit {0}", session.Name),
-                ControllerName = itemGroup.ControllerName,
-                ActionName = "edit",
-                RouteValues = new { id = session.Id, testprojectId = session.Project.Id }
-            });
+            itemGroup.Children.
+            Add(new NavItem { Text = session.Name, ControllerName = "TestSessions", ActionName = "show", RouteValues = new { id = session.Id, testprojectId = session.Project.Id } });
         }
     }
 }

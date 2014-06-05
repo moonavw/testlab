@@ -4,7 +4,7 @@
     ViewBag.Title = "Test Plans";
 }
 
-
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -22,5 +22,7 @@
     c.Add(o => o.Name);
 
     c.Add(o => o.Cases.Count);
+
+    c.Add(o => o.Sessions.Count);
     
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

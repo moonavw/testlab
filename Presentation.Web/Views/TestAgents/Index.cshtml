@@ -6,7 +6,7 @@
 
 
 
-@Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
+@Html.Grid(Model.OrderByDescending(z=>z.LastTalked)).Columns(c =>
 {
     c.Add()
      .Encoded(false)
@@ -15,17 +15,14 @@
      .RenderValueAs(d =>
                         Html.ActionLink("Open", "Show", "TestAgents", new { id = d.Id }, new { @class = "btn btn-default" })
         );
-
-    c.Add(o => o.Id)
-     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
     
     c.Add(o => o.Name);
 
     c.Add(o => o.IsOnline);
     
     c.Add(o => o.Summary);
-   
+
     c.Add(o => o.LastTalked)
-     .SetWidth(110);
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
     
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

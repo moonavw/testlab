@@ -20,7 +20,7 @@ namespace TestLab.Infrastructure.EF.Mapping
                 .WillCascadeOnDelete(false);
 
             HasRequired(z => z.Plan)
-                .WithMany()
+                .WithMany(f => f.Sessions)
                 .Map(m => m.MapKey("TestPlanId"));
         }
     }

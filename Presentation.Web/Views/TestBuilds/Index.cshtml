@@ -4,7 +4,7 @@
     ViewBag.Title = "Test Builds";
 }
 
-
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {

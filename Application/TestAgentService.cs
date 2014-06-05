@@ -66,7 +66,7 @@ namespace TestLab.Application
                     KeepAlive();
                     if (StartJobs() == 0)
                     {//just have a rest
-                        Thread.Sleep(5000);
+                        Thread.Sleep(10 * 1000);
                     }
                 }
             }, _source.Token);
@@ -81,11 +81,8 @@ namespace TestLab.Application
 
         private void KeepAlive()
         {
-            if (!_agent.IsOnline)
-            {
-                _agent.LastTalked = DateTime.Now;
-                _uow.Commit();
-            }
+            _agent.LastTalked = DateTime.Now;
+            _uow.Commit();
         }
 
         private int StartJobs()

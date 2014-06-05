@@ -1,21 +1,23 @@
 ﻿@model TestSession
 
 @{
-    ViewBag.Title = "Test Session";
+    ViewBag.Title = "Test Session: " + Model.Name;
 }
 
-<div class="clearfix">
+<p><a href="@Url.Action("Edit")" class="btn btn-default">Edit</a></p>
+
+<div>
     
     @Html.Partial("_Audit", Model)
     
     
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Build)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Model.Build.Name
         </dd>
 
         <dt>
@@ -24,15 +26,7 @@
 
         <dd>
             @Html.DisplayFor(model => model.Summary)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Build)
-        </dt>
-
-        <dd>
-            @Model.Build.Name
-        </dd>
+        </dd>       
     </dl>
 </div>
 @if(Model.FailCount>0)
