@@ -1,7 +1,10 @@
 ﻿using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Configuration.Install;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,23 +22,52 @@ namespace TestLab.AgentService
             var kernel = new StandardKernel();
             Bootstrapper.Initialize(kernel);
             kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
-            var service = kernel.Get<TestAgentService>();
+            var agent = kernel.Get<TestAgentService>();
 
             if (Environment.UserInteractive)
             {
-                service.Start();
-
-                do
+                string parameter = string.Concat(args);
+                switch (parameter)
                 {
-                    Console.WriteLine("press Q to quit");
-                }
-                while (Console.ReadKey().Key != ConsoleKey.Q);
+                    case "--install":
+                        ManagedInstallerClass.InstallHelper(new string[] { Assembly.GetExecutingAssembly().Location });
+                        break;
+                    case "--uninstall":
+                        ManagedInstallerClass.InstallHelper(new string[] { "/u", Assembly.GetExecutingAssembly().Location });
+                        break;
 
-                service.Stop();
+                    default:
+                        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+                        {
+                            Trace.TraceError(e.ExceptionObject.ToString());
+                            agent.Stop();
+                        };
+
+                        agent.Start();
+
+                        do
+                        {
+                            Console.WriteLine("press Q to quit");
+                        }
+                        while (Console.ReadKey().Key != ConsoleKey.Q);
+
+                        agent.Stop();
+
+                        break;
+                }
+
             }
             else
             {
-                ServiceBase.Run(new TestLabAgentService(service));
+                var service = new TestLabAgentService(agent);
+
+                AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+                {
+                    Trace.TraceError(e.ExceptionObject.ToString());
+                    service.Stop();
+                };
+
+                ServiceBase.Run(service);
             }
         }
     }
