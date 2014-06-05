@@ -40,9 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns, Version=1.0.5267.4008, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NPatterns, Version=1.0.5269.3167, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.1.0.5267\lib\net451\NPatterns.dll</HintPath>
+      <HintPath>..\packages\NPatterns.1.0.5269\lib\net451\NPatterns.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

@@ -27,26 +27,19 @@ namespace TestLab.Application
 
         public async Task HandleAsync(T message)
         {
-            try
-            {
-                var job = message;
+            var job = message;
 
-                Debug.WriteLine("Started job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
+            Debug.WriteLine("Started job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
 
-                job.Started = DateTime.Now;
-                await Uow.CommitAsync();
+            job.Started = DateTime.Now;
+            await Uow.CommitAsync();
 
-                await Run(job);
+            await Run(job);
 
-                job.Completed = DateTime.Now;
-                await Uow.CommitAsync();
+            job.Completed = DateTime.Now;
+            await Uow.CommitAsync();
 
-                Debug.WriteLine("Completed job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError(ex.ToString());
-            }
+            Debug.WriteLine("Completed job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
         }
 
         #endregion

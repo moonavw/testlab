@@ -86,9 +86,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.3.0.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns, Version=1.0.5267.4008, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NPatterns, Version=1.0.5269.3167, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.1.0.5267\lib\net451\NPatterns.dll</HintPath>
+      <HintPath>..\packages\NPatterns.1.0.5269\lib\net451\NPatterns.dll</HintPath>
     </Reference>
     <Reference Include="RestfulRouting">
       <HintPath>..\packages\RestfulRouting.1.5.0\lib\RestfulRouting.dll</HintPath>

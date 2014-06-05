@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FE2E6F2E-7BDD-4535-8C32-EFABCCCD8EE3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestLab.AgentService</RootNamespace>
     <AssemblyName>TestLab.AgentService</AssemblyName>
@@ -40,6 +40,9 @@
     <SlowCheetah_NuGetImportPath Condition=" '$(SlowCheetah_NuGetImportPath)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\Properties\SlowCheetah\SlowCheetah.Transforms.targets ))</SlowCheetah_NuGetImportPath>
     <SlowCheetahTargets Condition=" '$(SlowCheetah_EnableImportFromNuGet)'=='true' and Exists('$(SlowCheetah_NuGetImportPath)') ">$(SlowCheetah_NuGetImportPath)</SlowCheetahTargets>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.2.0\lib\net40\Common.Logging.dll</HintPath>
@@ -62,11 +65,13 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.0.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns">
-      <HintPath>..\packages\NPatterns.1.0.5267\lib\net451\NPatterns.dll</HintPath>
+    <Reference Include="NPatterns, Version=1.0.5269.3167, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.1.0.5269\lib\net451\NPatterns.dll</HintPath>
     </Reference>
-    <Reference Include="NPatterns.ObjectRelational.EF">
-      <HintPath>..\packages\NPatterns.ObjectRelational.EF.1.0.5267\lib\net451\NPatterns.ObjectRelational.EF.dll</HintPath>
+    <Reference Include="NPatterns.ObjectRelational.EF, Version=1.0.5269.3170, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NPatterns.ObjectRelational.EF.1.0.5269.1\lib\net451\NPatterns.ObjectRelational.EF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -90,11 +95,11 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="Service1.cs">
+    <Compile Include="TestLabAgentService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Service1.Designer.cs">
-      <DependentUpon>Service1.cs</DependentUpon>
+    <Compile Include="TestLabAgentService.Designer.cs">
+      <DependentUpon>TestLabAgentService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,8 +167,8 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Service1.resx">
-      <DependentUpon>Service1.cs</DependentUpon>
+    <EmbeddedResource Include="TestLabAgentService.resx">
+      <DependentUpon>TestLabAgentService.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

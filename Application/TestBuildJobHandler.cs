@@ -1,4 +1,5 @@
 ﻿using MoreLinq;
+using NPatterns.ObjectRelational;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -56,7 +57,7 @@ namespace TestLab.Application
 
             //publish
             var tests = (await driver.Publish(build)).ToList();
-            var toDel = project.Cases.ExceptBy(tests, z => z.FullName).ToList();
+            var toDel = project.Cases.Actives().ExceptBy(tests, z => z.FullName).ToList();
             var toAdd = tests.ExceptBy(project.Cases, z => z.FullName).ToList();
 
             var toUpdate = (from le in project.Cases
@@ -68,16 +69,18 @@ namespace TestLab.Application
                 z.le.Keyword = z.re.Keyword;
             });
 
+            toAdd.ForEach(z => project.Cases.Add(z));
+
             toDel.ForEach(z =>
             {
                 z.Plans.Clear();
-                project.Cases.Remove(z);
+
+                z.Archive();
             });
-            toAdd.ForEach(z => project.Cases.Add(z));
 
             await Uow.CommitAsync();
 
-            Trace.TraceInformation("Complete TestBuild {0} with {1} TestCases published", build, toAdd.Count);
+            Trace.TraceInformation("Complete TestBuild {0} with {1} TestCases published as {2} added, {3} updated, {4} deleted", build, tests.Count, toAdd.Count, toUpdate.Count, toDel.Count);
         }
     }
 }

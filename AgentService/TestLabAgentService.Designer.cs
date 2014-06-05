@@ -1,6 +1,6 @@
 ﻿namespace TestLab.AgentService
 {
-    partial class Service1
+    partial class TestLabAgentService
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             // 
-            // Service1
+            // TestLabAgentService
             // 
             this.ServiceName = "TestLabAgentService";
 

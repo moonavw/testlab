@@ -49,13 +49,6 @@ namespace TestLab.Application
             Trace.TraceInformation("start TestAgent: {0}", _agent.Name);
         }
 
-        public void Run()
-        {
-            Initialize();
-            KeepAlive();
-            StartJobs();
-        }
-
         public void Start()
         {
             Initialize();
@@ -63,10 +56,17 @@ namespace TestLab.Application
             {
                 while (!_source.Token.IsCancellationRequested)
                 {
-                    KeepAlive();
-                    if (StartJobs() == 0)
-                    {//just have a rest
-                        Thread.Sleep(10 * 1000);
+                    try
+                    {
+                        KeepAlive();
+                        if (StartJobs() == 0)
+                        {//just have a rest
+                            Thread.Sleep(10 * 1000);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(ex.ToString());
                     }
                 }
             }, _source.Token);
@@ -81,6 +81,7 @@ namespace TestLab.Application
 
         private void KeepAlive()
         {
+            _agent.Active();
             _agent.LastTalked = DateTime.Now;
             _uow.Commit();
         }
@@ -113,8 +114,14 @@ namespace TestLab.Application
                 {
                     if (_source.Token.IsCancellationRequested)
                         break;
-
-                    _bus.Publish(job);
+                    try
+                    {
+                        _bus.Publish(job);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError(ex.ToString());
+                    }
                 }
             }, _source.Token);
         }
