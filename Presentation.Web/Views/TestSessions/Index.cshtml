@@ -21,9 +21,7 @@
     
     c.Add(o => o.Name);
 
-    c.Add()
-     .Titled("Agents")
-     .RenderValueAs(d => string.Join(",", d.Queues.Select(z => z.Agent.Name)));
+    c.Add(o => o.Queues.Count);
     
     c.Add(o => o.Build.Name);
    

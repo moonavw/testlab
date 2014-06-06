@@ -1,0 +1,10 @@
+﻿@model IEnumerable<NavItem>
+@{
+    ViewBag.Title = "Help";
+}
+
+<ul class="nav nav-tabs">
+    @Html.Partial("_nav", Model)
+</ul>
+
+@Html.Raw(ViewBag.Message)

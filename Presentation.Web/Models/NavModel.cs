@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Routing;
 using TestLab.Domain;
 
 namespace TestLab.Presentation.Web.Models
@@ -10,15 +11,16 @@ namespace TestLab.Presentation.Web.Models
         public NavItem()
         {
             Children = new List<NavItem>();
+            RouteValues = new RouteValueDictionary();
         }
 
         public string Text { get; set; }
-
+        
         public string ControllerName { get; set; }
 
         public string ActionName { get; set; }
 
-        public object RouteValues { get; set; }
+        public RouteValueDictionary RouteValues { get; set; }
 
         public List<NavItem> Children { get; set; }
     }
@@ -34,7 +36,7 @@ namespace TestLab.Presentation.Web.Models
             : base()
         {
             Add(new NavItem { Text = "Dashboard", ControllerName = "Home", ActionName = "Index" });
-            Add(new NavItem { Text = "Help", ControllerName = "Home", ActionName = "About" });
+            Add(new NavItem { Text = "Help", ControllerName = "Wiki", ActionName = "Index" });
         }
     }
 
@@ -48,6 +50,8 @@ namespace TestLab.Presentation.Web.Models
         }
     }
 
+    public class WikiNav : HomeNav { }
+
     public class TestAgentNav : HomeNav
     {
         public TestAgentNav() : base() { }
@@ -57,7 +61,7 @@ namespace TestLab.Presentation.Web.Models
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestAgents", StringComparison.OrdinalIgnoreCase));
             itemGroup.Children.
-            Add(new NavItem { Text = agent.Name, ControllerName = "TestAgents", ActionName = "show", RouteValues = new { id = agent.Id } });
+            Add(new NavItem { Text = agent.Name, ControllerName = "TestAgents", ActionName = "show", RouteValues = new RouteValueDictionary(new { id = agent.Id }) });
         }
     }
 
@@ -70,11 +74,11 @@ namespace TestLab.Presentation.Web.Models
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestProjects", StringComparison.OrdinalIgnoreCase));
             itemGroup.Children.
-            Add(new NavItem { Text = proj.Name, ControllerName = "TestProjects", ActionName = "show", RouteValues = new { id = proj.Id } });
+            Add(new NavItem { Text = proj.Name, ControllerName = "TestProjects", ActionName = "show", RouteValues = new RouteValueDictionary(new { id = proj.Id }) });
 
-            Add(new NavItem { Text = "Builds", ControllerName = "TestBuilds", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
-            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
-            Add(new NavItem { Text = "Sessions", ControllerName = "TestSessions", ActionName = "Index", RouteValues = new { testprojectId = proj.Id } });
+            Add(new NavItem { Text = "Builds", ControllerName = "TestBuilds", ActionName = "Index", RouteValues = new RouteValueDictionary(new { testprojectId = proj.Id }) });
+            Add(new NavItem { Text = "Plans", ControllerName = "TestPlans", ActionName = "Index", RouteValues = new RouteValueDictionary(new { testprojectId = proj.Id }) });
+            Add(new NavItem { Text = "Sessions", ControllerName = "TestSessions", ActionName = "Index", RouteValues = new RouteValueDictionary(new { testprojectId = proj.Id }) });
         }
     }
 
@@ -87,7 +91,7 @@ namespace TestLab.Presentation.Web.Models
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestPlans", StringComparison.OrdinalIgnoreCase));
             itemGroup.Children.
-            Add(new NavItem { Text = plan.Name, ControllerName = "TestPlans", ActionName = "show", RouteValues = new { id = plan.Id, testprojectId = plan.Project.Id } });
+            Add(new NavItem { Text = plan.Name, ControllerName = "TestPlans", ActionName = "show", RouteValues = new RouteValueDictionary(new { id = plan.Id, testprojectId = plan.Project.Id }) });
         }
     }
 
@@ -107,7 +111,7 @@ namespace TestLab.Presentation.Web.Models
         {
             var itemGroup = Find(z => z.ControllerName.Equals("TestSessions", StringComparison.OrdinalIgnoreCase));
             itemGroup.Children.
-            Add(new NavItem { Text = session.Name, ControllerName = "TestSessions", ActionName = "show", RouteValues = new { id = session.Id, testprojectId = session.Project.Id } });
+            Add(new NavItem { Text = session.Name, ControllerName = "TestSessions", ActionName = "show", RouteValues = new RouteValueDictionary(new { id = session.Id, testprojectId = session.Project.Id }) });
         }
     }
 }

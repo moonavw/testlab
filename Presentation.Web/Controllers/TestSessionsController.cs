@@ -57,12 +57,17 @@ namespace TestLab.Presentation.Web.Controllers
             //set queues incomplete to restart
             foreach (var queue in entity.Queues)
             {
-                queue.Completed = null;
                 //set failed runs incomplete to restart
-                foreach (var run in queue.Runs.Where(z => z.Result.PassOrFail == false))
+                var fails = queue.Runs.Where(z => z.Result.PassOrFail == false).ToList();
+                if (fails.Count > 0)
                 {
-                    run.Completed = null;
-                    run.Result = new TestResult();
+                    queue.Completed = null;
+                    foreach (var run in fails)
+                    {
+                        run.Started = null;
+                        run.Completed = null;
+                        run.Result = new TestResult();
+                    }
                 }
             }
 

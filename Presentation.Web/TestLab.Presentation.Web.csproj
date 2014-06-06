@@ -179,6 +179,7 @@
     <Compile Include="Controllers\TestSessionsController.cs" />
     <Compile Include="Controllers\TestPlansController.cs" />
     <Compile Include="Controllers\TestProjectsController.cs" />
+    <Compile Include="Controllers\WikiController.cs" />
     <Compile Include="Filters\LogErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,9 +208,9 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="NLog.config" />
-    <Content Include="..\README.md">
-      <Link>README.md</Link>
-    </Content>
+    <Content Include="docs\UserGuide.md" />
+    <Content Include="docs\Maintainance.md" />
+    <Content Include="docs\Roadmap.md" />
     <None Include="Properties\PublishProfiles\dev.pubxml" />
     <None Include="Properties\PublishProfiles\prod.pubxml" />
     <Content Include="Scripts\bootstrap-select.js" />
@@ -246,7 +247,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Wiki\Show.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
@@ -276,8 +277,10 @@
     <Content Include="Views\TestSessions\_TestQueues.cshtml" />
     <Content Include="Views\TestAgents\Show.cshtml" />
     <Content Include="Views\TestAgents\_TestJobs.cshtml" />
-    <Content Include="Views\Shared\_NavItems.cshtml" />
+    <Content Include="Views\Shared\_nav.cshtml" />
     <Content Include="Views\TestSessions\_TestConfig.cshtml" />
+    <Content Include="Views\Shared\_nav_sidebar.cshtml" />
+    <Content Include="Views\Wiki\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
