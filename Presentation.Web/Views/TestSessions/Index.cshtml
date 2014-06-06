@@ -1,14 +1,10 @@
-﻿@model IEnumerable<TestLab.Domain.TestSession>
+﻿@model IEnumerable<TestSession>
 
 @{
     ViewBag.Title = "Test Sessions";
-    TestLab.Domain.TestProject project = ViewBag.Project;
 }
 
-<h2>Test Sessions</h2>
-<p>
-    @Html.ActionLink("Create New", "New", "TestSessions", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
-</p>
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -17,7 +13,7 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", "TestSessions", new { id = d.Id, testprojectId = project.Id }, new { @class = "btn btn-default" })
+                        Html.ActionLink("Open", "Show", "TestSessions", new { id = d.Id, testprojectId = d.Project.Id }, new { @class = "btn btn-default" })
         );
 
     c.Add(o => o.Id)
@@ -25,9 +21,11 @@
     
     c.Add(o => o.Name);
 
-    c.Add(o => o.Agent);
+    c.Add()
+     .Titled("Agents")
+     .RenderValueAs(d => string.Join(",", d.Queues.Select(z => z.Agent.Name)));
     
-    c.Add(o => o.Build);
+    c.Add(o => o.Build.Name);
    
     c.Add(o => o.Started)
      .SetWidth(110);
@@ -40,19 +38,6 @@
      .Sanitized(false)
      .Titled("Progress")
      .SetWidth(200)
-     .RenderValueAs(d => Html.Partial("_ShowProgress", d));
+     .RenderValueAs(d => Html.Partial("_Progress", d));
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
-
-@section nav{
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li>@Html.ActionLink(project.Name, "Show", "TestProjects", new { id = project.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = project.Id }, null)</li>
-    <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = project.Id }, null)</li>
-    <li class="active">@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = project.Id }, null)</li>
-}

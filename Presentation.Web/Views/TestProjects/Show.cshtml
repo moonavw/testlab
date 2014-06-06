@@ -1,23 +1,16 @@
-﻿@model TestLab.Domain.TestProject
+﻿@model TestProject
 
 @{
-    ViewBag.Title = "Test Project";
+    ViewBag.Title = "Test Project: " + Model.Name;
 }
 
-<div>
-    <h2>Test Project</h2>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.Partial("_ShowAudit", Model)
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+<p><a href="@Url.Action("Edit")" class="btn btn-default">Edit</a></p>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        
+<div>
+    
+    @Html.Partial("_Audit", Model)
+    
+    <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.RepoPathOrUrl)
         </dt>
@@ -53,22 +46,8 @@
         </dd>
     </dl>
 </div>
-@Html.Partial("_ShowBuild", Model.Build)
-@if(Model.Build.Started==null || Model.Build.Completed!=null)
-{
-<p>
-    @Html.ActionLink("Start New Build", "Build", "TestProjects", new { id = Model.Id }, new { @class = "btn btn-success ajax-post" })
-</p>
-}
-@section nav{
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li class="active">@Html.ActionLink(Model.Name, "Show", "TestProjects", new { id = Model.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Id }, null)</li>
-    <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Id }, null)</li>
-    <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Id }, null)</li>
-}
+
+<div>
+    <h2 class="sub-header">Test Cases</h2>
+    @Html.Partial("_TestCases", Model.Cases.Actives())
+</div>

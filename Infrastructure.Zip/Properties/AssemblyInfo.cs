@@ -8,6 +8,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TestLab.Infrastructure.Zip")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("16c13a83-6de1-4c59-a7ad-8722034e7cf3")]

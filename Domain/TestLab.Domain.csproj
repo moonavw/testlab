@@ -33,9 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NPatterns, Version=1.0.5189.41347, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NPatterns, Version=1.0.5269.3167, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NPatterns.1.0.5189\lib\net451\NPatterns.dll</HintPath>
+      <HintPath>..\packages\NPatterns.1.0.5269\lib\net451\NPatterns.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -50,19 +50,16 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BuildProjectCommand.cs" />
-    <Compile Include="ITestBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ITestDriver.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StartTestSessionCommand.cs" />
     <Compile Include="TestAgent.cs" />
     <Compile Include="TestBuild.cs" />
+    <Compile Include="TestConfig.cs" />
+    <Compile Include="TestJob.cs" />
+    <Compile Include="TestQueue.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="TestRun.cs" />
-    <Compile Include="TestRunTask.cs" />
     <Compile Include="TestSession.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="TestPlan.cs" />

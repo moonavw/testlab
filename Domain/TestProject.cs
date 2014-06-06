@@ -8,14 +8,14 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestProject : AggregateRoot, IAuditable
+    public class TestProject : AggregateRoot, IAuditable, IArchivable
     {
         public TestProject()
         {
-            Build = new TestBuild();
             Cases = new HashSet<TestCase>();
             Plans = new HashSet<TestPlan>();
             Sessions = new HashSet<TestSession>();
+            Builds = new HashSet<TestBuild>();
         }
 
         public int Id { get; set; }
@@ -37,17 +37,7 @@ namespace TestLab.Domain
         [Display(Name = "Build Script")]
         public string BuildScript { get; set; }
 
-        public string WorkDir
-        {
-            get { return Path.Combine(Constants.PROJ_ROOT, ToString()); }
-        }
-
-        public string BuildOutputDir
-        {
-            get { return Path.Combine(WorkDir, BuildOutputPath ?? ""); }
-        }
-
-        public TestBuild Build { get; set; }
+        public virtual ICollection<TestBuild> Builds { get; set; }
 
         public virtual ICollection<TestPlan> Plans { get; set; }
 
@@ -55,7 +45,7 @@ namespace TestLab.Domain
 
         public virtual ICollection<TestSession> Sessions { get; set; }
 
-        #region Implementation of IAuditable
+        #region IAuditable Members
 
         public DateTime? Created { get; set; }
         public string CreatedBy { get; set; }
@@ -63,6 +53,33 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        #region IArchivable Members
+
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
+
+        #endregion
+
+        public string LocalPath
+        {
+            get { return Path.Combine(Constants.LOCAL_ROOT, ToString()); }
+        }
+
+        public string SrcDir
+        {
+            get { return Path.Combine(LocalPath, Constants.SRC_DIR_NAME); }
+        }
+
+        public string BuildOutputDir
+        {
+            get { return Path.Combine(SrcDir, BuildOutputPath ?? ""); }
+        }
+
+        public string GetPathOnAgent(TestAgent agent)
+        {
+            return Path.Combine(string.Format(Constants.AGENT_ROOT_FORMAT, agent.Name), ToString());
+        }
 
         public override string ToString()
         {

@@ -1,14 +1,10 @@
-﻿@model IEnumerable<TestLab.Domain.TestPlan>
+﻿@model IEnumerable<TestPlan>
 
 @{
     ViewBag.Title = "Test Plans";
-    TestLab.Domain.TestProject project = ViewBag.Project;
 }
 
-<h2>Test Plans</h2>
-<p>
-    @Html.ActionLink("Create New", "New", "TestPlans", new { testprojectId = project.Id }, new { @class = "btn btn-default" })
-</p>
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -17,7 +13,7 @@
      .Sanitized(false)
      .SetWidth(30)
      .RenderValueAs(d =>
-                        Html.ActionLink("Open", "Show", "TestPlans", new {id = d.Id, testprojectId = project.Id}, new {@class = "btn btn-default"})
+                        Html.ActionLink("Open", "Show", "TestPlans", new {id = d.Id, testprojectId = d.Project.Id}, new {@class = "btn btn-default"})
         );
     
     c.Add(o => o.Id)
@@ -26,18 +22,7 @@
     c.Add(o => o.Name);
 
     c.Add(o => o.Cases.Count);
+
+    c.Add(o => o.Sessions.Count);
     
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
-
-@section nav{
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li>@Html.ActionLink(project.Name, "Show", "TestProjects", new { id = project.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = project.Id }, null)</li>
-    <li class="active">@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = project.Id }, null)</li>
-    <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = project.Id }, null)</li>
-}

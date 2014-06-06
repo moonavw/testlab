@@ -1,28 +1,34 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestBuild : ValueObject, IStartable
+    public class TestBuild : TestJob
     {
-        public string Name { get; set; }
+        public virtual TestProject Project { get; set; }
 
-        public string Location
+        public string Name
         {
-            get { return Path.Combine(Constants.BUILD_ROOT, Name); }
+            get { return string.Format("{0:yyyyMMddhhmm}", Created); }
         }
 
-        #region Implementation of IStartable
+        public string LocalPath
+        {
+            get { return Path.Combine(Project.LocalPath, Constants.BUILD_DIR_NAME, Name); }
+        }
 
-        public DateTime? Started { get; set; }
-        public DateTime? Completed { get; set; }
-
-        #endregion
+        public string SharedPath
+        {
+            get
+            {
+                if (Agent == null) return null;
+                return Path.Combine(Project.GetPathOnAgent(Agent), Constants.BUILD_DIR_NAME, Name);
+            }
+        }
 
         public override string ToString()
         {
-            return Name;
+            return string.Format("{0} on {1}", Name, Agent);
         }
     }
 }

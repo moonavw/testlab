@@ -7,11 +7,12 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestPlan : Entity, IAuditable
+    public class TestPlan : Entity, IAuditable, IArchivable
     {
         public TestPlan()
         {
             Cases = new HashSet<TestCase>();
+            Sessions = new HashSet<TestSession>();
         }
 
         public int Id { get; set; }
@@ -24,7 +25,9 @@ namespace TestLab.Domain
 
         public virtual ICollection<TestCase> Cases { get; set; }
 
-        #region Implementation of IAuditable
+        public virtual ICollection<TestSession> Sessions { get; set; }
+
+        #region IAuditable Members
 
         public DateTime? Created { get; set; }
         public string CreatedBy { get; set; }
@@ -32,5 +35,17 @@ namespace TestLab.Domain
         public string UpdatedBy { get; set; }
 
         #endregion
+
+        #region IArchivable Members
+
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
+
+        #endregion
+
+        public void SetCases(IEnumerable<TestCase> cases)
+        {
+            Cases = new HashSet<TestCase>(cases.Actives());
+        }
     }
 }

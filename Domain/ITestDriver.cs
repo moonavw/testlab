@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace TestLab.Domain
@@ -7,10 +8,8 @@ namespace TestLab.Domain
     {
         string Name { get; }
 
-        Task<IEnumerable<TestCase>> Publish(TestProject project);
+        Task<IEnumerable<TestCase>> Publish(TestBuild build);
 
-        TestRunTask CreateTask(TestRun run, TestAgent agent);
-
-        Task<TestResult> ParseResult(TestRunTask task);
+        Task<TestResult> Run(TestRun run);
     }
 }

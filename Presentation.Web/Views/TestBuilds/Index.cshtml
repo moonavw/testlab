@@ -1,0 +1,26 @@
+﻿@model IEnumerable<TestBuild>
+
+@{
+    ViewBag.Title = "Test Builds";
+}
+
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
+
+@Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
+{
+    c.Add(o => o.Id)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
+    
+    c.Add(o => o.Name);
+
+    c.Add(o => o.Agent.Name);
+      
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add(o => o.SharedPath);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

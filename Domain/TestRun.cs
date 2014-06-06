@@ -10,21 +10,26 @@ namespace TestLab.Domain
             Result = new TestResult();
         }
 
+        public TestResult Result { get; set; }
+
         public int TestCaseId { get; set; }
 
-        public int TestSessionId { get; set; }
-
-        public TestResult Result { get; set; }
+        public int TestQueueId { get; set; }
 
         public virtual TestCase Case { get; set; }
 
-        public virtual TestSession Session { get; set; }
+        public virtual TestQueue Queue { get; set; }
 
-        #region Implementation of IStartable
+        #region IStartable Members
 
         public DateTime? Started { get; set; }
         public DateTime? Completed { get; set; }
 
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("{0} in {1}", Case.Name, Queue);
+        }
     }
 }

@@ -1,13 +1,9 @@
-﻿@model TestLab.Domain.TestProject
+﻿@model TestProject
 
 @{
     ViewBag.Title = "New Test Project";
 }
 
-<h2>Create New</h2>
-<p>
-    @Html.ActionLink("Cancel", "Index", "TestProjects", null, new { @class = "btn btn-default" })
-</p>
 
 @using (Html.BeginForm("Create", "TestProjects"))
 {
@@ -16,13 +12,4 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
-@section nav{
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li class="active">@Html.ActionLink("Create New", "New", "TestProjects")</li>
-        </ul>
-    </li>
 }

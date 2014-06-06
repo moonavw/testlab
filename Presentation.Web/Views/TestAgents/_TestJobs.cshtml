@@ -1,0 +1,16 @@
+﻿@model IEnumerable<TestJob>
+
+@Html.Grid(Model.OrderByDescending(z => z.Id)).Columns(c =>
+{
+    c.Add(o => o.Id)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
+
+    c.Add()
+     .Titled("Type")
+     .RenderValueAs(d => d.GetType().BaseType.Name);
+
+    c.Add(o => o.Started);
+
+    c.Add(o => o.Completed);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

@@ -1,0 +1,31 @@
+﻿@model TestBuild
+
+<p><a href="javascript:history.back()" class="btn btn-default">Cancel</a></p>
+
+@{
+    IEnumerable<TestAgent> agents = ViewBag.Agents;
+}
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+
+<div class="form-horizontal">
+    <fieldset>
+        <legend>Test Build</legend>
+
+        <div class="form-group@(Html.ValidationError("TestAgent", " has-error"))">
+            @Html.Label("TestAgent", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("TestAgent", new SelectList(agents, "Id", "Name", (Model.Agent == null ? 0 : Model.Agent.Id)), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.ValidationMessage("TestAgent", null, new { @class = "help-block" })
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="reset" value="Reset" class="btn btn-default" />
+        </div>
+    </div>
+</div>

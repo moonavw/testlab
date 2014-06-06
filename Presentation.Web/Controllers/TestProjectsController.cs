@@ -1,4 +1,5 @@
 ﻿using NPatterns.Messaging;
+using NPatterns.ObjectRelational;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,20 +7,21 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
     public class TestProjectsController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IEnumerable<ITestDriver> _drivers;
-        private readonly IEnumerable<ISourcePuller> _pullers;
+        private readonly IEnumerable<IPuller> _pullers;
         private readonly IMessageBus _bus;
 
-        public TestProjectsController(IUnitOfWork uow,
+        public TestProjectsController(ITestLabUnitOfWork uow,
             IEnumerable<ITestDriver> drivers,
-            IEnumerable<ISourcePuller> pullers,
+            IEnumerable<IPuller> pullers,
             IMessageBus bus)
         {
             _uow = uow;
@@ -29,25 +31,21 @@ namespace TestLab.Presentation.Web.Controllers
             _bus = bus;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Build(int id)
+        private void SetNav(TestProject proj = null)
         {
-            await _bus.PublishAsync(new BuildProjectCommand(id));
-            return RespondTo(formats =>
-            {
-                formats.Default = RedirectToAction("Show", new { id });
-                formats["text"] = () => Content("Started");
-            });
-        }
-
-        public async Task<ActionResult> Index()
-        {
-            return View(await _projRepo.Query().ToListAsync());
+            ViewBag.Nav = proj == null ? new TestProjectNav() : new TestProjectNav(proj);
         }
 
         private void SetViewData()
         {
             ViewBag.DriverNames = _drivers.Select(z => z.Name);
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            SetNav();
+            var list = await _projRepo.Query().ToListAsync();
+            return View(list.Actives());
         }
 
         public async Task<ActionResult> Show(int id)
@@ -57,11 +55,13 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public ActionResult New()
         {
+            SetNav();
             SetViewData();
             return View(new TestProject());
         }
@@ -81,19 +81,15 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id });
             }
+            SetNav(model);
             SetViewData();
             return View("new", model);
         }
 
-        public async Task<ActionResult> Edit(int id)
+        public Task<ActionResult> Edit(int id)
         {
-            var entity = await _projRepo.FindAsync(id);
-            if (entity == null)
-            {
-                return HttpNotFound();
-            }
             SetViewData();
-            return View(entity);
+            return Show(id);
         }
 
         [HttpPut]
@@ -110,6 +106,7 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id });
             }
+            SetNav(model);
             SetViewData();
             return View("edit", model);
         }
@@ -119,13 +116,10 @@ namespace TestLab.Presentation.Web.Controllers
         public async Task<ActionResult> Destroy(int id)
         {
             var entity = await _projRepo.FindAsync(id);
-
-            var sessionRepo = _uow.Repository<TestSession>();
-            entity.Sessions.ToList().ForEach(z => sessionRepo.Remove(z));
-
-            var planRepo = _uow.Repository<TestPlan>();
-            entity.Plans.ToList().ForEach(z => planRepo.Remove(z));
-
+            if (entity == null)
+            {
+                return HttpNotFound();
+            }
             _projRepo.Remove(entity);
             await _uow.CommitAsync();
             return RedirectToAction("Index");

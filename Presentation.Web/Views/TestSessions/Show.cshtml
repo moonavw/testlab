@@ -1,21 +1,23 @@
-﻿@model TestLab.Domain.TestSession
+﻿@model TestSession
 
 @{
-    ViewBag.Title = "Test Session";
+    ViewBag.Title = "Test Session: " + Model.Name;
 }
 
+<p><a href="@Url.Action("Edit")" class="btn btn-default">Edit</a></p>
+
 <div>
-    <h2>Test Session</h2>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.Partial("_ShowAudit", Model)
-    <hr />
+    
+    @Html.Partial("_Audit", Model)
+    
+    
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Build)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Model.Build.Name
         </dd>
 
         <dt>
@@ -24,44 +26,35 @@
 
         <dd>
             @Html.DisplayFor(model => model.Summary)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Build)
-        </dt>
-
-        <dd>
-            @Model.Build
-        </dd>
+        </dd>       
     </dl>
-    @Html.Partial("_ShowStartInfo", Model)
 </div>
-@Html.Partial("_ShowAgent", Model.Agent)
-
-@if(Model.Started==null || Model.Completed!=null)
+@if(Model.FailCount>0)
 {
 <p>
-    @Html.ActionLink("Start The Session", "Start", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
+    @Html.ActionLink("Restart Failed Cases", "Restart", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
 </p>
 }
 
-@Html.Partial("../TestRuns/Index", Model.Runs)
+@Html.Partial("_Progress", Model)
 
-@section nav{
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li>@Html.ActionLink(Model.Project.Name, "Show", "TestProjects", new { id = Model.Project.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
-    <li>@Html.ActionLink("Plans", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sessions <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
-            <li class="active">@Html.ActionLink(Model.Name, "Show", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
-        </ul>
-    </li>
-}
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li><a href="#testconfig" data-toggle="tab">Test Config</a></li>
+  <li><a href="#testqueues" data-toggle="tab">Test Queues</a></li>
+  <li class="active"><a href="#testruns" data-toggle="tab">Test Runs</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane" id="testconfig"><br />
+      @Html.Partial("_TestConfig", Model.Config)
+  </div>
+  <div class="tab-pane" id="testqueues"><br />
+      @Html.Partial("_TestQueues", Model.Queues)
+  </div>
+  <div class="tab-pane active" id="testruns"><br />
+      @Html.Partial("_TestRuns", Model.Runs)
+  </div>
+</div>
+

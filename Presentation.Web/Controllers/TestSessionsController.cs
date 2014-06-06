@@ -1,4 +1,5 @@
 ﻿using NPatterns.Messaging;
+using NPatterns.ObjectRelational;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,28 +7,66 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
     public class TestSessionsController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IRepository<TestSession> _sessionRepo;
+        private readonly IRepository<TestAgent> _agentRepo;
         private readonly IMessageBus _bus;
 
-        public TestSessionsController(IUnitOfWork uow, IMessageBus bus)
+        public TestSessionsController(ITestLabUnitOfWork uow, IMessageBus bus)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _sessionRepo = uow.Repository<TestSession>();
+            _agentRepo = uow.Repository<TestAgent>();
             _bus = bus;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Start(int id, int testprojectId)
+        private void SetNav(TestSession session)
         {
-            await _bus.PublishAsync(new StartTestSessionCommand(id));
+            ViewBag.Nav = new TestSessionNav(session);
+        }
+
+        private void SetNav(TestProject proj)
+        {
+            ViewBag.Nav = new TestSessionNav(proj);
+        }
+
+        private void SetViewData()
+        {
+            ViewBag.Agents = from e in _agentRepo.Query().Actives()
+                             where e.IsOnline
+                             select e;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Restart(int id, int testprojectId)
+        {
+            var entity = await _sessionRepo.FindAsync(id);
+            if (entity == null || entity.Project.Id != testprojectId)
+            {
+                return HttpNotFound();
+            }
+
+            //set queues incomplete to restart
+            foreach (var queue in entity.Queues)
+            {
+                queue.Completed = null;
+                //set failed runs incomplete to restart
+                foreach (var run in queue.Runs.Where(z => z.Result.PassOrFail == false))
+                {
+                    run.Completed = null;
+                }
+            }
+
+            await _uow.CommitAsync();
+
             return RespondTo(formats =>
             {
                 formats.Default = RedirectToAction("Show", new { id, testprojectId });
@@ -42,8 +81,8 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Project = project;
-            return View(project.Sessions);
+            SetNav(project);
+            return View(project.Sessions.Actives());
         }
 
         public async Task<ActionResult> Show(int id, int testprojectId)
@@ -53,73 +92,115 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public async Task<ActionResult> New(int testprojectId)
         {
-            var model = new TestSession { Project = await _projRepo.FindAsync(testprojectId) };
-            if (model.Project == null)
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
             {
                 return HttpNotFound();
             }
-            model.Build = model.Project.Build;
-            return View(model);
+            SetNav(project);
+            SetViewData();
+            return View(new TestSession { Project = project });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplanId)
+        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
-            var plan = project.Plans.FirstOrDefault(z => z.Id == testplanId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
+            if (model.Build == null)
+            {
+                ModelState.AddModelError("testbuild", "no completed build for this test session");
+            }
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
             if (plan == null)
             {
-                ModelState.AddModelError("testplanId", "no test plan found for this test session");
+                ModelState.AddModelError("testplan", "no test plan found for this test session");
             }
             else
             {
-                var tests = plan.Cases.Where(z => z.Published != null).ToList();
-                if (tests.Count == 0)
+                if (plan.Cases.Count == 0)
                 {
-                    ModelState.AddModelError("testplanId", "no published tests in this test plan for this test session");
+                    ModelState.AddModelError("testplan", "empty test plan for this test session");
                 }
-                else
-                {
-                    model.Runs = new HashSet<TestRun>(tests.Select(z => new TestRun { Case = z }));
-                }
-            }
-            if (model.Build.Completed == null)
-            {
-                ModelState.AddModelError("Build.Name", "no completed build for this test session");
             }
 
             if (ModelState.IsValid)
             {
+                if (testagents != null)
+                {
+                    var agents = (from e in _agentRepo.Query()
+                                  where testagents.Contains(e.Id)
+                                  select e).ToList();
+                    model.SetAgents(agents);
+                }
                 project.Sessions.Add(model);
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
-
+            SetNav(model);
+            SetViewData();
             return View("new", model);
         }
 
         public Task<ActionResult> Edit(int id, int testprojectId)
         {
+            SetViewData();
             return Show(id, testprojectId);
         }
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model)
+        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
         {
+            var project = model.Project = await _projRepo.FindAsync(testprojectId);
+            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
+            if (model.Build == null)
+            {
+                ModelState.AddModelError("testbuild", "no completed build for this test session");
+            }
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
+            if (plan == null)
+            {
+                ModelState.AddModelError("testplan", "no test plan found for this test session");
+            }
+            else
+            {
+                if (plan.Cases.Count == 0)
+                {
+                    ModelState.AddModelError("testplan", "empty test plan for this test session");
+                }
+            }
             if (ModelState.IsValid)
             {
                 _sessionRepo.Modify(model);
+                if (testagents != null)
+                {
+                    var agents = (from e in _agentRepo.Query()
+                                  where testagents.Contains(e.Id)
+                                  select e).ToList();
+
+                    var queueRepo = _uow.Repository<TestQueue>();
+                    var q = await (from e in queueRepo.Query()
+                                   where e.Session.Id == model.Id
+                                   select e).ToListAsync();
+                    q.ForEach(z => queueRepo.Remove(z));
+
+                    model.SetAgents(agents);
+                }
+
                 await _uow.CommitAsync();
 
                 return RedirectToAction("Show", new { id, testprojectId });
             }
+            SetNav(model);
+            SetViewData();
             return View("edit", model);
         }
 

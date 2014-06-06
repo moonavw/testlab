@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPatterns.ObjectRelational;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -7,47 +8,72 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestAgent : ValueObject
+    public class TestAgent : AggregateRoot, IArchivable
     {
-        [Required]
-        public string Server { get; set; }
-
-        [Required]
-        public string Domain { get; set; }
-
-        [Required]
-        public string UserName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        public string EncryptedPassword
+        public TestAgent()
         {
-            get { return PasswordProtector.Encrypt(Password, Constants.EncryptionKey); }
-            set { Password = PasswordProtector.Decrypt(value, Constants.EncryptionKey); }
+            Jobs = new HashSet<TestJob>();
         }
 
-        public string DomainUser
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public DateTime? LastTalked { get; set; }
+
+        public virtual ICollection<TestJob> Jobs { get; set; }
+
+        public bool IsOnline
         {
-            get { return string.Format(@"{0}\{1}", Domain, UserName); }
+            get
+            {
+                if (LastTalked == null)
+                    return false;
+                return LastTalked.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
+            }
         }
 
-        public string GetOutputDir(TestSession session)
+        #region info
+
+        public int CompletedCount
         {
-            string resultRoot = string.Format(Constants.AGENT_RESULT_ROOT_FORMAT, Server);
-            return Path.Combine(resultRoot, session.ToString());
+            get { return Jobs.Count(z => z.Completed != null); }
         }
 
-        public string GetBuildDir(TestBuild build)
+        public int RunningCount
         {
-            string buildRoot = string.Format(Constants.AGENT_BUILD_ROOT_FORMAT, Server);
-            return Path.Combine(buildRoot, build.Name);
+            get { return Jobs.Count(z => z.Started != null && z.Completed == null); }
         }
+
+        public int NotStartedCount
+        {
+            get { return Jobs.Count(z => z.Started == null); }
+        }
+
+        public string Summary
+        {
+            get
+            {
+                return string.Format("{0} completed, {1} running, {2} not started",
+                    CompletedCount,
+                    RunningCount,
+                    NotStartedCount);
+            }
+        }
+
+        #endregion
+
+        #region IArchivable Members
+
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
+
+        #endregion
 
         public override string ToString()
         {
-            return string.Format("{0}@{1}", DomainUser, Server);
+            return Name;
         }
     }
 }

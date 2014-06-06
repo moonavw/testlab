@@ -1,24 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using NPatterns.ObjectRelational;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using TestLab.Domain;
 using TestLab.Infrastructure;
+using TestLab.Presentation.Web.Models;
 
 namespace TestLab.Presentation.Web.Controllers
 {
     public class TestPlansController : ApplicationController
     {
-        private readonly IUnitOfWork _uow;
+        private readonly ITestLabUnitOfWork _uow;
         private readonly IRepository<TestProject> _projRepo;
         private readonly IRepository<TestPlan> _planRepo;
 
-        public TestPlansController(IUnitOfWork uow)
+        public TestPlansController(ITestLabUnitOfWork uow)
         {
             _uow = uow;
             _projRepo = uow.Repository<TestProject>();
             _planRepo = uow.Repository<TestPlan>();
+        }
+
+        private void SetNav(TestPlan plan)
+        {
+            ViewBag.Nav = new TestPlanNav(plan);
+        }
+
+        private void SetNav(TestProject proj)
+        {
+            ViewBag.Nav = new TestPlanNav(proj);
         }
 
         public async Task<ActionResult> Index(int testprojectId)
@@ -28,8 +40,8 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Project = project;
-            return View(project.Plans);
+            SetNav(project);
+            return View(project.Plans.Actives());
         }
 
         public async Task<ActionResult> Show(int id, int testprojectId)
@@ -39,17 +51,19 @@ namespace TestLab.Presentation.Web.Controllers
             {
                 return HttpNotFound();
             }
+            SetNav(entity);
             return View(entity);
         }
 
         public async Task<ActionResult> New(int testprojectId)
         {
-            var model = new TestPlan { Project = await _projRepo.FindAsync(testprojectId) };
-            if (model.Project == null)
+            var project = await _projRepo.FindAsync(testprojectId);
+            if (project == null)
             {
                 return HttpNotFound();
             }
-            return View(model);
+            SetNav(project);
+            return View(new TestPlan { Project = project });
         }
 
         [HttpPost]
@@ -63,7 +77,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             else
             {
-                model.Cases = new HashSet<TestCase>(project.Cases.Where(z => testcases.Contains(z.Id)));
+                model.SetCases(project.Cases.Where(z => testcases.Contains(z.Id)));
             }
             if (ModelState.IsValid)
             {
@@ -71,7 +85,7 @@ namespace TestLab.Presentation.Web.Controllers
                 await _uow.CommitAsync();
                 return RedirectToAction("Show", new { id = model.Id, testprojectId });
             }
-
+            SetNav(model);
             return View("new", model);
         }
 
@@ -97,12 +111,14 @@ namespace TestLab.Presentation.Web.Controllers
                     _planRepo.Merge(entity, model);
 
                     entity.Cases.Clear();
-                    entity.Cases = new HashSet<TestCase>(project.Cases.Where(z => testcases.Contains(z.Id)));
+                    entity.SetCases(project.Cases.Where(z => testcases.Contains(z.Id)));
+
                     await _uow.CommitAsync();
 
                     return RedirectToAction("Show", new { id, testprojectId });
                 }
             }
+            SetNav(model);
             return View("edit", model);
         }
 
@@ -117,7 +133,7 @@ namespace TestLab.Presentation.Web.Controllers
             }
             _planRepo.Remove(entity);
             await _uow.CommitAsync();
-            return RedirectToAction("Index", new {testprojectId});
+            return RedirectToAction("Index", new { testprojectId });
         }
     }
 }

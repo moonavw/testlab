@@ -1,0 +1,27 @@
+﻿@model IAuditable
+
+
+    
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+            &nbsp;
+            @Html.DisplayFor(model => model.CreatedBy)
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated)
+            &nbsp;
+            @Html.DisplayFor(model => model.UpdatedBy)
+            &nbsp;
+        </dd>
+    </dl>

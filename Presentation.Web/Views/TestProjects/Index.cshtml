@@ -1,13 +1,10 @@
-﻿@model IEnumerable<TestLab.Domain.TestProject>
+﻿@model IEnumerable<TestProject>
 
 @{
     ViewBag.Title = "Test Projects";
 }
 
-<h2>Test Projects</h2>
-<p>
-    @Html.ActionLink("Create New", "New", "TestProjects", null, new { @class = "btn btn-default" })
-</p>
+<p><a href="@Url.Action("New")" class="btn btn-default">Create New</a></p>
 
 @Html.Grid(Model.OrderByDescending(z=>z.Id)).Columns(c =>
 {
@@ -25,8 +22,6 @@
     c.Add(o => o.Name);
 
     c.Add(o => o.DriverName);
-
-    c.Add(o => o.Build);
     
     c.Add(o => o.Plans.Count);
 
@@ -35,8 +30,3 @@
     c.Add(o => o.Sessions.Count);
 
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20)
-
-
-@section nav{
-    <li class="active">@Html.ActionLink("Projects", "Index", "TestProjects", null, null)</li>
-}

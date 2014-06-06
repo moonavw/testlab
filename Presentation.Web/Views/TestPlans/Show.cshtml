@@ -1,42 +1,18 @@
-﻿@model TestLab.Domain.TestPlan
+﻿@model TestPlan
 
 @{
-    ViewBag.Title = "Test Plan";
+    ViewBag.Title = "Test Plan: " + Model.Name;
 }
+
+<p><a href="@Url.Action("Edit")" class="btn btn-default">Edit</a></p>
 
 <div>
-    <h2>Test Plan</h2>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-    @Html.Partial("_ShowAudit", Model)
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
+    @Html.Partial("_Audit", Model)
+
 </div>
 
-@Html.Partial("../TestCases/Index", Model.Cases)
-
-@section nav{
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Projects <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestProjects", null, null)</li>
-            <li>@Html.ActionLink(Model.Project.Name, "Show", "TestProjects", new { id = Model.Project.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Cases", "Index", "TestCases", new { testprojectId = Model.Project.Id }, null)</li>
-    <li class="dropdown active">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Plans <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("List", "Index", "TestPlans", new { testprojectId = Model.Project.Id }, null)</li>
-            <li class="active">@Html.ActionLink(Model.Name, "Show", "TestPlans", new { id = Model.Id, testprojectId = Model.Project.Id }, null)</li>
-        </ul>
-    </li>
-    <li>@Html.ActionLink("Sessions", "Index", "TestSessions", new { testprojectId = Model.Project.Id }, null)</li>
-}
+<div>
+    <h2 class="sub-header">Test Cases</h2>
+    @Html.Partial("../TestProjects/_TestCases", Model.Cases.Actives())
+</div>

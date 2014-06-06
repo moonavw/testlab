@@ -1,0 +1,16 @@
+﻿@model IEnumerable<TestCase>
+
+
+@Html.Grid(Model.OrderBy(z=>z.Name)).Columns(c =>
+{   
+    c.Add(o => o.Name)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Ascending);
+
+    c.Add(o => o.Keyword);
+    
+    c.Add(o => o.Location);
+
+    c.Add(o => o.Published)
+     .SetWidth(110);
+
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

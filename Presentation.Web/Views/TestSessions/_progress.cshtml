@@ -1,0 +1,13 @@
+﻿@model TestSession
+
+<div class="progress">
+  <div class="progress-bar progress-bar-success" style="width: @((double)Model.PassCount*100/Model.Runs.Count)%">
+    @Model.PassCount <span class="sr-only">passed</span>
+  </div>
+  <div class="progress-bar progress-bar-danger" style="width: @((double)Model.FailCount*100/Model.Runs.Count)%">
+    @Model.FailCount <span class="sr-only">failed</span>
+  </div>
+  <div class="progress-bar progress-bar-info" style="width: @((double)Model.Runs.Count(z => z.Started != null && z.Completed == null)*100/Model.Runs.Count)%">
+    @Model.Runs.Count(z => z.Started != null && z.Completed == null) <span class="sr-only">running</span>
+  </div>
+</div>

@@ -8,18 +8,21 @@ namespace TestLab.Infrastructure.EF.Mapping
     {
         public TestRunMapping()
         {
-            HasKey(z => new { z.TestCaseId, z.TestSessionId });
-            Property(z => z.TestCaseId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-            Property(z => z.TestSessionId).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            HasKey(z => new { z.TestCaseId, z.TestQueueId });
+
+            Property(z => z.TestCaseId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            Property(z => z.TestQueueId)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             HasRequired(z => z.Case)
                 .WithMany()
                 .HasForeignKey(z => z.TestCaseId)
                 .WillCascadeOnDelete(false);
 
-            HasRequired(z => z.Session)
+            HasRequired(z => z.Queue)
                 .WithMany(f => f.Runs)
-                .HasForeignKey(z => z.TestSessionId);
+                .HasForeignKey(z => z.TestQueueId);
         }
     }
 }

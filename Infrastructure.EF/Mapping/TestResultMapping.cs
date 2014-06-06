@@ -3,7 +3,7 @@ using TestLab.Domain;
 
 namespace TestLab.Infrastructure.EF.Mapping
 {
-    public class TestResultMapping : ComplexTypeConfiguration<TestResult>
-    {        
+    internal class TestResultMapping : ComplexTypeConfiguration<TestResult>
+    {
     }
 }

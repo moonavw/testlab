@@ -8,33 +8,37 @@ using TestLab.Infrastructure;
 
 namespace TestLab.Domain
 {
-    public class TestSession : Entity, IAuditable, IStartable
+    public class TestSession : Entity, IAuditable, IArchivable
     {
         public TestSession()
         {
-            Build = new TestBuild();
-            Runs = new HashSet<TestRun>();
-            Agent = new TestAgent();
+            Queues = new HashSet<TestQueue>();
+            Config = new TestConfig();
         }
 
         public int Id { get; set; }
 
-        [RegularExpression("[a-zA-Z0-9 ]+")]
-        [Required]
-        public string Name { get; set; }
-
-        public TestBuild Build { get; set; }
-
-        public TestAgent Agent { get; set; }
-
-        public string OutputDir
+        public string Name
         {
-            get { return Path.Combine(Constants.RESULT_ROOT, ToString()); }
+            get { return string.Format("{1} {0:yyyyMMddhhmm}", Created, Plan.Name); }
         }
+
+        public TestConfig Config { get; set; }
+
+        public virtual TestBuild Build { get; set; }
 
         public virtual TestProject Project { get; set; }
 
-        public virtual ICollection<TestRun> Runs { get; set; }
+        public virtual TestPlan Plan { get; set; }
+
+        public virtual ICollection<TestQueue> Queues { get; set; }
+
+        public IReadOnlyCollection<TestRun> Runs
+        {
+            get { return Queues.SelectMany(z => z.Runs).ToList().AsReadOnly(); }
+        }
+
+        #region info
 
         public int PassCount
         {
@@ -62,7 +66,9 @@ namespace TestLab.Domain
             }
         }
 
-        #region Implementation of IAuditable
+        #endregion
+
+        #region IAuditable Members
 
         public DateTime? Created { get; set; }
         public string CreatedBy { get; set; }
@@ -71,29 +77,48 @@ namespace TestLab.Domain
 
         #endregion
 
-        #region Implementation of IStartable
+        #region IArchivable Members
 
-        public DateTime? Started { get; set; }
-        public DateTime? Completed { get; set; }
+        public DateTime? Deleted { get; set; }
+        public string DeletedBy { get; set; }
 
         #endregion
 
-        public override string ToString()
+        public DateTime? Started
         {
-            return string.Format("{0}_{1}", Project, Name.Replace(" ", ""));
+            get { return Queues.OrderBy(z => z.Started).Select(z => z.Started).FirstOrDefault(); }
         }
 
-
-        public IEnumerable<TestAgent> GetAgents()
+        public DateTime? Completed
         {
-            return from s in Agent.Server.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                   select new TestAgent
-                   {
-                       Server = s.Trim(),
-                       Domain = Agent.Domain,
-                       Password = Agent.Password,
-                       UserName = Agent.UserName
-                   };
+            get { return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault(); }
+        }
+
+        public string LocalPath
+        {
+            get { return Path.Combine(Project.LocalPath, Constants.RESULT_DIR_NAME, ToString()); }
+        }
+
+        public string GetPathOnAgent(TestAgent agent)
+        {
+            return Path.Combine(Project.GetPathOnAgent(agent), Constants.RESULT_DIR_NAME, ToString());
+        }
+
+        public void SetAgents(IEnumerable<TestAgent> agents)
+        {
+            Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z }));
+
+            var tests = Plan.Cases.Actives().ToList();
+            int pageSize = (int)Math.Ceiling((double)tests.Count / Queues.Count);
+            for (int i = 0; i < Queues.Count; i++)
+            {
+                Queues.ElementAt(i).Runs = new HashSet<TestRun>(tests.Skip(i * pageSize).Take(pageSize).Select(z => new TestRun { Case = z }));
+            }
+        }
+
+        public override string ToString()
+        {
+            return Name.Replace(" ", "");
         }
     }
 }

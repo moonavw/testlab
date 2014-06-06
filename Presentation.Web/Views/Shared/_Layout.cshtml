@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    IEnumerable<NavItem> nav = ViewBag.Nav;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,32 +12,42 @@
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink(TestLab.Infrastructure.Constants.AppName, "Index", "Home", null, new { @class = "navbar-brand" })
+                @Html.ActionLink(TestLab.Infrastructure.Constants.APP_NAME, "Index", "Home", null, new { @class = "navbar-brand" })
             </div>
             <nav class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li @(Html.IsRouteMatch("About","Home")?"class=active":null)>@Html.ActionLink("About", "About", "Home")</li>
-                    @RenderSection("nav", required: false)
+                <ul class="nav navbar-nav navbar-right">
+                    @Html.Partial("_NavItems", new Nav())
                 </ul>
-                <p class="navbar-text navbar-right">Hello, @User.Identity.Name!</p>
+                <p class="navbar-text navbar-left">Hello, @User.Identity.Name!</p>
             </nav>
         </div>
     </header>
-    <section class="container body-content">
-        @RenderBody()
-    </section>
-    <footer>
-        <div class="container">
-            <p class="text-muted">&copy; @DateTime.Now.Year - @TestLab.Infrastructure.Constants.AppName</p>
+    <section class="container-fluid">
+        @if(nav.Any())
+        {
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                @Html.Partial("_NavItems", nav)
+            </ul>
         </div>
-    </footer>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">@ViewBag.Title</h1>
+            @RenderBody()
+        </div>
+        }
+        else
+        {
+            <h1 class="page-header">@ViewBag.Title</h1>
+            @RenderBody()
+        }
+    </section>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

@@ -6,7 +6,7 @@ namespace TestLab.Infrastructure.Git
     {
         public override void Load()
         {
-            Bind<ISourcePuller>().To<GitSourcePuller>();
+            Bind<IPuller>().To<GitPuller>();
         }
     }
 }

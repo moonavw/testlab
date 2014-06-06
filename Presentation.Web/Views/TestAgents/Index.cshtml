@@ -1,0 +1,28 @@
+﻿@model IEnumerable<TestAgent>
+
+@{
+    ViewBag.Title = "Test Agents";
+}
+
+
+
+@Html.Grid(Model.OrderByDescending(z=>z.LastTalked)).Columns(c =>
+{
+    c.Add()
+     .Encoded(false)
+     .Sanitized(false)
+     .SetWidth(30)
+     .RenderValueAs(d =>
+                        Html.ActionLink("Open", "Show", "TestAgents", new { id = d.Id }, new { @class = "btn btn-default" })
+        );
+    
+    c.Add(o => o.Name);
+
+    c.Add(o => o.IsOnline);
+    
+    c.Add(o => o.Summary);
+
+    c.Add(o => o.LastTalked)
+     .SortInitialDirection(GridMvc.Sorting.GridSortDirection.Descending);
+    
+}).Sortable().Filterable().WithMultipleFilters().WithPaging(20)

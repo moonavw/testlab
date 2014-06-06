@@ -1,7 +1,7 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(TestLab.Presentation.Web.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(TestLab.Presentation.Web.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(TestLab.Presentation.Web.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(TestLab.Presentation.Web.App_Start.NinjectWebCommon), "Stop")]
 
-namespace TestLab.Presentation.Web
+namespace TestLab.Presentation.Web.App_Start
 {
     using System;
     using System.Web;
@@ -11,29 +11,28 @@ namespace TestLab.Presentation.Web
     using Ninject;
     using Ninject.Web.Common;
 
-    public static class NinjectWebCommon
+    public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start()
+        public static void Start() 
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
         }
-
+        
         /// <summary>
         /// Stops the application.
         /// </summary>
         public static void Stop()
         {
-            Application.Bootstrapper.Shutdown(bootstrapper.Kernel);
             bootstrapper.ShutDown();
         }
-
+        
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -41,11 +40,19 @@ namespace TestLab.Presentation.Web
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-            RegisterServices(kernel);
-            return kernel;
+                RegisterServices(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -55,6 +62,6 @@ namespace TestLab.Presentation.Web
         private static void RegisterServices(IKernel kernel)
         {
             Application.Bootstrapper.Initialize(kernel);
-        }
+        }        
     }
 }

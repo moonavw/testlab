@@ -1,0 +1,14 @@
+﻿@model TestBuild
+
+@{
+    ViewBag.Title = "New Test Build";
+}
+
+@using (Html.BeginForm("Create", "TestBuilds", new { testprojectId = Model.Project.Id }))
+{
+    @Html.Partial("_form", Model)
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
