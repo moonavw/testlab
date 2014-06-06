@@ -7,15 +7,7 @@
 
     c.Add(o => o.Case.Keyword);
 
-    c.Add(o => o.Started)
-     .SetWidth(110);
-
-    c.Add(o => o.Completed)
-     .SetWidth(110);
-
-    c.Add(o => o.Result.PassOrFail);
-    
-    c.Add(o => o.Result.Summary)
+    c.Add(o => o.Result.PassOrFail)
      .Encoded(false)
      .Sanitized(false)
      .RenderValueAs(d =>
@@ -27,13 +19,21 @@
                                  </button>
 
                                  <div id="result-@d.Case.Id" class="collapse">
-                                     <pre>@d.Result.ErrorDetails
-                                         @d.Result.Output</pre>
+                                     <pre>@d.Result.Output
+                                         @d.Result.ErrorDetails</pre>
                                  </div>
                              }
                          </div>
         );
 
+    c.Add(o => o.Started)
+     .SetWidth(110);
+
+    c.Add(o => o.Completed)
+     .SetWidth(110);
+
+    c.Add(o => o.Queue.Agent.Name);
+     
 }).Sortable().Filterable().WithMultipleFilters().WithPaging(20).SetRowCssClasses(item => {
     switch (item.Result.PassOrFail)
     {

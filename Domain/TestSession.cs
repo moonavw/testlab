@@ -104,15 +104,18 @@ namespace TestLab.Domain
             return Path.Combine(Project.GetPathOnAgent(agent), Constants.RESULT_DIR_NAME, ToString());
         }
 
-        public void SetAgents(IEnumerable<TestAgent> agents)
+        public void SetAgents(IReadOnlyCollection<TestAgent> agents)
         {
-            Queues = new HashSet<TestQueue>(agents.Select(z => new TestQueue { Agent = z }));
-
             var tests = Plan.Cases.Actives().ToList();
-            int pageSize = (int)Math.Ceiling((double)tests.Count / Queues.Count);
-            for (int i = 0; i < Queues.Count; i++)
+            int pageSize = (int)Math.Ceiling((double)tests.Count / agents.Count);
+            int pageCount = (int)Math.Ceiling((double)tests.Count / pageSize);
+            for (int i = 0; i < pageCount; i++)
             {
-                Queues.ElementAt(i).Runs = new HashSet<TestRun>(tests.Skip(i * pageSize).Take(pageSize).Select(z => new TestRun { Case = z }));
+                Queues.Add(new TestQueue
+                {
+                    Agent = agents.ElementAt(i),
+                    Runs = new HashSet<TestRun>(tests.Skip(i * pageSize).Take(pageSize).Select(z => new TestRun { Case = z }))
+                });
             }
         }
 

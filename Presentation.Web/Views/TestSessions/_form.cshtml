@@ -16,14 +16,14 @@
         <div class="form-group@(Html.ValidationError("TestPlan", " has-error"))">
             @Html.Label("TestPlan", new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.DropDownList("TestPlan", new SelectList(Model.Project.Plans.Actives(), "Id", "Name"), new {@class = "form-control selectpicker",data_live_search="true"})
+                @Html.DropDownList("TestPlan", new SelectList(Model.Project.Plans.Actives(), "Id", "Name", Model.Plan == null ? 0 : Model.Plan.Id), new {@class = "form-control selectpicker",data_live_search="true"})
                 @Html.ValidationMessage("TestPlan", null, new {@class = "help-block"})
             </div>
         </div>
         <div class="form-group@(Html.ValidationError("TestBuild", " has-error"))">
             @Html.Label("TestBuild", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("TestBuild", new SelectList(Model.Project.Builds.Where(z => z.Completed != null).OrderByDescending(z => z.Id), "Id", "Name"), new { @class = "form-control selectpicker", data_live_search = "true" })
+                @Html.DropDownList("TestBuild", new SelectList(Model.Project.Builds.Where(z => z.Completed != null).OrderByDescending(z => z.Id), "Id", "Name", Model.Build == null ? 0 : Model.Build.Id), new { @class = "form-control selectpicker", data_live_search = "true" })
                 @Html.ValidationMessage("TestBuild", null, new { @class = "help-block" })
             </div>
         </div>

@@ -1,7 +1,5 @@
 ﻿using Ninject;
 using System;
-using System.Configuration.Install;
-using System.Reflection;
 using System.ServiceProcess;
 using TestLab.Application;
 
@@ -16,35 +14,24 @@ namespace TestLab.AgentService
         {
             var kernel = new StandardKernel();
             Bootstrapper.Initialize(kernel);
-            kernel.Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>().To<TestLab.Infrastructure.EF.TestLabUnitOfWork>().InSingletonScope();
+            kernel
+                .Rebind<TestLab.Infrastructure.ITestLabUnitOfWork>()
+                .To<TestLab.Infrastructure.EF.TestLabUnitOfWork>()
+                .InSingletonScope();
+
             var agent = kernel.Get<TestAgentService>();
 
             if (Environment.UserInteractive)
             {
-                string parameter = string.Concat(args);
-                switch (parameter)
+                agent.Start();
+
+                do
                 {
-                    case "--install":
-                        ManagedInstallerClass.InstallHelper(new string[] { Assembly.GetExecutingAssembly().Location });
-                        break;
-                    case "--uninstall":
-                        ManagedInstallerClass.InstallHelper(new string[] { "/u", Assembly.GetExecutingAssembly().Location });
-                        break;
-
-                    default:
-                        agent.Start();
-
-                        do
-                        {
-                            Console.WriteLine("press Q to quit");
-                        }
-                        while (Console.ReadKey().Key != ConsoleKey.Q);
-
-                        agent.Stop();
-
-                        break;
+                    Console.WriteLine("press Q to quit");
                 }
+                while (Console.ReadKey().Key != ConsoleKey.Q);
 
+                agent.Stop();
             }
             else
             {

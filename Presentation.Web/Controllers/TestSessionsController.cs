@@ -62,6 +62,7 @@ namespace TestLab.Presentation.Web.Controllers
                 foreach (var run in queue.Runs.Where(z => z.Result.PassOrFail == false))
                 {
                     run.Completed = null;
+                    run.Result = new TestResult();
                 }
             }
 
@@ -137,7 +138,7 @@ namespace TestLab.Presentation.Web.Controllers
                 {
                     var agents = (from e in _agentRepo.Query()
                                   where testagents.Contains(e.Id)
-                                  select e).ToList();
+                                  select e).ToList().AsReadOnly();
                     model.SetAgents(agents);
                 }
                 project.Sessions.Add(model);
@@ -182,16 +183,15 @@ namespace TestLab.Presentation.Web.Controllers
                 _sessionRepo.Modify(model);
                 if (testagents != null)
                 {
-                    var agents = (from e in _agentRepo.Query()
-                                  where testagents.Contains(e.Id)
-                                  select e).ToList();
-
                     var queueRepo = _uow.Repository<TestQueue>();
                     var q = await (from e in queueRepo.Query()
                                    where e.Session.Id == model.Id
                                    select e).ToListAsync();
                     q.ForEach(z => queueRepo.Remove(z));
 
+                    var agents = (from e in _agentRepo.Query()
+                                  where testagents.Contains(e.Id)
+                                  select e).ToList().AsReadOnly();
                     model.SetAgents(agents);
                 }
 

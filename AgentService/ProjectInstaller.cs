@@ -15,9 +15,13 @@ namespace TestLab.AgentService
         public ProjectInstaller()
         {
             InitializeComponent();
+        }
 
-            this.serviceProcessInstaller1.Username = ConfigurationManager.AppSettings["ServiceInstaller_Username"];
-            this.serviceProcessInstaller1.Password = ConfigurationManager.AppSettings["ServiceInstaller_Password"];
+        protected override void OnBeforeInstall(IDictionary savedState)
+        {
+            base.OnBeforeInstall(savedState);
+            this.serviceProcessInstaller1.Username = this.Context.Parameters["username"];
+            this.serviceProcessInstaller1.Password = this.Context.Parameters["password"];
         }
     }
 }
