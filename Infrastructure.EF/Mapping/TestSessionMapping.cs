@@ -16,12 +16,12 @@ namespace TestLab.Infrastructure.EF.Mapping
 
             HasRequired(z => z.Build)
                 .WithMany()
-                .Map(m => m.MapKey("TestBuildId"))
+                .HasForeignKey(z => z.TestBuildId)
                 .WillCascadeOnDelete(false);
 
             HasRequired(z => z.Plan)
                 .WithMany(f => f.Sessions)
-                .Map(m => m.MapKey("TestPlanId"));
+                .HasForeignKey(z => z.TestPlanId);
         }
     }
 }

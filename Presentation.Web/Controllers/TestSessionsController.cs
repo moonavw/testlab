@@ -116,15 +116,11 @@ namespace TestLab.Presentation.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
+        public async Task<ActionResult> Create(int testprojectId, TestSession model, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
-            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
-            if (model.Build == null)
-            {
-                ModelState.AddModelError("testbuild", "no completed build for this test session");
-            }
-            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
+
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == model.TestPlanId);
             if (plan == null)
             {
                 ModelState.AddModelError("testplan", "no test plan found for this test session");
@@ -163,15 +159,11 @@ namespace TestLab.Presentation.Web.Controllers
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int testplan, int testbuild, int[] testagents)
+        public async Task<ActionResult> Update(int id, int testprojectId, TestSession model, int[] testagents)
         {
             var project = model.Project = await _projRepo.FindAsync(testprojectId);
-            model.Build = project.Builds.FirstOrDefault(z => z.Id == testbuild);
-            if (model.Build == null)
-            {
-                ModelState.AddModelError("testbuild", "no completed build for this test session");
-            }
-            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == testplan);
+
+            var plan = model.Plan = project.Plans.FirstOrDefault(z => z.Id == model.TestPlanId);
             if (plan == null)
             {
                 ModelState.AddModelError("testplan", "no test plan found for this test session");

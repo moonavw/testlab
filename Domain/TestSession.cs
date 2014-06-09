@@ -24,6 +24,12 @@ namespace TestLab.Domain
         }
 
         public TestConfig Config { get; set; }
+        
+        [Required]
+        public int TestBuildId { get; set; }
+
+        [Required]
+        public int TestPlanId { get; set; }
 
         public virtual TestBuild Build { get; set; }
 
