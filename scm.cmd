@@ -13,10 +13,13 @@ set targetFolder=AutomationTools
 set inifile=%1
 set action=%2
 set "args=%~3"
-
-FOR /F "eol=; tokens=*" %%i IN (%inifile%) DO (
-	echo %%i
-	call :%action% %%i %args%
+if exist %inifile% (
+	FOR /F "eol=; tokens=*" %%i IN (%inifile%) DO (
+		echo %%i
+		call :%action% %%i %args%
+	)
+) else (
+	call :%action% %inifile% %args%
 )
 goto :EOF
 
