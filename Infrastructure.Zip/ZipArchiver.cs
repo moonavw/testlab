@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Ionic.Zip;
+using System.Diagnostics;
 
 namespace TestLab.Infrastructure.Zip
 {
@@ -17,6 +18,7 @@ namespace TestLab.Infrastructure.Zip
                     fi.Directory.Create();
                 await Task.Run(() =>
                 {
+                    Trace.TraceInformation("archiving {0} to {1}", srcDir, fi.FullName);
                     //zip files
                     using (var zip = new ZipFile(fi.FullName))
                     {
@@ -34,6 +36,7 @@ namespace TestLab.Infrastructure.Zip
             {
                 await Task.Run(() =>
                 {
+                    Trace.TraceInformation("extracting {0} to {1}", filename, destDir);
                     //unzip files
                     using (var zip = ZipFile.Read(filename))
                     {

@@ -76,7 +76,7 @@ namespace TestLab.Infrastructure.Cucumber
 
             //get test's feature file
             string workFile = Path.Combine(build.LocalPath, test.Location);
-            string outputFileName = Path.ChangeExtension(test.FullName, ".html");
+            string outputFileName = test.FullName + ".html";
             var outputFile = new FileInfo(Path.Combine(session.LocalPath, outputFileName));
             if (!outputFile.Directory.Exists)
                 outputFile.Directory.Create();
