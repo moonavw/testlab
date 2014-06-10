@@ -24,7 +24,7 @@ namespace TestLab.Domain
         }
 
         public TestConfig Config { get; set; }
-        
+
         [Required]
         public int TestBuildId { get; set; }
 
@@ -97,7 +97,12 @@ namespace TestLab.Domain
 
         public DateTime? Completed
         {
-            get { return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault(); }
+            get
+            {
+                if (Queues.Any(z => z.Completed == null))
+                    return null;
+                return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault();
+            }
         }
 
         public string LocalPath

@@ -75,6 +75,7 @@ namespace TestLab.Presentation.Web
                     {
                         sessions.As("sessions");
                         sessions.Member(z => z.Post("restart"));
+                        sessions.Member(z => z.Post("continue"));
                     });
                 });
             }

@@ -29,12 +29,17 @@
         </dd>       
     </dl>
 </div>
-@if(Model.FailCount>0)
-{
 <p>
-    @Html.ActionLink("Restart Failed Cases", "Restart", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
+    @if(Model.FailCount > 0)
+    {
+        @Html.ActionLink("Restart Failed Cases", "Restart", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
+    }
+
+    @if(Model.Completed != null && Model.NoResultCount > 0)
+    {
+        @Html.ActionLink("Continue Not Started Cases", "Continue", "TestSessions", new { id = Model.Id, testprojectId = Model.Project.Id }, new { @class = "btn btn-success ajax-post" })
+    }
 </p>
-}
 
 @Html.Partial("_Progress", Model)
 
