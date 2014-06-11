@@ -86,7 +86,7 @@ namespace TestLab.Infrastructure.Cucumber
             var rubyDir = new DirectoryInfo(@"c:\").GetDirectories("ruby*", SearchOption.TopDirectoryOnly).FirstOrDefault();
             if (rubyDir == null) throw new DirectoryNotFoundException("ruby installation not found on " + agent.Name);
             string startProgram = string.Format(@"c:\{0}\bin\cucumber.bat", rubyDir.Name);
-            string startProgramArgs = string.Format(@"{0} --tag @Name_{1} -f html --out {2}", workFile, test.Name, outputFile.FullName);
+            string startProgramArgs = string.Format("\"{0}\" --tag @Name_{1} -f html --out \"{2}\"", workFile, test.Name, outputFile.FullName);
 
             var pi = new ProcessStartInfo(startProgram, startProgramArgs);
             pi.EnvironmentVariables.Add(session.Config.Key, session.Config.Value);
