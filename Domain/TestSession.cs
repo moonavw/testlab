@@ -97,12 +97,7 @@ namespace TestLab.Domain
 
         public DateTime? Completed
         {
-            get
-            {
-                if (Queues.Any(z => z.Completed == null))
-                    return null;
-                return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault();
-            }
+            get { return Queues.OrderByDescending(z => z.Completed).Select(z => z.Completed).FirstOrDefault(); }
         }
 
         public string LocalPath
