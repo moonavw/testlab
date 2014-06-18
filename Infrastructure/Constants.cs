@@ -16,8 +16,8 @@ namespace TestLab.Infrastructure
         //format: \\{machine}\testlab\
         public static readonly string AGENT_ROOT_FORMAT = Path.Combine(@"\\{0}\", APP_NAME);
 
-        public static readonly int AGENT_KEEPALIVE = 10 * 60;//sec
+        public static readonly int AGENT_KEEPALIVE = 60;//sec
 
-        public static readonly int POLLING_INTERVAL = int.Parse(ConfigurationManager.AppSettings["PollingInterval"] ?? "30");//sec
+        public static readonly int POLLING_INTERVAL = int.Parse(ConfigurationManager.AppSettings["PollingInterval"] ?? AGENT_KEEPALIVE.ToString());//sec
     }
 }

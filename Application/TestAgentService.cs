@@ -13,26 +13,37 @@ namespace TestLab.Application
 {
     public class TestAgentService
     {
-        private readonly IMessageBus _bus;
-        private readonly ITestLabUnitOfWork _uow;
-        private readonly IRepository<TestJob> _jobRepo;
-        private Task _runningTask;
+        public event EventHandler<Exception> OnError;
 
+        private readonly Func<ITestLabUnitOfWork> _uowFactory;
+        private readonly IMessageBus _bus;
+
+        private Task _worker;
         private CancellationTokenSource _source;
         private TestAgent _agent;
+        private ITestLabUnitOfWork _uow;
 
-        public TestAgentService(ITestLabUnitOfWork uow, IMessageBus bus)
+        public TestAgentService(Func<ITestLabUnitOfWork> uowFactory, IMessageBus bus)
         {
-            _uow = uow;
-            _jobRepo = uow.Repository<TestJob>();
+            _uowFactory = uowFactory;
             _bus = bus;
+        }
+
+        protected ITestLabUnitOfWork Uow
+        {
+            get
+            {
+                if (_uow == null)
+                    _uow = _uowFactory();
+                return _uow;
+            }
         }
 
         private void Initialize()
         {
             string agentName = Environment.MachineName;
             //find current agent in repository
-            var agentRepo = _uow.Repository<TestAgent>();
+            var agentRepo = Uow.Repository<TestAgent>();
             _agent = agentRepo.Query().FirstOrDefault(z => z.Name == agentName);
 
             Debug.WriteLine("{1} TestAgent: {0}", agentName, _agent == null ? "Create" : "Update");
@@ -42,7 +53,7 @@ namespace TestLab.Application
             {
                 _agent = new TestAgent { Name = agentName };
                 agentRepo.Add(_agent);
-                _uow.Commit();
+                Uow.Commit();
             }
 
             _source = new CancellationTokenSource();
@@ -52,7 +63,7 @@ namespace TestLab.Application
         public void Start()
         {
             Initialize();
-            _runningTask = Task.Run(() =>
+            _worker = Task.Run(() =>
             {
                 while (!_source.Token.IsCancellationRequested)
                 {
@@ -66,7 +77,12 @@ namespace TestLab.Application
                     }
                     catch (Exception ex)
                     {
-                        OnError(ex);
+                        HandleError(ex);
+                    }
+                    finally
+                    {
+                        _uow.Dispose();
+                        _uow = null;
                     }
                 }
             }, _source.Token);
@@ -76,61 +92,64 @@ namespace TestLab.Application
         {
             Trace.TraceInformation("stop TestAgent: {0}", _agent.Name);
             _source.Cancel();
-            Task.WaitAll(_runningTask);
+            Task.WaitAll(_worker);
         }
 
-        private void OnError(Exception ex)
+        private void HandleError(Exception ex)
         {
             Trace.TraceError(ex.ToString());
-            _source.Cancel();
-            Trace.TraceWarning("Test Agent: {0} has to be stopped since got error", _agent.Name);
+            if (OnError != null)
+            {
+                OnError(this, ex);
+            }
+            else
+            {
+                Trace.TraceWarning("Test Agent: {0} has to be stopped since got error", _agent.Name);
+                Stop();
+            }
         }
 
         private void KeepAlive()
         {
             _agent.Active();
             _agent.LastTalked = DateTime.Now;
-            _uow.Commit();
+            Uow.Commit();
         }
 
         private int StartJobs()
         {
             //get NotStarted jobs assigned to current agent
-            var jobs = (from e in _jobRepo.Query()
+            var jobs = (from e in Uow.Repository<TestJob>().Query()
                         where e.Agent.Id == _agent.Id && (e.Started == null || e.Completed == null)
                         select e).ToList();
 
             if (jobs.Count > 0)
             {
                 Trace.TraceInformation("get {0} jobs for agent {1}", jobs.Count, _agent);
-                Task.WaitAll(
-                    StartJobs(jobs.OfType<TestBuild>()),
-                    StartJobs(jobs.OfType<TestQueue>())
-                );
+                StartJobs(jobs.OfType<TestBuild>());
+                StartJobs(jobs.OfType<TestQueue>());
+
                 Trace.TraceInformation("complete {0} jobs by agent {1}", jobs.Count, _agent);
             }
 
             return jobs.Count;
         }
 
-        private Task StartJobs<T>(IEnumerable<T> jobs) where T : TestJob
+        private void StartJobs<T>(IEnumerable<T> jobs) where T : TestJob
         {
-            return Task.Run(() =>
+            foreach (var job in jobs)
             {
-                foreach (var job in jobs)
+                if (_source.Token.IsCancellationRequested)
+                    break;
+                try
                 {
-                    if (_source.Token.IsCancellationRequested)
-                        break;
-                    try
-                    {
-                        _bus.Publish(job);
-                    }
-                    catch (Exception ex)
-                    {
-                        OnError(ex);
-                    }
+                    _bus.Publish(job);
                 }
-            }, _source.Token);
+                catch (Exception ex)
+                {
+                    HandleError(ex);
+                }
+            }
         }
     }
 }

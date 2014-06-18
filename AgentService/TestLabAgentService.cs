@@ -1,4 +1,5 @@
-﻿using System.ServiceProcess;
+﻿using System;
+using System.ServiceProcess;
 using TestLab.Application;
 
 namespace TestLab.AgentService
@@ -12,6 +13,12 @@ namespace TestLab.AgentService
             InitializeComponent();
 
             _service = service;
+            _service.OnError += OnError;
+        }
+
+        void OnError(object sender, Exception e)
+        {
+            Stop();
         }
 
         protected override void OnStart(string[] args)

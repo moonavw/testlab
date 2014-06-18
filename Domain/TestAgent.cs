@@ -30,6 +30,8 @@ namespace TestLab.Domain
             {
                 if (LastTalked == null)
                     return false;
+                if (RunningCount > 0)
+                    return true;
                 return LastTalked.Value.AddSeconds(Constants.AGENT_KEEPALIVE) >= DateTime.Now;
             }
         }
