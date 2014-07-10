@@ -28,6 +28,7 @@ namespace TestLab.Application
         public async Task HandleAsync(T message)
         {
             var job = message;
+            Uow.MarkUnchanged(job);
 
             Debug.WriteLine("Started job-{0} {2} on agent {1}", job.Id, job.Agent, typeof(T).BaseType.Name);
 

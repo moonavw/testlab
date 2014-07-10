@@ -4,6 +4,7 @@ REM require inifile: for list of machines (one line for one machine)
 REM require robocopy.exe for copying files
 REM require psexec.exe for execute cmd on remote machine
 REM require username and password when using psexec.exe
+REM usage for install/uninstall: scm agents.ini install "username password"
 
 set installutil=C:\Windows\Microsoft.NET\Framework64\v4.0.30319\installutil.exe
 set source=AgentService\bin\Release

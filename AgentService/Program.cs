@@ -2,7 +2,6 @@
 using System;
 using System.ServiceProcess;
 using TestLab.Application;
-using TestLab.Infrastructure;
 
 namespace TestLab.AgentService
 {
@@ -15,14 +14,6 @@ namespace TestLab.AgentService
         {
             var kernel = new StandardKernel();
             Bootstrapper.Initialize(kernel);
-            kernel
-                .Rebind<ITestLabUnitOfWork>()
-                .To<TestLab.Infrastructure.EF.TestLabUnitOfWork>()
-                .InSingletonScope();
-
-            kernel
-                .Bind<Func<ITestLabUnitOfWork>>()
-                .ToMethod(ctx => () => ctx.Kernel.Get<ITestLabUnitOfWork>());
 
             var agent = kernel.Get<TestAgentService>();
 
